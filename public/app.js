@@ -161,7 +161,7 @@ $('#year').textContent = new Date().getFullYear();
 const bannerExamples = {
   night: {
     icon:'moon',
-    message:"It's <strong>11:49 PM</strong> for the Orka team. Our humans are asleep. A reply may take a little while.",
+    message:"It’s <strong>11:49 PM</strong> here. Our humans are asleep. Orky is still here to help.",
     title:'Orky · AI agent',
     body:'Hi! The team is asleep, but I’m here to help. What do you need?',
     status:'Answer within an hour',
@@ -313,12 +313,12 @@ if ('IntersectionObserver' in window) {
 
 // One sender per project. Update a visible conversation at a time, without moving the diagram.
 const projectMessages = [
-  [['Amy', 'AM', 'Can I save a meal?'], ['Jordan', 'JK', 'Can I edit a portion?'], ['Nina', 'NP', 'Where are my saved meals?']],
-  [['Theo', 'TS', 'Is this cap in stock?'], ['Sam', 'SR', 'Do you ship to Canada?'], ['Ava', 'AW', 'Does it come in green?']],
-  [['Lena', 'LM', 'Can I change my plan?'], ['Omar', 'OA', 'How do I get started?'], ['Sofia', 'SC', 'Can I update my email?']],
-  [['Kai', 'KB', 'Can I move my booking?'], ['Daniel', 'DC', 'Any slots on Monday?'], ['Julie', 'JL', 'Where is my booking?']],
-  [['Mia', 'MN', 'How do I publish this?'], ['Noah', 'NT', 'Can I add a cover image?'], ['Ella', 'EB', 'Can I schedule a post?']],
-  [['Alex', 'AR', 'Can I connect my account?'], ['Hugo', 'HM', 'How do I find conversations?'], ['Zoe', 'ZC', 'Can I invite a teammate?']]
+  [['Amy', 'AM', 'I’d like a refund, please.'], ['Jordan', 'JK', 'My payment went through twice.'], ['Nina', 'NP', 'Can I talk to a real person?']],
+  [['Theo', 'TS', 'Can I cancel my order?'], ['Sam', 'SR', 'My package never arrived.'], ['Ava', 'AW', 'How do I return this cap?']],
+  [['Lena', 'LM', 'I was charged twice.'], ['Omar', 'OA', 'Please cancel my plan.'], ['Sofia', 'SC', 'I need a human, please.']],
+  [['Kai', 'KB', 'Can I speak to a human?'], ['Daniel', 'DC', 'Please refund my booking.'], ['Julie', 'JL', 'I need to cancel tomorrow.']],
+  [['Mia', 'MN', 'Please cancel my subscription.'], ['Noah', 'NT', 'Where is my refund?'], ['Ella', 'EB', 'My post disappeared. Help!']],
+  [['Alex', 'AR', 'My account is locked. Help?'], ['Hugo', 'HM', 'Can someone call me back?'], ['Zoe', 'ZC', 'I’d like to request a refund.']]
 ];
 const podConversations = $$('[data-project-conversation]');
 const conversationPositions = projectMessages.map(() => 0);

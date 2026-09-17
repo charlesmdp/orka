@@ -40,3 +40,16 @@ Original standard tiles at zoom 3, x=1..3, y=1..4; displayed with local example 
 2026-09-17 v13: Forest-green cap with white orca embroidery, original generated product photograph. P+ dog-supplements mark is an illustrative monogram. Travel newsletter uses the existing envelope UI symbol. Shopify and WordPress platform marks are the credited official assets already used on this site.
 
 2026-09-17 v14: Cap-store project now uses the generated orca-cap product image. Reddit outreach project mark reuses the existing chat UI symbol on an original orange tile; it is not an official Reddit logo.
+
+2026-09-17 product refinements:
+- Two round portraits supplied by the site owner:
+  https://framerusercontent.com/images/Zg6gXbdHepEd3vJ9DEaPGursNMM.png
+  https://framerusercontent.com/images/Tbi6xk3ds1PgJoQ6DmGSjzZ1oc.png
+- Additional illustrative portrait by The Connected Narrative, Unsplash License:
+  https://unsplash.com/photos/a-man-smiling-for-the-camera-N8lRH2uxih4
+- Additional illustrative portrait by Christina @ wocintechchat.com, Unsplash License:
+  https://unsplash.com/photos/crossed-arm-woman-smiling-lFntEHwQvi4
+- ChatGPT / OpenAI and Claude marks retrieved from SVGL. Trademarks belong to OpenAI and Anthropic respectively. Used to identify AI providers.
+  https://github.com/pheralb/svgl/blob/main/static/library/openai.svg
+  https://github.com/pheralb/svgl/blob/main/static/library/claude-ai-icon.svg
+- orky-head.svg: original vector illustration created for this site.

@@ -1,20 +1,29 @@
-import {expandVisitors, clusterVisitors, clampView, zoomView} from './map-model.js';
+import {expandVisitors, clusterVisitors, clampView, zoomView, worldView, WORLD_LABELS, CITY_LABELS} from './map-model.js';
 
 const svg = document.querySelector('.live-geographic-map');
 const layer = svg.querySelector('.live-map-markers');
+const labelLayer = svg.querySelector('.live-map-labels');
 const popup = document.querySelector('.map-visitor-popup');
 const viewport = document.querySelector('.geographic-viewport');
 const projectButtons = [...document.querySelectorAll('[data-map-project]')];
 const rows = [...document.querySelectorAll('.live-visitor-row')];
 const points = expandVisitors();
 const projectNames = Object.fromEntries(projectButtons.map(button => [button.dataset.mapProject, button.querySelector('span:nth-child(2)').textContent]));
-const baseWidth = 470, maxZoom = 16;
+const maxZoom = 64;
 let project = 'all', zoom = 1, selectedId = null, view, drag, suppressClick = false;
 
-function homeView() {
-  const ratio = viewport.clientWidth / Math.max(1, viewport.clientHeight);
-  const height = Math.min(768, baseWidth/ratio);
-  return clampView({x:0,y:530-height/2,width:baseWidth,height});
+function homeView() { return worldView(viewport.clientWidth,viewport.clientHeight); }
+function renderLabels(scale) {
+  const labels=document.createDocumentFragment(), placed=[];
+  for (const country of [...CITY_LABELS,...WORLD_LABELS]) {
+    if (zoom<country.minZoom || country.x<view.x || country.x>view.x+view.width || country.y<view.y || country.y>view.y+view.height) continue;
+    const w=country.name.length*5.6+12;
+    if(placed.some(p=>Math.abs(p.x-country.x)*scale<(p.w+w)/2 && Math.abs(p.y-country.y)*scale<19))continue;
+    const group=element('g',{transform:`translate(${country.x} ${country.y}) scale(${1/scale})`});
+    group.append(element('text',{'text-anchor':'middle',class:country.kind==='city'?'map-city-label':'map-country-label'},country.name));
+    labels.append(group);placed.push({...country,w});
+  }
+  labelLayer.replaceChildren(labels);
 }
 function element(name, attributes, text) {
   const node = document.createElementNS('http://www.w3.org/2000/svg', name);
@@ -27,7 +36,8 @@ function render() {
   svg.setAttribute('viewBox', `${view.x} ${view.y} ${view.width} ${view.height}`);
   const scale = Math.min(viewport.clientWidth/view.width,viewport.clientHeight/view.height);
   const filtered = points.filter(point => project === 'all' || point.project === project);
-  const clusters = clusterVisitors(filtered, scale, zoom>=8?18:36);
+  const clusters = clusterVisitors(filtered, scale, zoom>=32?18:36);
+  renderLabels(scale);
   const fragment = document.createDocumentFragment();
   for (const cluster of clusters) {
     const margin = 28/scale;
@@ -46,7 +56,7 @@ function render() {
       if (suppressClick) return;
       if (count>1 && zoom<maxZoom) {
         const next = Math.min(maxZoom,zoom*2);
-        const width = baseWidth/next, height = view.height*width/view.width;
+        const width = homeView().width/next, height = view.height*width/view.width;
         zoom = next;
         view = clampView({x:cluster.x-width/2,y:cluster.y-height/2,width,height});
         popup.hidden = true;
@@ -71,7 +81,7 @@ function render() {
   layer.replaceChildren(fragment);
   document.querySelector('[data-map-zoom="out"]').disabled = zoom <= 1;
   document.querySelector('[data-map-zoom="in"]').disabled = zoom >= maxZoom;
-  document.querySelector('.map-zoom-level').textContent = `${Number(zoom.toFixed(1))}×`;
+  document.querySelector('.map-zoom-level').textContent = zoom === 1 ? 'World' : `${Number(zoom.toFixed(1))}×`;
   const status = `${filtered.length} example visitors. ${clusters.length} map markers at ${Number(zoom.toFixed(1))} times zoom.`;
   const output = document.querySelector('#map-cluster-status');
   if(output.textContent!==status)output.textContent=status;
@@ -100,6 +110,8 @@ rows.forEach(row=>row.addEventListener('click',()=>{
   const next=points.find(point=>point.profileId===row.dataset.visitor)?.id || null;
   if(selectedId===next)return;
   selectedId=next;
+  const selected=points.find(point=>point.id===next);
+  if(selected && zoom>1)view=clampView({...view,x:selected.x-view.width/2,y:selected.y-view.height/2});
   popup.hidden=true;
   render();
 }));
@@ -135,8 +147,9 @@ svg.addEventListener('keydown',event=>{
   else if(event.key==='Escape')popup.hidden=true;
 });
 function resize(){
-  if(!view||zoom===1)view=homeView();
-  else {const height=view.width*viewport.clientHeight/Math.max(1,viewport.clientWidth);view=clampView({...view,y:view.y+(view.height-height)/2,height});}
+  const base=homeView();
+  if(!view||zoom===1)view=base;
+  else {const width=base.width/zoom,height=base.height/zoom;view=clampView({x:view.x+(view.width-width)/2,y:view.y+(view.height-height)/2,width,height});}
   render();
 }
 if('ResizeObserver'in window)new ResizeObserver(resize).observe(viewport);

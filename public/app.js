@@ -33,29 +33,91 @@ document.addEventListener('keydown', event => {
 });
 
 const orkySampleReply = "Absolutely! Open a meal and choose Save meal. It will be ready to add again from your saved meals.";
+const draftMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+let draftTimer, draftWords = [], draftPosition = 0, draftVisible = false, draftStarted = false;
+function stopDraftWriting() {
+  clearTimeout(draftTimer);
+  draftTimer = null;
+  draftWords = [];
+  $('#orky-draft').setAttribute('aria-busy', 'false');
+}
+function finishDraftWriting() {
+  stopDraftWriting();
+  $('#orky-draft-badge').textContent = 'NOT SENT';
+  $('[data-orky-send]').disabled = !$('#orky-draft').value.trim();
+  $('#copilot-status').textContent = 'Your draft is ready. Review it, then send.';
+}
+function writeNextDraftWord() {
+  draftTimer = null;
+  if (!draftWords.length || !draftVisible || document.hidden) return;
+  draftPosition++;
+  $('#orky-draft').value = draftWords.slice(0, draftPosition).join(' ');
+  if (draftPosition >= draftWords.length) finishDraftWriting();
+  else draftTimer = setTimeout(writeNextDraftWord, 95);
+}
 function resetCopilot() {
+  stopDraftWriting();
+  draftStarted = true;
   $('#orky-composer').hidden = false;
   $('#copilot-sent').hidden = true;
-  $('#orky-draft').value = orkySampleReply;
-  $('#orky-draft-badge').textContent = 'NOT SENT';
-  $('[data-orky-send]').disabled = false;
-  $('#copilot-status').textContent = 'Orky suggests. You send.';
+  if (draftMotion.matches) {
+    $('#orky-draft').value = orkySampleReply;
+    finishDraftWriting();
+    return;
+  }
+  $('#orky-draft').value = '';
+  $('#orky-draft').setAttribute('aria-busy', 'true');
+  $('#orky-draft-badge').textContent = 'WRITING…';
+  $('[data-orky-send]').disabled = true;
+  $('#copilot-status').textContent = 'Orky is writing a draft for you…';
+  draftWords = orkySampleReply.split(' ');
+  draftPosition = 0;
+  writeNextDraftWord();
 }
+function syncDraftWriting() {
+  clearTimeout(draftTimer);
+  draftTimer = null;
+  if (!draftVisible || document.hidden) return;
+  if (!draftStarted) resetCopilot();
+  else if (draftWords.length) writeNextDraftWord();
+}
+if ('IntersectionObserver' in window) {
+  new IntersectionObserver(entries => {
+    draftVisible = entries[0].isIntersecting;
+    syncDraftWriting();
+  }, {threshold:.3}).observe($('.copilot-surface'));
+} else {
+  draftVisible = true;
+  resetCopilot();
+}
+document.addEventListener('visibilitychange', syncDraftWriting);
+draftMotion.addEventListener('change', () => {
+  if (draftMotion.matches && draftWords.length) {
+    $('#orky-draft').value = orkySampleReply;
+    finishDraftWriting();
+  }
+});
 $('[data-copilot-reset]').addEventListener('click', resetCopilot);
 $('[data-copilot-suggest]').addEventListener('click', resetCopilot);
 $('[data-orky-clear]').addEventListener('click', () => {
+  stopDraftWriting();
   $('#orky-draft').value = '';
   $('#orky-draft').placeholder = 'Your words. Your reply.';
   $('#orky-draft').focus();
+  $('#orky-draft-badge').textContent = 'YOUR DRAFT · NOT SENT';
+  $('#copilot-status').textContent = 'Start fresh. Write your own reply.';
   $('[data-orky-send]').disabled = true;
 });
 $('#orky-draft').addEventListener('input', event => {
+  stopDraftWriting();
   $('[data-orky-send]').disabled = !event.currentTarget.value.trim();
   $('#orky-draft-badge').textContent = 'YOUR EDIT · NOT SENT';
+  $('#copilot-status').textContent = 'Your words. Your final say.';
 });
 $('[data-orky-send]').addEventListener('click', () => {
   const reply = $('#orky-draft').value.trim();
-  if (!reply) return;
+  if (!reply || $('[data-orky-send]').disabled) return;
+  stopDraftWriting();
   $('#copilot-sent-copy').textContent = reply;
   $('#copilot-sent').hidden = false;
   $('#orky-composer').hidden = true;
@@ -417,6 +479,11 @@ $$('[data-visitor]').forEach(button => button.addEventListener('click', () => {
     item.setAttribute('aria-pressed', String(active));
   });
   ['initials','name','location','email','domain','page','previous'].forEach(key => $('#context-' + key).textContent = visitor[key]);
+  const hasCart = selectedVisitor === 'ny';
+  $('#context-cart').open = false;
+  $('#context-cart-count').textContent = hasCart ? '1 item' : '0 items';
+  $('#context-cart-item').hidden = !hasCart;
+  $('#context-cart-empty').hidden = hasCart;
   const profile = visitorProfiles[selectedVisitor];
   $('#context-flag').textContent = profile.flag;
   $('#context-location').textContent = profile.flag + ' ' + visitor.location;
@@ -747,9 +814,9 @@ if ('IntersectionObserver' in window) {
   const sonarObserver = new IntersectionObserver(entries => {
     entries.forEach(entry => entry.target.classList.toggle('motion-visible', entry.isIntersecting && !document.hidden));
   }, {threshold:.2});
-  $$('.hero, .real-livemap-card, .story-echoes, .urgency-card').forEach(section => sonarObserver.observe(section));
+  $$('.hero, .real-livemap-card, .story-echoes, .story-knowledge, .urgency-card').forEach(section => sonarObserver.observe(section));
   document.addEventListener('visibilitychange', () => {
-    $$('.hero, .real-livemap-card, .story-echoes, .urgency-card').forEach(section => {
+    $$('.hero, .real-livemap-card, .story-echoes, .story-knowledge, .urgency-card').forEach(section => {
       if (document.hidden) section.classList.remove('motion-visible');
       else {
         const box = section.getBoundingClientRect();

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 96" fill="none">
+  <title>Orky — a friendly orca</title>
+  <path d="M12 55C15 33 36 16 65 17c24 0 43 15 45 34 3 19-13 32-38 34-25 2-47-7-57-18-4-4-5-8-3-12Z" fill="#12252D"/>
+  <path d="M14 59c13 7 28 3 41 7 18 7 36 10 54-7-4 16-19 25-39 26-22 1-43-7-53-18l-3-8Z" fill="#F8FCFC"/>
+  <path d="M65 30c9-6 19-4 22 1 4 6-6 14-15 15-8 1-13-3-12-7 0-3 2-7 5-9Z" fill="#F8FCFC"/>
+  <ellipse cx="43" cy="47" rx="6.2" ry="5.5" fill="#FFF"/>
+  <ellipse cx="41.5" cy="47.3" rx="3.9" ry="4.3" fill="#102027"/>
+  <circle cx="40.3" cy="45.8" r="1.5" fill="#FFF"/>
+  <path d="M35 38c3-3 7-4 11-2" stroke="#45606B" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M20 62c9 5 17 6 25 3" stroke="#12252D" stroke-width="2.1" stroke-linecap="round"/>
+  <path d="M31 29c8-6 17-8 27-8" stroke="#FFFFFF" stroke-opacity=".1" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

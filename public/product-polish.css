@@ -514,3 +514,49 @@ html .site-preview-dialog[data-preview-theme=halloween] .preview-sent-message{ba
 }
 @media(max-height:700px){.preview-widget-dock .preview-night-notice{padding-block:9px}.preview-widget-dock .preview-live-header{padding-block:29px 9px;gap:5px}.preview-widget-dock .preview-live-avatars{min-height:35px;zoom:.85}.preview-widget-dock .preview-widget-invite{padding-block:7px}.preview-widget-dock .preview-chat-credit{display:none}}
 @media(prefers-reduced-motion:reduce){.support-crew-card{transition:none}.support-crew-card:hover{transform:none}}
+
+/* A whole-world canvas and quiet product controls. */
+.geographic-viewport{background:#87D8F8}
+.live-geographic-map>image{filter:none}
+.map-country-label{fill:#3A4A46;font:600 10px var(--sans);stroke:#FFFFFFBD;stroke-width:2.8px;paint-order:stroke;stroke-linejoin:round;pointer-events:none}
+.map-project-counters>button{background:#354E5DBA;border-color:#FFFFFF35;backdrop-filter:blur(8px);box-shadow:0 2px 7px #0F2D4620}
+.map-project-counters>button.active{background:#345A63DE;border-color:#89DAA0;box-shadow:0 0 0 1px #47D97130}
+.map-project-counters>button:hover{background:#25465BE8}
+.dashboard-current .workspace-top{justify-content:space-between}
+.dashboard-current .dashboard-presence{margin-left:auto}
+.dashboard-frame>.workspace-preview{border-radius:18px;overflow:hidden}
+
+/* Each conversation has a person and its own softly tinted ocean wallpaper. */
+.copilot-surface{--ocean-wallpaper:linear-gradient(#FFF1C8DB,#FFF1C8DB),url("assets/ocean-pattern-v15.png");background-color:#FFF0C5}
+.autopilot-surface{--ocean-wallpaper:linear-gradient(#E8DDFADE,#E8DDFADE),url("assets/ocean-pattern-v15.png");background-color:#EADFFA}
+.quick-action-workspace{--ocean-wallpaper:linear-gradient(#FFE0EDDE,#FFE0EDDE),url("assets/ocean-pattern-v15.png");background-color:#FFE3EF}
+.job-person-photo{display:block;width:36px;height:36px;flex:0 0 36px;object-fit:cover;border-radius:50%;border:2px solid #FFF;box-shadow:0 1px 5px #14231A16}
+.message-person-photo{display:block;width:28px;height:28px;flex:0 0 28px;object-fit:cover;border-radius:50%;border:2px solid #FFFFFFE6;box-shadow:0 1px 3px #17281D16}
+.job-visitor-message{display:flex;align-items:flex-end;gap:7px;min-width:0}
+.orky-three-jobs .copilot-surface>.job-visitor-message{margin:18px 12px}
+.orky-three-jobs .job-visitor-message>.copilot-question{margin:0;min-width:0}
+.orky-three-jobs .job-visitor-message>.auto-visitor{min-width:0;border-radius:16px 16px 16px 3px}
+.orky-three-jobs .quick-chat-context>.message-person-photo{display:block}
+.orky-three-jobs .quick-chat-context>div{min-width:0}
+#orky-draft[aria-busy=true]{caret-color:#547B4B}
+#orky-draft[aria-busy=true]~.orky-composer-actions [data-orky-send]{opacity:.5;cursor:wait}
+.orky-head.suggestion-avatar{padding:2px;border-radius:50%;background:#FFFFFF}
+.orky-avatar-halo>.orky-head{transform:none;padding:4px}
+
+/* A little victory dance, only while the illustration is on screen. */
+.learning-orca-dancer{transform-box:fill-box;transform-origin:50% 75%}
+@keyframes orky-learning-dance{0%,100%{transform:translateY(0) rotate(-6deg)}25%{transform:translateY(-8px) rotate(7deg)}50%{transform:translateY(0) rotate(6deg)}75%{transform:translateY(-6px) rotate(-8deg)}}
+@media(prefers-reduced-motion:no-preference){.learning-orca-dancer{animation:orky-learning-dance 2.4s ease-in-out infinite;animation-play-state:paused}.story-knowledge.motion-visible .learning-orca-dancer{animation-play-state:running}}
+
+.contact-cart .cart-item-count{margin-left:auto;font-size:10px;color:#7E9083;font-weight:500}
+.contact-cart summary>.icon:last-child{margin-left:0}
+.contact-cart-content{padding:0 18px 17px}
+.contact-cart-product{display:flex;gap:13px;align-items:center;padding:12px;border:1px solid #DDE5DC;border-radius:12px;background:#F7F9F3}
+.contact-cart-product>img{width:68px;height:68px;flex:0 0 68px;object-fit:contain;background:#EDF3E7;border-radius:9px}
+.contact-cart-product>div{min-width:0}.contact-cart-product strong{display:block;font-size:12px;color:#2D4035}
+.contact-cart-product span{display:block;font-size:10px;color:#7D8C80;margin:5px 0 9px}.contact-cart-product b{font-size:12px;color:#2D4035}
+.contact-cart-total{display:flex;justify-content:space-between;padding:13px 2px 0;font-size:11px;color:#728173}.contact-cart-total strong{color:#2D4035}
+#context-cart-empty{font-size:11px;color:#7D8C80;padding:5px 0}
+.live-geographic-map{background:#87D8F8}
+.map-city-label{fill:#33484C;font:600 10px var(--sans);stroke:#FFFFFFD9;stroke-width:3px;paint-order:stroke;pointer-events:none}
+@media(max-width:600px){.live-geographic-map{position:absolute;height:100%}.geographic-viewport{height:470px;flex-shrink:0}.map-project-counters{position:absolute;display:flex;flex-direction:column;top:12px;left:12px;right:auto;bottom:auto;padding:0;border:0;background:none}.map-project-counters>.all-map-projects{grid-column:auto}.map-project-counters>button{width:100%}.map-zoom-controls{bottom:57px;right:13px}}

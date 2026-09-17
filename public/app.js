@@ -83,10 +83,10 @@ $('[data-takeover-send]').addEventListener('click', () => {
   $('#autopilot-status').textContent = 'Human handover complete. Emma replied in this demo.';
 });
 const urgencyExamples = {
-  low: {label:'Low', count:1, message:'Can I switch between grams and ounces?'},
-  normal: {label:'Normal', count:1, message:'Can I save a meal to log it again?'},
-  high: {label:'High', count:2, message:'My saved meals have disappeared.'},
-  critical: {label:'Critical', count:3, message:'The app is down. I can’t sign in.'}
+  low: {label:'Easy life', icon:'🐠', count:1, message:'Can I switch between grams and ounces?'},
+  normal: {label:'Starting to sting', icon:'🐡', count:1, message:'Can I save a meal to log it again?'},
+  high: {label:'That really stings', icon:'🪼', count:2, message:'My saved meals have disappeared.'},
+  critical: {label:'They want blood', icon:'🦈', count:3, message:'The app is down. I can’t sign in.'}
 };
 $$('[data-urgency]').forEach(button => button.addEventListener('click', () => {
   const level = button.dataset.urgency;
@@ -96,9 +96,9 @@ $$('[data-urgency]').forEach(button => button.addEventListener('click', () => {
     item.classList.toggle('active', active);
     item.setAttribute('aria-pressed', String(active));
   });
-  $('#urgency-inbox-sharks').innerHTML = `<span class="shark-set ${level}" aria-hidden="true">${'<span class="shark-icon">🦈</span>'.repeat(example.count)}</span>`;
+  $('#urgency-inbox-sharks').innerHTML = `<span class="shark-set ${level}" aria-hidden="true">${`<span class="shark-icon">${example.icon}</span>`.repeat(example.count)}</span>`;
   $('#urgency-example-message').textContent = example.message;
-  $('#urgency-current-label').textContent = example.label + ' urgency';
+  $('#urgency-current-label').textContent = example.label;
 }));
 
 const themes = {
@@ -679,7 +679,7 @@ $('#site-preview-form').addEventListener('submit', async event => {
   previewModeIntent = 'auto';
   // Loading the website must not depend on the metadata request succeeding.
   setPreviewMode('live');
-  $$('.preview-sent-message', previewChat).forEach(message => message.remove());
+  $$('.preview-sent-message:not(.preview-example-message)', previewChat).forEach(message => message.remove());
   $('#preview-chat-input').value = '';
   setPreviewChat(true);
   const fallback = {siteName:url.hostname.replace(/^www\./,''), hostname:url.hostname, favicon:'', status:'unavailable'};
@@ -776,6 +776,7 @@ const quickActions = {
   hi:{title:'👋 Say hi',description:'Start with a warm welcome, using the visitor’s name.',context:'Hi! I have a question about my booking.',draft:'Hi Jessy! 👋 Thanks for reaching out. What can I help you with today?'},
   bye:{title:'✋ Say goodbye',description:'Wrap up warmly and remind them they can come back for help.',context:'That worked, thank you!',draft:'You’re very welcome, Jessy! If anything else comes up with your bookings, we’re right here. Have a lovely day!'},
   chat:{title:'☕ Chit chat',description:'Keep the conversation human while you look into their question.',context:'Thanks for checking. I’m planning a birthday surprise!',draft:'A birthday surprise — lovely! 🎉 I’m checking those booking details for you now, Jessy.'},
+  weather:{title:'☀️ Talk about the weather',description:'A little small talk while you help. No made-up forecast.',context:'Thanks! I’m taking a quick break while you check.',draft:'You’re welcome, Jessy! How’s the weather where you are? Hope you get a little sunshine on your break. ☀️'},
   answer:{title:'AI Answer',description:'Draft a useful answer from your own help docs and FAQs.',context:'How do I reschedule my appointment?',draft:'Hi Jessy! Open your confirmation email and choose Reschedule. You’ll be able to pick another available time. Let me know if you need a hand.'},
   summary:{title:'☷ Summarize',description:'Catch up on the conversation in a private note for your team.',context:'Perfect, I’ve moved my appointment to Friday. Thank you!',draft:'Jessy wanted to reschedule an appointment. We explained how to use the link in the confirmation email. The appointment is now on Friday and the visitor has confirmed everything is sorted.',private:true}
 };
@@ -783,8 +784,9 @@ let selectedQuickAction = 'bye';
 const quickSend = $('[data-quick-send]');
 const quickDraft = $('#quick-action-draft');
 function chooseQuickAction(key) {
-  selectedQuickAction=key;
   const action=quickActions[key];
+  if (!action) return;
+  selectedQuickAction=key;
   $$('[data-quick-action]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.quickAction===key)));
   $('#quick-action-title').textContent=action.title;
   $('#quick-action-description').textContent=action.description;
@@ -803,7 +805,7 @@ function chooseQuickAction(key) {
 $$('[data-quick-action]').forEach(button=>button.addEventListener('click',()=>chooseQuickAction(button.dataset.quickAction)));
 quickDraft.addEventListener('input',()=>{
   quickSend.disabled=!quickDraft.value.trim();
-  $('#quick-action-status').textContent='Your edit. Still private until you choose to send.';
+  $('#quick-action-status').textContent=quickActions[selectedQuickAction].private?'Your edit. This note stays private to your team.':'Your edit. Still private until you choose to send.';
 });
 quickSend.addEventListener('click',()=>{
   const draft=quickDraft.value.trim();if(!draft)return;
@@ -814,4 +816,42 @@ quickSend.addEventListener('click',()=>{
   $('#quick-sent-result')?.remove();$('.quick-chat-context').after(result);
   $('#quick-action-status').textContent=isPrivate?'Private note saved in this example.':'Reply sent in this example. Pick another shortcut to try it.';
   quickSend.disabled=true;
+});
+
+// A floating messenger demo. Messages stay on this page and are never transmitted.
+const supportFloat = $('.support-float');
+const supportPanel = $('#support-chat-panel');
+const supportLauncher = $('[data-open-support-chat]');
+function setSupportChat(open) {
+  supportPanel.hidden = !open;
+  $('.support-launcher-wrap').hidden = open;
+  supportFloat.dataset.chatOpen = String(open);
+  supportLauncher.setAttribute('aria-expanded', String(open));
+  (open ? $('#support-chat-input') : supportLauncher).focus();
+}
+supportLauncher.addEventListener('click', () => setSupportChat(true));
+$('[data-close-support-chat]').addEventListener('click', () => setSupportChat(false));
+$('[data-collapse-support]').addEventListener('click', event => {
+  const compact = supportFloat.dataset.compact !== 'true';
+  supportFloat.dataset.compact = String(compact);
+  event.currentTarget.setAttribute('aria-expanded', String(!compact));
+  event.currentTarget.setAttribute('aria-label', compact ? 'Expand team widget' : 'Minimize team widget');
+  event.currentTarget.textContent = compact ? '+' : '−';
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && !supportPanel.hidden && !sitePreviewDialog.open) setSupportChat(false);
+});
+$('#support-chat-form').addEventListener('submit', event => {
+  event.preventDefault();
+  const input = $('#support-chat-input');
+  const draft = input.value.trim();
+  if (!draft) return;
+  const message = document.createElement('p');
+  message.className = 'preview-sent-message';
+  message.textContent = draft;
+  const messages = $('#support-chat-messages');
+  messages.appendChild(message);
+  messages.scrollTop = messages.scrollHeight;
+  input.value = '';
+  input.focus();
 });

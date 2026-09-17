@@ -42,6 +42,7 @@ function resetCopilot() {
   $('#copilot-status').textContent = 'Orky suggests. You send.';
 }
 $('[data-copilot-reset]').addEventListener('click', resetCopilot);
+$('[data-copilot-suggest]').addEventListener('click', resetCopilot);
 $('[data-orky-clear]').addEventListener('click', () => {
   $('#orky-draft').value = '';
   $('#orky-draft').placeholder = 'Your words. Your reply.';
@@ -281,8 +282,8 @@ function setGrowth(demo, step) {
 function playGrowth(demo, requested = false) {
   stopGrowth(demo);
   setGrowth(demo, 1);
-  if (reduceMotion.matches && !requested) return;
   const maxProjects = Number(demo.dataset.growthMax) || 6;
+  if (reduceMotion.matches && !requested) { setGrowth(demo, maxProjects); return; }
   growthTimers.set(demo, Array.from({length:maxProjects - 1}, (_, index) => {
     const step = index + 2;
     return setTimeout(() => setGrowth(demo, step), (step - 1) * 960);
@@ -294,7 +295,7 @@ $$('.growth-demo').forEach(demo => {
     stopGrowth(demo);
     setGrowth(demo, Number(button.dataset.growthStep));
   }));
-  $('[data-growth-replay]', demo).addEventListener('click', () => {
+  $('[data-growth-replay]', demo)?.addEventListener('click', () => {
     demo.dataset.growthManual = 'true';
     playGrowth(demo, true);
   });
@@ -545,37 +546,6 @@ $('[data-bento-ai]').addEventListener('click', event => {
   $('#ai-demo-note').textContent = enabled ? 'Auto-reply is on for this example conversation.' : 'Auto-reply is off. You can still ask Orky for a draft.';
 });
 
-$$('.geo-cluster').forEach(cluster => cluster.addEventListener('keydown', event => {
-  if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); cluster.dispatchEvent(new Event('click')); }
-}));
-const mapProjects = ['calories','caps','trustarr','booking','blog','outreach'];
-$$('[data-map-project]').forEach(button => button.addEventListener('click', () => {
-  const project = button.dataset.mapProject;
-  $$('[data-map-project]').forEach(item => {
-    const active = item === button;
-    item.classList.toggle('active', active);
-    item.setAttribute('aria-pressed', String(active));
-  });
-  $$('.live-visitor-row').forEach(row => row.hidden = project !== 'all' && row.dataset.visitorProject !== project);
-  $$('.geo-cluster').forEach(cluster => {
-    const counts = cluster.dataset.clusterCounts.split(',').map(Number);
-    const count = project === 'all' ? counts.reduce((total,n) => total+n,0) : counts[mapProjects.indexOf(project)];
-    $('.cluster-count', cluster).textContent = count;
-    cluster.setAttribute('aria-label', count + ' example visitors in ' + $('title', cluster).textContent);
-  });
-  $('#map-project-summary').textContent = project === 'all' ? '6 projects. One live view.' : $('span:nth-child(2)', button).textContent + ' · live visitors';
-  const first = $('.live-visitor-row:not([hidden])');
-  if (first) first.click();
-}));
-let mapZoom = 1;
-$$('[data-map-zoom]').forEach(button => button.addEventListener('click', () => {
-  mapZoom = button.dataset.mapZoom === 'reset' ? 1 : Math.max(1, Math.min(1.8, mapZoom + (button.dataset.mapZoom === 'in' ? .2 : -.2)));
-  const width = 768/mapZoom, height = 590/mapZoom;
-  $('.live-geographic-map').setAttribute('viewBox', `${384-width/2} ${575-height/2} ${width} ${height}`);
-  $('[data-map-zoom="out"]').disabled = mapZoom === 1;
-  $('[data-map-zoom="in"]').disabled = mapZoom >= 1.8;
-}));
-$('[data-map-zoom="out"]').disabled = true;
 $('.live-visitor-row[data-visitor="ny"]').click();
 
 // A local preview only: never inject code into, or alter, the visitor's website.
@@ -625,6 +595,7 @@ function setPreviewTheme(theme) {
 }
 $$('button[data-preview-theme]').forEach(button => button.addEventListener('click', () => setPreviewTheme(button.dataset.previewTheme)));
 function setPreviewChat(open) {
+  sitePreviewDialog.classList.toggle('preview-minimized', !open);
   previewChat.hidden = !open;
   previewChatLauncher.hidden = open;
 }
@@ -706,7 +677,6 @@ $('#site-preview-form').addEventListener('submit', async event => {
   const request = previewRequest;
   previewWebsite = url;
   previewModeIntent = 'auto';
-  $('#preview-domain').textContent = url.hostname;
   // Loading the website must not depend on the metadata request succeeding.
   setPreviewMode('live');
   $$('.preview-sent-message', previewChat).forEach(message => message.remove());
@@ -800,3 +770,48 @@ if ('IntersectionObserver' in window) {
   }, {threshold:0}).observe(closingSection);
   document.addEventListener('visibilitychange', syncClosingMotion);
 }
+
+// These shortcuts only edit this illustration's local draft.
+const quickActions = {
+  hi:{title:'👋 Say hi',description:'Start with a warm welcome, using the visitor’s name.',context:'Hi! I have a question about my booking.',draft:'Hi Jessy! 👋 Thanks for reaching out. What can I help you with today?'},
+  bye:{title:'✋ Say goodbye',description:'Wrap up warmly and remind them they can come back for help.',context:'That worked, thank you!',draft:'You’re very welcome, Jessy! If anything else comes up with your bookings, we’re right here. Have a lovely day!'},
+  chat:{title:'☕ Chit chat',description:'Keep the conversation human while you look into their question.',context:'Thanks for checking. I’m planning a birthday surprise!',draft:'A birthday surprise — lovely! 🎉 I’m checking those booking details for you now, Jessy.'},
+  answer:{title:'AI Answer',description:'Draft a useful answer from your own help docs and FAQs.',context:'How do I reschedule my appointment?',draft:'Hi Jessy! Open your confirmation email and choose Reschedule. You’ll be able to pick another available time. Let me know if you need a hand.'},
+  summary:{title:'☷ Summarize',description:'Catch up on the conversation in a private note for your team.',context:'Perfect, I’ve moved my appointment to Friday. Thank you!',draft:'Jessy wanted to reschedule an appointment. We explained how to use the link in the confirmation email. The appointment is now on Friday and the visitor has confirmed everything is sorted.',private:true}
+};
+let selectedQuickAction = 'bye';
+const quickSend = $('[data-quick-send]');
+const quickDraft = $('#quick-action-draft');
+function chooseQuickAction(key) {
+  selectedQuickAction=key;
+  const action=quickActions[key];
+  $$('[data-quick-action]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.quickAction===key)));
+  $('#quick-action-title').textContent=action.title;
+  $('#quick-action-description').textContent=action.description;
+  $('#quick-context-message').textContent=action.context;
+  $('#quick-action-example').textContent=action.draft;
+  $('#quick-action-kind').textContent=action.private?'Private summary':'AI draft';
+  $('#quick-example-label').textContent=action.private?'Only visible to your team':'Example for Jessy';
+  $('#quick-action-note').textContent=action.private?'A private recap. It is never sent to the visitor.':'Creates a draft. You review and send as Charles.';
+  $('#quick-composer-mode').textContent=action.private?'🔒 Private note':'↩ Reply';
+  $('#quick-action-status').textContent=action.private?'Private summary · Only your team can see it.':'Demo only · Nothing is sent to a real visitor.';
+  quickDraft.value=action.draft;
+  quickSend.textContent=action.private?'Save private note':'Send as Charles ↑';
+  quickSend.disabled=false;
+  $('#quick-sent-result')?.remove();
+}
+$$('[data-quick-action]').forEach(button=>button.addEventListener('click',()=>chooseQuickAction(button.dataset.quickAction)));
+quickDraft.addEventListener('input',()=>{
+  quickSend.disabled=!quickDraft.value.trim();
+  $('#quick-action-status').textContent='Your edit. Still private until you choose to send.';
+});
+quickSend.addEventListener('click',()=>{
+  const draft=quickDraft.value.trim();if(!draft)return;
+  const isPrivate=quickActions[selectedQuickAction].private;
+  const result=document.createElement('div');result.id='quick-sent-result';result.className='quick-sent-result'+(isPrivate?' private':'');
+  const label=document.createElement('small');label.textContent=isPrivate?'Private note · Charles':'Charles · Sent in this demo ✓✓';
+  const body=document.createElement('p');body.textContent=draft;result.append(label,body);
+  $('#quick-sent-result')?.remove();$('.quick-chat-context').after(result);
+  $('#quick-action-status').textContent=isPrivate?'Private note saved in this example.':'Reply sent in this example. Pick another shortcut to try it.';
+  quickSend.disabled=true;
+});

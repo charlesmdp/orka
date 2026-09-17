@@ -1,0 +1,42 @@
+Orca swimming vector: Open Clip Art / Totodu74, Wikimedia Commons, CC0.
+https://commons.wikimedia.org/wiki/File:Orca-matthew-gates-r.svg
+Adaptations: flattened palette and composed scene variants.
+
+Orca rising vector: Petruss, Wikimedia Commons, CC0.
+https://commons.wikimedia.org/wiki/File:Orca_anatomy.svg
+Adaptations: removed anatomy labels, isolated paths, cropped and recolored.
+
+Seasonal emoji: Twemoji 14.0.2, Twitter and contributors. CC BY 4.0.
+https://github.com/twitter/twemoji
+https://creativecommons.org/licenses/by/4.0/
+Assets: 1f383, 1f47b, 1f384, 1f385. Original paths retained; resized and positioned in widget mockups.
+
+Caveat font: The Caveat Project Authors. SIL Open Font License 1.1.
+https://github.com/google/fonts/tree/main/ofl/caveat
+Full license: Caveat-OFL.txt
+
+Widget portraits and product references supplied by the site owner.
+
+Illustrative project logos, original artwork unchanged:
+Todoist: https://www.todoist.com/press
+Asset: https://www.todoist.com/brand-assets/todoist-logo.zip (Icon/Color.svg)
+New Era: https://www.neweracap.jp/ (official compact flag mark)
+Fictional project examples, not a customer list. Trademarks belong to their respective owners.
+
+Additional illustrative project marks, original artwork unchanged:
+Buffer: https://raw.githubusercontent.com/gilbarbara/logos/main/logos/buffer.svg
+Calendly: https://cdn.calendlycms.com/calendly-icon.svg (official newsroom)
+Figma: https://raw.githubusercontent.com/gilbarbara/logos/main/logos/figma.svg
+Substack: https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/substack.svg
+
+Visitor map tiles: © OpenStreetMap contributors.
+https://www.openstreetmap.org/copyright
+Original standard tiles at zoom 3, x=1..3, y=1..4; displayed with local example visitor overlays.
+
+2026-09-17 updates: Cowlendar cow/calendar logo retrieved unchanged from https://framerusercontent.com/images/YPVVjYnmG2p7ImUPf7yTKlOBNU.png via https://cowlendar.com. To-do iOS and blogging project marks are original fictional interface icons. Trawler/sonar and orca dialogue illustrations generated for this site.
+
+2026-09-17 v12: Trawler scene revised with a stern wake and empty net, generated for this site; live visitor records overlaid in HTML. Calorie tracker icon and TRUSTARR T monogram are original illustrative project marks, not third-party official logos. Marine dashboard pattern reuses the existing credited orca outline.
+
+2026-09-17 v13: Forest-green cap with white orca embroidery, original generated product photograph. P+ dog-supplements mark is an illustrative monogram. Travel newsletter uses the existing envelope UI symbol. Shopify and WordPress platform marks are the credited official assets already used on this site.
+
+2026-09-17 v14: Cap-store project now uses the generated orca-cap product image. Reddit outreach project mark reuses the existing chat UI symbol on an original orange tile; it is not an official Reddit logo.

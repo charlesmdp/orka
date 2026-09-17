@@ -252,6 +252,7 @@ function stopGrowth(demo) {
 }
 function setGrowth(demo, step) {
   demo.dataset.growth = String(step);
+  if (demo.classList.contains('pod-growth')) requestAnimationFrame(updatePodConnectors);
   $$('[data-appear]', demo).forEach(item => {
     const visible = Number(item.dataset.appear) <= step;
     item.toggleAttribute('hidden', !visible);
@@ -340,6 +341,42 @@ function syncProjectMessages() {
   if (podIsVisible && !document.hidden && !reduceMotion.matches) conversationTimer = setInterval(rotateProjectMessage, 2700);
 }
 const podDiagram = $('.pod-audience-diagram');
+// Anchor every connector to the rendered cards and hub, including after fonts load.
+function updatePodConnectors() {
+  if (!podDiagram) return;
+  const svg = $('.pod-lines', podDiagram);
+  if (!svg.getClientRects().length) return;
+  const diagram = podDiagram.getBoundingClientRect();
+  const hub = $('.diagram-hub', podDiagram).getBoundingClientRect();
+  const originX = diagram.left + podDiagram.clientLeft;
+  const originY = diagram.top + podDiagram.clientTop;
+  svg.setAttribute('viewBox', `0 0 ${podDiagram.clientWidth} ${podDiagram.clientHeight}`);
+  const paths = $$('.pod-lines > g > path', podDiagram);
+  $$('.diagram-project', podDiagram).forEach((node, index) => {
+    if (node.hidden) return;
+    const card = node.getBoundingClientRect();
+    const fromLeft = index % 2 === 0;
+    const direction = fromLeft ? 1 : -1;
+    const row = Math.floor(index / 2);
+    const startX = (fromLeft ? card.right : card.left) - originX;
+    const startY = card.top + card.height / 2 - originY;
+    const endX = (fromLeft ? hub.left - 7 : hub.right + 7) - originX;
+    const endY = hub.top + hub.height * (row + 1) / 4 - originY;
+    const bend = Math.max(12, Math.abs(endX - startX) * .55);
+    paths[index].setAttribute('d', `M${startX} ${startY} C${startX + direction * bend} ${startY},${endX - direction * bend} ${endY},${endX} ${endY}`);
+  });
+}
+if (podDiagram) {
+  if ('ResizeObserver' in window) {
+    const connectorObserver = new ResizeObserver(updatePodConnectors);
+    [podDiagram, $('.diagram-hub', podDiagram), ...$$('.diagram-project', podDiagram)].forEach(node => connectorObserver.observe(node));
+  } else {
+    window.addEventListener('resize', updatePodConnectors);
+  }
+  document.fonts?.ready.then(updatePodConnectors);
+  updatePodConnectors();
+}
+
 if (podDiagram && 'IntersectionObserver' in window) {
   new IntersectionObserver(entries => {
     podIsVisible = entries[0].isIntersecting;
@@ -406,22 +443,25 @@ $('[data-show-admin]').addEventListener('click', event => {
   event.currentTarget.setAttribute('aria-expanded', String(show));
 });
 const translations = {
-  nl: ['Dutch', '🇳🇱','Kan ik een collega uitnodigen?','Natuurlijk! Open je lijst en klik op Delen.'],
-  fr: ['French', '🇫🇷','Est-ce que je peux inviter un collègue ?','Bien sûr ! Ouvrez votre liste et cliquez sur Partager.'],
-  es: ['Spanish', '🇪🇸','¿Puedo invitar a un compañero?','¡Claro! Abre tu lista y haz clic en Compartir.']
+  fr: ['French', 'French (France)', '🇫🇷', 'Bonjour, je souhaite exporter mes réservations.', 'Bonjour ! Alex ici. Je peux vous aider 😊'],
+  nl: ['Dutch', 'Dutch (Netherlands)', '🇳🇱', 'Hallo, ik wil graag mijn boekingen exporteren.', 'Hallo! Alex hier. Ik help je graag 😊'],
+  es: ['Spanish', 'Spanish (Spain)', '🇪🇸', 'Hola, me gustaría exportar mis reservas.', '¡Hola! Soy Alex. Estoy aquí para ayudarte 😊']
 };
 $$('button[data-language]').forEach(button => button.addEventListener('click', () => {
-  const [language, flag, incoming, outgoing] = translations[button.dataset.language];
+  const code = button.dataset.language;
+  const [language, locale, flag, incoming, outgoing] = translations[code];
   $$('button[data-language]').forEach(item => {
     const active = item === button;
     item.classList.toggle('active', active);
     item.setAttribute('aria-pressed', String(active));
   });
   $('#translation-in-label').textContent = language;
-  $('#translation-out-language').textContent = language;
+  $('#translation-out-language').textContent = locale;
   $$('[data-visitor-flag]').forEach(el => el.textContent = flag);
   $('#translation-in-original').textContent = incoming;
+  $('#translation-in-original').lang = code;
   $('#translation-out-result').textContent = outgoing;
+  $('#translation-out-result').lang = code;
 }));
 // Normalize a previously cached hero before the new typing styles run.
 const legacyTyping = $('.workspace-live-preview');

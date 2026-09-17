@@ -1126,3 +1126,48 @@ html[data-brand-theme=blue] .composer-suggestion{background:var(--ui-tint);color
 html[data-brand-theme=blue] :is(.feature-check,.context-deeplink,.composer-mode-row>strong){color:var(--ui-accent)}
 html[data-brand-theme=blue] :is(.composer-box,.orky-composer){border-color:var(--line)}
 html[data-brand-theme=blue] .hero .hero-eyebrow{color:#DAEAFF!important;border-color:#7299BC66}
+
+/* Product-faithful chat examples, independent of the landing page palette. */
+.typing-card .typing-example-reply{background:#416DF5;color:#FFF;border-radius:18px}
+.typing-card .typing-scene,.translation-thread{background-color:#EAEAF5;background-image:url('assets/dashboard-ocean-pattern.svg');background-size:340px}
+.typing-example-read>span{color:#416DF5}
+.context-bento>.translation-card{display:block}
+.translation-thread{padding:17px 12px 19px;border:1px solid #E1E2EE;border-radius:15px}
+.translation-thread-caption{display:block;text-align:center;font-family:var(--mono);font-size:8px;letter-spacing:.06em;color:#7A7D94;margin-bottom:17px}
+.translation-chat-row{display:flex;align-items:flex-end;gap:7px;min-width:0}
+.translation-chat-row+.translation-chat-row{margin-top:16px}
+.translation-chat-row.outgoing{justify-content:flex-end;padding-left:12px}
+.translation-avatar{flex:0 0 25px;width:25px;height:25px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#FFF;margin-bottom:5px;overflow:hidden}
+.translation-avatar.visitor img{width:21px;height:auto;filter:hue-rotate(95deg)}
+.translation-avatar.agent{background:#E8C9AE;color:#755236;font:700 8px var(--sans);border:2px solid #FFF}
+.translation-card .translated-message{flex:0 1 auto;min-width:0;max-width:calc(100% - 32px);margin:0;padding:12px;border:0;border-radius:17px;color:#202534;box-shadow:none}
+.translation-card .translated-message.incoming{background:#FFF}
+.translation-card .translated-message.outgoing{margin:0;background:#416DF5;color:#FFF}
+.translation-card .translated-message>p{font-size:13px;line-height:1.6;margin:0 0 9px;color:inherit;letter-spacing:-.015em;overflow-wrap:anywhere}
+.translation-card .message-side{font-family:var(--sans);font-size:10px;line-height:1.5;color:#697080;gap:5px;flex-wrap:nowrap;margin:0 0 10px;align-items:flex-start}
+.translation-card .message-side b{font-weight:600}
+.translation-card .message-side>.language-flag,.translation-result-label>.language-flag{font-size:14px;line-height:1.35;flex-shrink:0;margin:0}
+.translation-card .translated-message>.translation-result{display:block;background:#F4F5FF;border:0;border-radius:10px;padding:10px;margin:0;color:#202534}
+.translation-card .translation-result-label{display:flex;align-items:center;font-size:10px;line-height:1.5;font-weight:650;gap:5px;color:inherit}
+.translation-card .translation-result>p{font-size:12px;line-height:1.6;font-weight:500;letter-spacing:-.015em;margin:6px 0 0;color:inherit;overflow-wrap:anywhere}
+.translation-card .translated-message.outgoing .message-side{color:#DFE7FF}
+.translation-card .translated-message.outgoing>.translation-result{background:#FFFFFF29;color:#FFF}
+.translation-card .translated-message.outgoing .translation-result-label{color:#EDF1FF}
+.translation-card .translation-note{font-size:11px;line-height:1.6;align-items:flex-start;margin-top:15px}
+.pod-audience-diagram .pod-lines{pointer-events:none}
+.pod-audience-diagram .pod-lines>g{stroke-width:2}
+.pod-audience-diagram .pod-lines>g>path{vector-effect:non-scaling-stroke}
+@media(min-width:601px) and (max-width:1100px){
+  .translation-thread{padding:23px 24px;max-width:720px;margin-inline:auto}
+  .translation-card .translated-message{max-width:82%;padding:15px 17px}
+  .translation-card .translated-message>p{font-size:15px}
+  .translation-card .message-side,.translation-card .translation-result-label{font-size:12px}
+  .translation-card .translation-result>p{font-size:14px}
+}
+@media(max-width:600px){
+  .translation-thread{margin-inline:-9px;padding:16px 9px}
+  .translation-chat-row{gap:6px}
+  .translation-avatar{width:22px;height:22px;flex-basis:22px}
+  .translation-card .translated-message{max-width:calc(100% - 28px);padding:11px}
+  .translation-chat-row.outgoing{padding-left:5px}
+}

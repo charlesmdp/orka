@@ -53,3 +53,12 @@ Original standard tiles at zoom 3, x=1..3, y=1..4; displayed with local example 
   https://github.com/pheralb/svgl/blob/main/static/library/openai.svg
   https://github.com/pheralb/svgl/blob/main/static/library/claude-ai-icon.svg
 - orky-head.svg: original vector illustration created for this site.
+
+2026-09-17 world map and Orky refinements:
+- world-geography.svg and country labels derived from Natural Earth 1:110m countries, public domain:
+  https://www.naturalearthdata.com/about/terms-of-use/
+  https://github.com/nvkelso/natural-earth-vector/blob/master/geojson/ne_110m_admin_0_countries.geojson
+  Converted locally to Web Mercator. Local illustrative visitor data; no external map tile requests.
+- orky-head-v2.svg: original vector orca head redrawn for this site, with a separate eye and white eye patch.
+- trawler-dorsal-v14.png: edited with built-in image generation from this site's trawler-watchful-v13.png.
+  Prompt: Use case: precise-object-edit. Edit the attached existing landing-page illustration. Preserve the boat, its exact position, the wide turquoise fishing net, lime floats, diagonal composition, dark teal ocean, texture, palette and illustrated style. Change ONLY the orca at lower right: submerge it almost completely. Only a smooth curved black back and its tall distinctive dorsal fin should emerge above the water behind the net. No visible face, eye, white eye patch, belly, flippers or tail. Show delicate water ripples around the emerging back, and a faint subtle submerged silhouette if needed, but the only clearly visible anatomy is back and dorsal fin. Keep the orca behind the net, outside it, quietly following the net. Preserve the wide 3:2 aspect ratio, no text, no new objects.

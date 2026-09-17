@@ -1,0 +1,8 @@
+{
+  "name": "orka",
+  "pages_build_output_dir": "./dist/client",
+  "compatibility_date": "2026-09-17",
+  "vars": {
+    "SUPABASE_URL": "https://ppglbozceswzrykhwbpq.supabase.co"
+  }
+}

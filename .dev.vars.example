@@ -1,0 +1,4 @@
+SUPABASE_URL=https://ppglbozceswzrykhwbpq.supabase.co
+# Add the project's publishable key locally and in Cloudflare's runtime settings.
+# Do not use a secret or service_role key. This file contains no credentials.
+SUPABASE_PUBLISHABLE_KEY=

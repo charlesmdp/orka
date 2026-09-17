@@ -24,11 +24,14 @@ if (pages) {
 }
 let html = await readFile(path.join(output, 'client/index.html'), 'utf8');
 let headers = '/\n  Cache-Control: no-cache\n/index.html\n  Cache-Control: no-cache\n';
-for (const filename of ['style.css', 'refinement.css', 'refresh.css', 'app.js']) {
-  const content = await readFile(path.join(root, 'public', filename));
+const assetNames = new Map();
+for (const filename of ['map-model.js', 'live-map.js', 'style.css', 'refinement.css', 'refresh.css', 'product-polish.css', 'app.js']) {
+  let content = await readFile(path.join(root, 'public', filename), 'utf8');
+  for (const [original, versioned] of assetNames) content = content.replaceAll('./' + original, './' + versioned);
   const hash = createHash('sha256').update(content).digest('hex').slice(0, 12);
   const ext = path.extname(filename);
   const versioned = filename.slice(0, -ext.length) + '.' + hash + ext;
+  assetNames.set(filename, versioned);
   await writeFile(path.join(output, 'client', versioned), content);
   html = html.replaceAll('"' + filename + '"', '"' + versioned + '"');
   headers += '/' + versioned + '\n  Cache-Control: public, max-age=31536000, immutable\n';

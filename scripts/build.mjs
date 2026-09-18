@@ -1,4 +1,4 @@
-import {mkdir, rm, cp, readFile, writeFile} from 'node:fs/promises';
+import {mkdir, rm, cp, readFile, writeFile, readdir} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
@@ -22,10 +22,9 @@ if (pages) {
   await writeFile(path.join(output, 'server/index.js'), worker);
   await cp(path.join(root, '.openai/hosting.json'), path.join(output, '.openai/hosting.json'));
 }
-let html = await readFile(path.join(output, 'client/index.html'), 'utf8');
-let headers = '/\n  Cache-Control: no-cache\n/index.html\n  Cache-Control: no-cache\n';
+let headers = '/\n  Cache-Control: no-cache\n';
 const assetNames = new Map();
-for (const filename of ['map-model.js', 'live-map.js', 'style.css', 'refinement.css', 'refresh.css', 'product-polish.css', 'app.js']) {
+for (const filename of ['map-model.js', 'live-map.js', 'style.css', 'refinement.css', 'refresh.css', 'product-polish.css', 'app.js', 'pages.css', 'pages.js', 'features.js']) {
   let content = await readFile(path.join(root, 'public', filename), 'utf8');
   for (const [original, versioned] of assetNames) content = content.replaceAll('./' + original, './' + versioned);
   const hash = createHash('sha256').update(content).digest('hex').slice(0, 12);
@@ -33,9 +32,14 @@ for (const filename of ['map-model.js', 'live-map.js', 'style.css', 'refinement.
   const versioned = filename.slice(0, -ext.length) + '.' + hash + ext;
   assetNames.set(filename, versioned);
   await writeFile(path.join(output, 'client', versioned), content);
-  html = html.replaceAll('"' + filename + '"', '"' + versioned + '"');
   headers += '/' + versioned + '\n  Cache-Control: public, max-age=31536000, immutable\n';
 }
-await writeFile(path.join(output, 'client/index.html'), html);
+for (const filename of (await readdir(path.join(output, 'client'))).filter(name => name.endsWith('.html'))) {
+  let html = await readFile(path.join(output, 'client', filename), 'utf8');
+  for (const [original, versioned] of assetNames) html = html.replaceAll('"' + original + '"', '"' + versioned + '"');
+  await writeFile(path.join(output, 'client', filename), html);
+  headers += '/' + filename + '\n  Cache-Control: no-cache\n';
+  if (filename !== 'index.html') headers += '/' + filename.slice(0, -5) + '\n  Cache-Control: no-cache\n';
+}
 await writeFile(path.join(output, 'client/_headers'), headers);
 console.log('Built Orka for ' + (pages ? 'Cloudflare Pages' : 'Sites') + ' with versioned assets and website metadata preview.');

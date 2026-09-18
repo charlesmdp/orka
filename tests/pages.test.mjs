@@ -28,6 +28,19 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   const modelFile = mapSource.match(/from '\.\/(map-model\.[a-f0-9]{12}\.js)'/)[1];
   await access(new URL(modelFile, output));
   assert.ok(headers.includes('/' + modelFile + '\n  Cache-Control: public, max-age=31536000, immutable'));
+  for (const page of ['features', 'terms', 'privacy', 'cookies']) {
+    const source = await readFile(new URL(page + '.html', output), 'utf8');
+    assert.ok(headers.includes('/' + page + '\n  Cache-Control: no-cache'));
+    assert.ok(headers.includes('/' + page + '.html\n  Cache-Control: no-cache'));
+    assert.doesNotMatch(source, /content="noindex/);
+    assert.match(source, /href="pages\.[a-f0-9]{12}\.css"/);
+    assert.ok(new RegExp('src="' + (page === 'features' ? 'features' : 'pages') + '\\.[a-f0-9]{12}\\.js"').test(source));
+    for (const [, filename] of source.matchAll(/(?:href|src)="([^"/]+\.(?:css|js))"/g)) {
+      assert.match(filename, /\.[a-f0-9]{12}\.(?:css|js)$/);
+      await access(new URL(filename, output));
+      assert.ok(headers.includes('/' + filename + '\n  Cache-Control: public, max-age=31536000, immutable'));
+    }
+  }
   await assert.rejects(access(new URL('.openai/hosting.json', output)));
 
   const {default:worker} = await import(new URL('_worker.js', output));

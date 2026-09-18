@@ -1,0 +1,731 @@
+{
+  "categories": [
+    [
+      "conversations",
+      "Real conversations",
+      "Everything you need to answer well.",
+      "01"
+    ],
+    [
+      "team",
+      "One team. One inbox.",
+      "Keep the context when a conversation changes hands.",
+      "02"
+    ],
+    [
+      "ai",
+      "A little help from Orky",
+      "Choose when AI suggests, replies or steps aside.",
+      "03"
+    ],
+    [
+      "context",
+      "The person behind the message",
+      "Understand the visit before you write the reply.",
+      "04"
+    ],
+    [
+      "help-center",
+      "Answers people can find",
+      "A useful home for what your customers need to know.",
+      "05"
+    ],
+    [
+      "boundaries",
+      "Room for real life",
+      "Give visitors a clear picture of when you are around.",
+      "06"
+    ],
+    [
+      "widget",
+      "A welcome that feels like you",
+      "Your brand, your people, your corner of the internet.",
+      "07"
+    ],
+    [
+      "setup",
+      "Set up. Show up. Anywhere.",
+      "From your first website to every project after it.",
+      "08"
+    ]
+  ],
+  "features": [
+    [
+      "live-chat",
+      "conversations",
+      "Real-time live chat",
+      "Talk to visitors while they are on your website, with replies in the same conversation.",
+      "solo team legal shop saas agency",
+      "2",
+      ""
+    ],
+    [
+      "live-typing",
+      "conversations",
+      "See messages as they are typed",
+      "Get a head start on a question before your visitor presses send.",
+      "solo team shop saas",
+      "2",
+      ""
+    ],
+    [
+      "history-search",
+      "conversations",
+      "Conversation history & search",
+      "Pick up an earlier conversation and find messages by keyword.",
+      "team legal shop saas agency",
+      "4",
+      "Message search: Pod & Fleet"
+    ],
+    [
+      "saved-replies",
+      "conversations",
+      "Saved reply shortcuts",
+      "Give repeat answers a shortcut so you can spend more time on the personal part.",
+      "solo team legal shop saas agency",
+      "5",
+      ""
+    ],
+    [
+      "attachments",
+      "conversations",
+      "Files & images",
+      "Share a document, screenshot or image right inside a conversation.",
+      "team legal shop saas agency",
+      "6",
+      "Image sharing: Pod & Fleet"
+    ],
+    [
+      "emoji",
+      "conversations",
+      "Emoji picker",
+      "A friendly hello, a thank-you or a little personality, without leaving the composer.",
+      "solo shop saas",
+      "7",
+      ""
+    ],
+    [
+      "read-receipts",
+      "conversations",
+      "Read receipts",
+      "See when your reply has been read and know where the conversation stands.",
+      "solo team legal shop saas agency",
+      "8",
+      ""
+    ],
+    [
+      "email-follow-up",
+      "conversations",
+      "Continue by email",
+      "Keep the conversation going when someone has already left your website.",
+      "solo team legal shop saas agency",
+      "15",
+      ""
+    ],
+    [
+      "shared-inbox",
+      "team",
+      "Unlimited projects. One inbox.",
+      "Bring conversations from every website and project into one shared workspace and subscription.",
+      "solo team agency saas",
+      "28",
+      "Unlimited projects on every plan"
+    ],
+    [
+      "assignment",
+      "team",
+      "Conversation assignment",
+      "Give each conversation an owner so everyone knows who is taking care of it.",
+      "team legal shop agency",
+      "10",
+      ""
+    ],
+    [
+      "private-notes",
+      "team",
+      "Private notes & @mentions",
+      "Leave context for teammates and bring the right person into the conversation. Visitors do not see internal notes.",
+      "team legal agency saas",
+      "11",
+      ""
+    ],
+    [
+      "tags",
+      "team",
+      "Conversation tags",
+      "Organize requests by topic, product or whatever makes sense for your team.",
+      "team legal shop saas agency",
+      "12",
+      ""
+    ],
+    [
+      "filters",
+      "team",
+      "Inbox filters",
+      "Focus on a project, agent or conversation status without switching accounts.",
+      "team legal agency",
+      "13",
+      ""
+    ],
+    [
+      "resolved",
+      "team",
+      "Mark as resolved",
+      "Close the loop when a question is answered, while keeping its history available.",
+      "solo team legal shop saas agency",
+      "14",
+      ""
+    ],
+    [
+      "reminders",
+      "team",
+      "Conversation reminders",
+      "Set a reminder to return to a conversation that needs another look.",
+      "solo team legal shop agency",
+      "35",
+      ""
+    ],
+    [
+      "urgency",
+      "team",
+      "Urgency at a glance",
+      "From an easy-life fish to three hungry sharks: spot low, normal, high and critical conversations before you open them.",
+      "solo team shop saas",
+      "38",
+      ""
+    ],
+    [
+      "team-size",
+      "team",
+      "Room for your whole crew",
+      "Start with one person, work as a small pod, or bring a larger team into the same inbox.",
+      "team legal agency",
+      "",
+      "Solo: 1 member · Pod: 3 · Fleet: 20"
+    ],
+    [
+      "knowledge",
+      "ai",
+      "Answers from your own knowledge",
+      "Give Orky your website, help articles, documentation and FAQs to ground replies in your business.",
+      "solo team shop saas agency",
+      "23",
+      ""
+    ],
+    [
+      "automatic-replies",
+      "ai",
+      "Automatic replies & escalation",
+      "Let Orky cover conversations when you are busy or offline, with a handover to a person when help is needed.",
+      "solo team shop saas",
+      "24",
+      ""
+    ],
+    [
+      "ai-drafts",
+      "ai",
+      "AI drafts you approve",
+      "Ask for a suggested reply, edit the wording and decide when to send it. A draft is not sent on its own.",
+      "solo team legal shop saas agency",
+      "25",
+      ""
+    ],
+    [
+      "human-takeover",
+      "ai",
+      "Live human takeover",
+      "Step into an AI conversation with its context whenever a human answer is the right next step.",
+      "team legal shop saas",
+      "26",
+      ""
+    ],
+    [
+      "ai-per-chat",
+      "ai",
+      "AI control per conversation",
+      "Enable or disable AI in an individual conversation and keep control of where it helps.",
+      "solo team legal agency",
+      "27",
+      ""
+    ],
+    [
+      "translation",
+      "ai",
+      "Two-way translation",
+      "Read the original message, detected language and translation together. Reply in your language while your visitor reads theirs.",
+      "solo team legal shop saas agency",
+      "29",
+      "Solo translation: bring your own AI key"
+    ],
+    [
+      "ai-shortcuts",
+      "ai",
+      "One-click writing shortcuts",
+      "Say hi, say goodbye, make small talk, talk about the weather or draft an AI answer from the composer.",
+      "solo team shop saas",
+      "33",
+      ""
+    ],
+    [
+      "summaries",
+      "ai",
+      "Conversation summaries",
+      "Catch up on the key points before you take over or hand a conversation to someone else.",
+      "team legal agency saas",
+      "34",
+      ""
+    ],
+    [
+      "ai-providers",
+      "ai",
+      "ChatGPT or Claude",
+      "Choose an AI provider for the way your team works.",
+      "solo team saas agency",
+      "",
+      ""
+    ],
+    [
+      "own-key",
+      "ai",
+      "Bring your own AI key",
+      "Use your provider’s key and pay the provider directly, with no Orka markup.",
+      "solo team saas agency",
+      "",
+      "AI usage is separate from the plan"
+    ],
+    [
+      "usage-pricing",
+      "ai",
+      "Pay-as-you-go AI",
+      "Prefer not to connect a key? Pay for the AI you use through Orka.",
+      "solo team shop",
+      "",
+      "See current AI rates on the pricing section"
+    ],
+    [
+      "custom-orky",
+      "ai",
+      "Give Orky your own name",
+      "Make your AI teammate part of your brand with a custom name.",
+      "team shop agency",
+      "",
+      "Fleet"
+    ],
+    [
+      "live-map",
+      "context",
+      "Worldwide live visitor map",
+      "See where visitors are, zoom into a group and explore individual visitors across your projects.",
+      "solo team shop saas agency",
+      "20",
+      "Pod & Fleet"
+    ],
+    [
+      "visitor-list",
+      "context",
+      "Live visitor list",
+      "See who is online, which project they are visiting and the page they have open.",
+      "solo team shop saas agency",
+      "20",
+      ""
+    ],
+    [
+      "visitor-profile",
+      "context",
+      "Visitor details",
+      "Keep identity, email, location, language, local time and device information beside the conversation when available.",
+      "team legal shop saas agency",
+      "3",
+      ""
+    ],
+    [
+      "browsing-context",
+      "context",
+      "Current page & recent activity",
+      "Understand the page a visitor is on and where they were just before asking for help.",
+      "solo shop saas agency",
+      "21",
+      ""
+    ],
+    [
+      "custom-data",
+      "context",
+      "Your own customer attributes",
+      "Bring useful account details into the visitor profile, such as plan, account status or a link to your admin.",
+      "team shop saas agency",
+      "21",
+      "Requires your integration to supply the data"
+    ],
+    [
+      "visitor-cart",
+      "context",
+      "Cart context",
+      "See the products in a visitor’s cart, with quantity and value, when the connected store supplies them.",
+      "shop",
+      "",
+      "Requires connected cart data"
+    ],
+    [
+      "analytics",
+      "context",
+      "Conversation analytics",
+      "Review your support activity and how your conversations are handled.",
+      "solo team shop saas agency",
+      "30",
+      "Pod & Fleet"
+    ],
+    [
+      "help-center",
+      "help-center",
+      "A free help center",
+      "Give customers a place to find answers before they need to start a chat.",
+      "solo team legal shop saas agency",
+      "",
+      "Included on every plan"
+    ],
+    [
+      "multilingual-help",
+      "help-center",
+      "Help in every language",
+      "Make your help center available in the languages your customers use.",
+      "solo team legal shop saas agency",
+      "",
+      "Included on every plan"
+    ],
+    [
+      "online-away",
+      "boundaries",
+      "Online & away status",
+      "Show whether a human is available before someone starts a conversation.",
+      "solo team legal shop saas agency",
+      "9",
+      ""
+    ],
+    [
+      "reply-time",
+      "boundaries",
+      "Your average reply time",
+      "Set expectations with your real average response time in the widget.",
+      "solo team legal shop saas agency",
+      "36",
+      ""
+    ],
+    [
+      "night-banner",
+      "boundaries",
+      "Night banner & working hours",
+      "Show your team’s local time and let visitors know when your humans are asleep.",
+      "solo team legal saas agency",
+      "32",
+      ""
+    ],
+    [
+      "break-banner",
+      "boundaries",
+      "Break day banner",
+      "Let people know you are taking time off and when they can expect you back.",
+      "solo legal agency",
+      "32",
+      ""
+    ],
+    [
+      "panic-banner",
+      "boundaries",
+      "Panic banner",
+      "A real-life emergency? Put a clear heads-up in your widget when replies may take longer.",
+      "solo team legal shop saas agency",
+      "31",
+      ""
+    ],
+    [
+      "widget-brand",
+      "widget",
+      "Your colors & your words",
+      "Customize your widget’s colors, welcome text and tone to match your website.",
+      "solo team shop agency",
+      "17",
+      ""
+    ],
+    [
+      "widget-layouts",
+      "widget",
+      "Widget layouts & team profiles",
+      "Choose a welcome that puts your team front and center, from a simple messenger to a support crew.",
+      "solo team legal shop agency",
+      "",
+      ""
+    ],
+    [
+      "seasonal-themes",
+      "widget",
+      "Christmas & Halloween themes",
+      "Give your widget a seasonal look while keeping the same helpful people behind it.",
+      "solo shop",
+      "37",
+      ""
+    ],
+    [
+      "remove-branding",
+      "widget",
+      "Remove Orka branding",
+      "Give visitors a widget that carries your own brand throughout.",
+      "team legal shop agency",
+      "",
+      "Fleet"
+    ],
+    [
+      "installation",
+      "setup",
+      "Install on your website",
+      "Add Orka to Shopify, WordPress, Webflow, SaaS products, landing pages and other websites.",
+      "solo team legal shop saas agency",
+      "1",
+      ""
+    ],
+    [
+      "simple-setup",
+      "setup",
+      "A simple setup",
+      "Connect a project and add the widget without a long technical setup.",
+      "solo legal shop",
+      "22",
+      ""
+    ],
+    [
+      "sdk",
+      "setup",
+      "SDK for custom integrations",
+      "Connect your app and provide the customer context that matters to your team.",
+      "saas agency",
+      "22",
+      ""
+    ],
+    [
+      "mobile",
+      "setup",
+      "iOS & Android apps",
+      "Reply from your phone when you step away from your desk.",
+      "solo team legal shop agency",
+      "16",
+      "Included on every plan"
+    ],
+    [
+      "lightweight",
+      "setup",
+      "A lightweight widget",
+      "Add a helpful conversation to your site with a widget designed to stay light.",
+      "solo shop saas agency",
+      "18",
+      ""
+    ],
+    [
+      "blocking",
+      "setup",
+      "IP & country blocking",
+      "Keep unwanted traffic out of your chat with controls for individual IP addresses and countries.",
+      "solo team shop saas agency",
+      "19",
+      ""
+    ],
+    [
+      "help-domain",
+      "help-center",
+      "Your own help center domain",
+      "Publish on your own domain or a branded orka.help address.",
+      "solo team legal shop saas agency",
+      "",
+      "Help center included on every plan"
+    ],
+    [
+      "help-import",
+      "help-center",
+      "Bring your existing knowledge",
+      "Import help content from GitBook, Intercom, Crisp, Gorgias or Gleap.",
+      "solo team legal shop saas agency",
+      "",
+      "Help center included on every plan"
+    ],
+    [
+      "help-markdown",
+      "help-center",
+      "Markdown editor & preview",
+      "Write clear articles in Markdown and preview them before publishing.",
+      "solo team legal shop saas agency",
+      "",
+      "Help center included on every plan"
+    ],
+    [
+      "help-collections",
+      "help-center",
+      "Collections, sections & ordering",
+      "Organize articles into collections and sections, then choose their order.",
+      "solo team legal shop saas agency",
+      "",
+      "Help center included on every plan"
+    ],
+    [
+      "help-auto-translation",
+      "help-center",
+      "Automatic article translation",
+      "Translate articles in the background from your chosen source language.",
+      "solo team legal shop saas agency",
+      "",
+      "Help center included on every plan"
+    ],
+    [
+      "help-translation-review",
+      "help-center",
+      "Edit translations & spot outdated copy",
+      "Review translations by hand, translate missing articles and see when source edits make a translation outdated.",
+      "solo team legal shop saas agency",
+      "",
+      "Help center included on every plan"
+    ],
+    [
+      "help-widget",
+      "help-center",
+      "Searchable help inside the widget",
+      "Let visitors search and read articles in the Help tab before starting a conversation.",
+      "solo team legal shop saas agency",
+      "",
+      "Help center included on every plan"
+    ],
+    [
+      "help-ai",
+      "help-center",
+      "The same knowledge for Orky",
+      "Published articles feed your AI agent as well as your public help center.",
+      "solo team legal shop saas agency",
+      "",
+      "Help center included on every plan"
+    ],
+    [
+      "help-publishing",
+      "help-center",
+      "Drafts, publishing & article filters",
+      "Search and filter articles by collection and state. Publish or unpublish when ready.",
+      "solo team legal shop saas agency",
+      "",
+      "Help center included on every plan"
+    ],
+    [
+      "help-insights",
+      "help-center",
+      "Article views & reader reactions",
+      "See which articles get read and how readers react to them.",
+      "solo team legal shop saas agency",
+      "",
+      "Help center included on every plan"
+    ],
+    [
+      "help-seo",
+      "help-center",
+      "Article URLs, excerpts & SEO fields",
+      "Set a URL slug, excerpt, meta title and meta description, with an autofill option.",
+      "solo team legal shop saas agency",
+      "",
+      "Help center included on every plan"
+    ],
+    [
+      "help-branding",
+      "help-center",
+      "A help center that feels like yours",
+      "Customize its title, subtitle, color and website link, with translated public text.",
+      "solo team legal shop saas agency",
+      "",
+      "Help center included on every plan"
+    ]
+  ],
+  "profiles": [
+    [
+      "all",
+      "Explore everything",
+      "One place for all the ways you help.",
+      "Start with the complete toolkit, or choose the situation that sounds most like you.",
+      "Find the right features without leaving anything behind.",
+      [
+        "shared-inbox",
+        "ai-drafts",
+        "help-center"
+      ]
+    ],
+    [
+      "solo",
+      "I’m a solo founder",
+      "One person. Plenty on your plate.",
+      "Give your customers a proper welcome while keeping room for the rest of your business.",
+      "Keep the everyday answers in your help center, ask Orky for a draft, and set your hours.",
+      [
+        "ai-drafts",
+        "automatic-replies",
+        "night-banner",
+        "mobile"
+      ]
+    ],
+    [
+      "team",
+      "We’re a team of 10",
+      "Ten people. One conversation that makes sense.",
+      "Know who is replying, share context privately, and keep the next step clear.",
+      "Assign an owner, leave a note and set a reminder. Fleet has room for up to 20 teammates.",
+      [
+        "assignment",
+        "private-notes",
+        "reminders",
+        "team-size"
+      ]
+    ],
+    [
+      "legal",
+      "I work at a law firm",
+      "A clearer first conversation.",
+      "Help visitors with office hours, appointment questions and the next person to contact.",
+      "Use reviewed drafts and human handovers for general enquiries. Keep case-specific advice and confidential documents in your firm’s approved channels.",
+      [
+        "ai-drafts",
+        "human-takeover",
+        "private-notes",
+        "email-follow-up"
+      ]
+    ],
+    [
+      "shop",
+      "I run an online store",
+      "From “will it fit?” to “thank you”.",
+      "Answer product questions with the visitor’s page and cart context close at hand.",
+      "See what they are looking at, answer in their language, and bring in a person for an exception.",
+      [
+        "visitor-cart",
+        "browsing-context",
+        "translation",
+        "human-takeover"
+      ]
+    ],
+    [
+      "saas",
+      "I build a SaaS or an app",
+      "Less repeated explaining. More building.",
+      "Bring account context into support and give recurring setup questions a useful answer.",
+      "Connect customer attributes, feed Orky your docs, and help users across every project.",
+      [
+        "custom-data",
+        "sdk",
+        "knowledge",
+        "shared-inbox"
+      ]
+    ],
+    [
+      "agency",
+      "I run an agency",
+      "Several projects. The same familiar crew.",
+      "Keep client projects in one place and carry the context from one teammate to the next.",
+      "Filter by project, tag a conversation and leave private notes before passing it on.",
+      [
+        "shared-inbox",
+        "filters",
+        "tags",
+        "private-notes"
+      ]
+    ]
+  ]
+}

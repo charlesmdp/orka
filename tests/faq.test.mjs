@@ -47,6 +47,6 @@ test('new app guides are substantial, linked, source-based and contain no real i
   for(const [,src] of page.body.matchAll(/src="(\/assets\/[^\"]+)"/g))await access(new URL('../public'+src,import.meta.url));
  }
  const shopify=pages.find(p=>p.slug.endsWith('shopify-apps')).body;
- for(const feature of ['Cowlendar','BIG Digital Downloads','Rapi Bundles','EZ Product Image Translate','Shopify plan','App plan','Installed','SDK'])assert.ok(shopify.includes(feature));
+ for(const feature of ['Cowlendar','BIG Digital Downloads','Rapi Bundles','EZ Product Image Translate','Shopify plan','app plan','installed_at','SDK'])assert.ok(shopify.includes(feature));
  const gif=await readFile(new URL('../public/assets/orca-surprise.gif',import.meta.url));assert.match(gif.subarray(0,6).toString(),/^GIF8/);
 });

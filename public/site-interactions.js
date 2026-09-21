@@ -1,12 +1,64 @@
-export function questionEmail(question,page){
- const text=String(question).trim().slice(0,2000);
- if(!text)return null;
- return `mailto:hello@orka.chat?subject=${encodeURIComponent('A question about Orka')}&body=${encodeURIComponent(text+'\n\nPage: '+page)}`;
+export async function openQuestionInChat(question, {
+ getWidget=()=>window.Orka,
+ isReady=()=>!!document.querySelector('.orka-container .orka-button'),
+ wait=()=>new Promise(resolve=>setTimeout(resolve,200))
+}={}){
+ const text=String(question).trim().slice(0,600);
+ if(!text)return false;
+ // show(message) opens Orka with a draft. It does not send the message.
+ for(let attempt=0;attempt<50;attempt++){
+  const widget=getWidget();
+  if(typeof widget?.show==='function'&&isReady()){
+   widget.showWidget?.();widget.show(text);return true;
+  }
+  await wait();
+ }
+ throw new Error('The chat could not load. Please allow the Orka widget, then try again. Your question is still here.');
 }
 export function safeFaqSource(url){try{const u=new URL(url);return u.origin==='https://orka.chat'&&!u.username&&!u.password?u.href:null;}catch{return null;}}
 if(typeof document!=='undefined'){
  document.documentElement.dataset.brandTheme='green';
  try{localStorage.removeItem('orka-brand-theme');}catch{}
+ // sessionStorage follows this tab across pages and reloads, not future sessions.
+ try{if(sessionStorage.getItem('orka-letter-read')==='1')document.documentElement.dataset.letterRead='true';}catch{}
+ document.querySelectorAll('.letter-nav-stamp').forEach(link=>link.addEventListener('click',()=>{
+  try{sessionStorage.setItem('orka-letter-read','1');}catch{}
+  document.documentElement.dataset.letterRead='true';
+ }));
+ const invite=document.querySelector('[data-hero-widget-invite]');
+ if(invite){
+  let dismissed=window.scrollY>0,widgetObserver,resizeObserver;
+  const root=document.documentElement;
+  const hide=()=>{invite.hidden=true;root.classList.remove('hero-widget-intro');};
+  const bindWidget=()=>{
+   if(dismissed)return;
+   const container=document.querySelector('.orka-container');
+   const launcher=container?.querySelector('.orka-button');
+   if(!launcher)return;
+   const position=()=>{
+    if(dismissed||window.scrollY>0||!container.classList.contains('orka-closed')){hide();return;}
+    root.classList.add('hero-widget-intro');
+    const bounds=container.querySelector('.orka-button')?.getBoundingClientRect();
+    if(!bounds?.width||!bounds.height){hide();return;}
+    const width=Math.min(Math.max(bounds.width,250),420,window.innerWidth-32);
+    const left=Math.min(Math.max(16,bounds.right-width),window.innerWidth-width-16);
+    invite.style.width=width+'px';invite.style.left=left+'px';invite.hidden=false;
+   };
+   widgetObserver?.disconnect();
+   widgetObserver=new MutationObserver(position);
+   widgetObserver.observe(container,{attributes:true,childList:true,attributeFilter:['class','style']});
+   if('ResizeObserver' in window){resizeObserver=new ResizeObserver(position);resizeObserver.observe(launcher);}
+   window.addEventListener('resize',position,{passive:true});position();
+  };
+  if(!dismissed){
+   widgetObserver=new MutationObserver(bindWidget);
+   widgetObserver.observe(document.body,{childList:true,subtree:true});bindWidget();
+  }
+  window.addEventListener('scroll',()=>{
+   if(window.scrollY<=0||dismissed)return;
+   dismissed=true;hide();widgetObserver?.disconnect();resizeObserver?.disconnect();
+  },{passive:true});
+ }
  document.querySelectorAll('[data-faq-ask]').forEach(form=>{
   const input=form.querySelector('input'),button=form.querySelector('button'),result=form.querySelector('[data-faq-result]');
   input.addEventListener('input',()=>input.setCustomValidity(''));
@@ -28,7 +80,16 @@ if(typeof document!=='undefined'){
     const note=document.createElement('small');note.textContent='Generated from our published pages. AI can make mistakes.';result.append(note);
    }catch(error){result.textContent=error.name==='TimeoutError'?'Orky is taking a little longer. Please try again.':error.message;}
    finally{
-    const contact=document.createElement('a');contact.className='faq-ask-human';contact.href=questionEmail(question,location.origin+location.pathname);contact.textContent='Ask a human instead ↗';result.append(contact);
+    const contact=document.createElement('button');contact.type='button';contact.className='faq-ask-human';contact.textContent='Ask a human instead ↗';result.append(contact);
+    contact.addEventListener('click',async()=>{
+     contact.disabled=true;contact.textContent='Opening your chat…';
+     let status=result.querySelector('[data-chat-status]');
+     if(!status){status=document.createElement('small');status.dataset.chatStatus='';result.append(status);}
+     status.textContent='';
+     try{await openQuestionInChat(question);status.textContent='Your question is ready in the chat. Review it and press Send when you’re ready.';}
+     catch(error){status.textContent=error.message;}
+     finally{contact.disabled=false;contact.textContent='Ask a human instead ↗';}
+    });
     button.disabled=false;form.removeAttribute('aria-busy');
    }
   });

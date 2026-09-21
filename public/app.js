@@ -391,6 +391,7 @@ function rotateProjectMessage() {
 }
 function syncProjectMessages() {
   clearInterval(conversationTimer);
+  podDiagram?.classList.toggle('pod-stream-running', podIsVisible && !document.hidden && !reduceMotion.matches);
   if (podIsVisible && !document.hidden && !reduceMotion.matches) conversationTimer = setInterval(rotateProjectMessage, 2700);
 }
 const podDiagram = $('.pod-audience-diagram');
@@ -398,7 +399,7 @@ const podDiagram = $('.pod-audience-diagram');
 function updatePodConnectors() {
   if (!podDiagram) return;
   const svg = $('.pod-lines', podDiagram);
-  if (!svg.getClientRects().length) return;
+  if (!podDiagram.getClientRects().length) return;
   const diagram = podDiagram.getBoundingClientRect();
   const hub = $('.diagram-hub', podDiagram).getBoundingClientRect();
   const originX = diagram.left + podDiagram.clientLeft;
@@ -406,6 +407,8 @@ function updatePodConnectors() {
   svg.setAttribute('viewBox', `0 0 ${podDiagram.clientWidth} ${podDiagram.clientHeight}`);
   const paths = $$('.pod-lines > g > path', podDiagram);
   $$('.diagram-project', podDiagram).forEach((node, index) => {
+    const particles = $$(`[data-pod-flow="${index}"]`, podDiagram);
+    particles.forEach(particle => particle.hidden = node.hidden);
     if (node.hidden) return;
     const card = node.getBoundingClientRect();
     const fromLeft = index % 2 === 0;
@@ -416,10 +419,32 @@ function updatePodConnectors() {
     const endX = (fromLeft ? hub.left - 7 : hub.right + 7) - originX;
     const endY = hub.top + hub.height * (row + 1) / 4 - originY;
     const bend = Math.max(12, Math.abs(endX - startX) * .55);
-    paths[index].setAttribute('d', `M${startX} ${startY} C${startX + direction * bend} ${startY},${endX - direction * bend} ${endY},${endX} ${endY}`);
+    let path = `M${startX} ${startY} C${startX + direction * bend} ${startY},${endX - direction * bend} ${endY},${endX} ${endY}`;
+    if (window.innerWidth <= 700) {
+      const above = card.top < hub.top;
+      const x = card.left + card.width / 2 - originX;
+      const y = (above ? card.bottom : card.top) - originY;
+      const hx = hub.left + hub.width * (fromLeft ? .3 : .7) - originX;
+      const hy = (above ? hub.top - 6 : hub.bottom + 6) - originY;
+      const mid = (y + hy) / 2;
+      path = `M${x} ${y} C${x} ${mid},${hx} ${mid},${hx} ${hy}`;
+    }
+    paths[index].setAttribute('d', path);
+    particles.forEach(particle => particle.style.offsetPath = `path("${path}")`);
   });
 }
 if (podDiagram) {
+  const stream = document.createElement('div');
+  stream.className = 'pod-bubble-stream';stream.setAttribute('aria-hidden','true');
+  for (let project = 0; project < 6; project++) {
+    for (let bubble = 0; bubble < 3; bubble++) {
+      const particle = document.createElement('span');
+      particle.className = 'pod-flow-bubble';particle.dataset.podFlow = String(project);
+      particle.style.animationDelay = `${-bubble * 1.2 - project * .37}s`;
+      particle.innerHTML = '<i></i><i></i><i></i>';stream.append(particle);
+    }
+  }
+  podDiagram.append(stream);
   if ('ResizeObserver' in window) {
     const connectorObserver = new ResizeObserver(updatePodConnectors);
     [podDiagram, $('.diagram-hub', podDiagram), ...$$('.diagram-project', podDiagram)].forEach(node => connectorObserver.observe(node));
@@ -629,7 +654,9 @@ const previewChatLauncher = $('[data-open-preview-chat]');
 const previewThemes = {
   normal: {greeting:'Hey there! 👋', question:'How can we help?'},
   christmas: {greeting:'Happy holidays! 🎄', question:'Need a little holiday help?'},
-  halloween: {greeting:'Boo! 👻', question:'Need a hand? We don’t bite.'}
+  halloween: {greeting:'Boo! 👻', question:'Need a hand? We don’t bite.'},
+  summer: {greeting:'Hello, sunshine! ☀️', question:'What can we brighten up for you?'},
+  ocean: {greeting:'Welcome aboard! 🐋', question:'Your support pod is here. How can we help?'}
 };
 let previewTheme = 'normal';
 let previewBrandName = '';

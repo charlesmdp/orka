@@ -1,0 +1,52 @@
+{
+  "framer.png": {
+    "source": "https://framerusercontent.com/images/aXvo6HfUhqvR7oFjFL8b4AcyGfg.png",
+    "bytes": 3340,
+    "path": "/assets/platform-logos/framer.png"
+  },
+  "webflow.png": {
+    "source": "https://cdn.prod.website-files.com/686294e263eb7e215bd232f7/686d53d0446d4237b2f38c5f_webclip.png",
+    "bytes": 2661,
+    "path": "/assets/platform-logos/webflow.png"
+  },
+  "squarespace.png": {
+    "source": "https://media-www.sqspcdn.com/logos/apple-touch-icon-180.png",
+    "bytes": 6237,
+    "path": "/assets/platform-logos/squarespace.png"
+  },
+  "wix.ico": {
+    "source": "https://www.wix.com/favicon.ico",
+    "bytes": 3477,
+    "path": "/assets/platform-logos/wix.ico"
+  },
+  "woocommerce.png": {
+    "source": "https://woocommerce.com/wp-content/uploads/2024/12/cropped-logo-w-favicon.png?w=192",
+    "bytes": 3449,
+    "path": "/assets/platform-logos/woocommerce.png"
+  },
+  "bigcommerce.png": {
+    "source": "https://www.bigcommerce.com/mm/icons/favicon-196x196.png",
+    "bytes": 2632,
+    "path": "/assets/platform-logos/bigcommerce.png"
+  },
+  "gemini.svg": {
+    "source": "https://www.gstatic.com/lamda/images/gemini_sparkle_aurora_33f86dc0c0257da337c63.svg",
+    "bytes": 27794,
+    "path": "/assets/platform-logos/gemini.svg"
+  },
+  "grok.svg": {
+    "source": "https://grok.com/images/favicon.svg",
+    "bytes": 9758,
+    "path": "/assets/platform-logos/grok.svg"
+  },
+  "ghost.png": {
+    "source": "https://ghost.org/favicon.png",
+    "bytes": 2089,
+    "path": "/assets/platform-logos/ghost.png"
+  },
+  "carrd.ico": {
+    "source": "https://carrd.co/favicon.ico",
+    "bytes": 4286,
+    "path": "/assets/platform-logos/carrd.ico"
+  }
+}

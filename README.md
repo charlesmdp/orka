@@ -66,3 +66,13 @@ The original Sites build remains available with `npm run build`; it writes `dist
 - [Pages advanced Worker mode](https://developers.cloudflare.com/pages/functions/advanced-mode/)
 - [Pages configuration](https://developers.cloudflare.com/pages/functions/wrangler-configuration/)
 - [Supabase API keys](https://supabase.com/docs/guides/getting-started/api-keys)
+
+### Website FAQ (GPT-5 mini)
+
+`POST /api/faq-answer` answers a short visitor question using excerpts generated from the public HTML at build time. The index refreshes on every deployment. It does not read the widget, Supabase, account information or chat history. Only the submitted question and selected public excerpts are sent to OpenAI. Sources in the answer must resolve to the supplied site documents; the frontend renders plain text, never model HTML.
+
+Set `OPENAI_API_KEY` as a **Production secret** in the Cloudflare Pages project's **Settings → Variables and secrets**, then deploy. Never add the value to source control. The model is `gpt-5-mini`, Responses API, `store: false`, bounded input and output, 25-second provider timeout. Failure falls back to a visible error and an email link, not a fabricated answer.
+
+The worker uses best-effort in-memory limits of six requests per IP per ten minutes and sixty total per isolate per ten minutes. These counters are **not globally consistent** or a billing cap. For stronger abuse control, configure a Cloudflare edge rate-limit rule on `/api/faq-answer` and monitor the dedicated OpenAI project's usage. No question or answer is deliberately logged or stored by this function. OpenAI's provider retention rules still apply.
+
+The real marketing-site widget uses the owner-supplied project ID `66471b6efff6410a175c00b6`; public installation guides continue to show only `YOUR_PROJECT_ID`. Its loader is injected once per generated HTML page. The green brand theme is fixed. Five quick clicks on the header logo load the local orca GIF; reduced-motion users get a still image.

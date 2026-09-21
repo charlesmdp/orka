@@ -2,6 +2,7 @@ import {mkdir, rm, cp, readFile, writeFile, readdir} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
+import {buildFaqKnowledge} from './faq-knowledge.mjs';
 import {generateEditorial} from './editorial-pages.mjs';
 import {comparisons} from './comparison-content.mjs';
 import {sharedFooter,faqSection,faqSchema,homeFaqs} from './site-chrome.mjs';
@@ -12,7 +13,8 @@ const pages = process.argv.includes('--pages');
 await rm(output, {recursive:true, force:true});
 await cp(path.join(root, 'public'), path.join(output, 'client'), {recursive:true});
 await generateEditorial(path.join(output, 'client'));
-const worker = (await readFile(path.join(root, 'server/index.mjs'), 'utf8')).replace(/^export (?=(?:async )?function)/gm, '');
+const faqWorker = (await readFile(path.join(root, 'server/faq.mjs'), 'utf8')).replace(/^export (?=(?:async )?function)/gm, '');
+const worker = faqWorker + '\n' + (await readFile(path.join(root, 'server/index.mjs'), 'utf8')).replace(/^import .*faq.mjs';\n/m, '').replace(/^export (?=(?:async )?function)/gm, '');
 if (pages) {
   await writeFile(path.join(output, 'client/_worker.js'), worker);
   await writeFile(path.join(output, 'client/_routes.json'), JSON.stringify({
@@ -46,13 +48,16 @@ for (const filename of (await readdir(path.join(output, 'client'))).filter(name 
   html = html.replace(/<footer class="(?:site-footer|page-footer|pages-footer|ed-footer|o-footer)"[^>]*>[\s\S]*?<\/footer>/, footer);
   if (!html.includes('href="guides.css"')) html = html.replace('</head>','<link rel="stylesheet" href="guides.css"></head>');
   if (!html.includes('href="site-chrome.css"')) html = html.replace('</head>','<link rel="stylesheet" href="site-chrome.css"></head>');
+  html = html.replace('<html lang="en">','<html lang="en" data-brand-theme="green">');
   html = html.replace('</head>','<script type="module" src="site-interactions.js"></script></head>');
   html = html.replace('<!-- HOME_FAQ -->',faqSection(homeFaqs,{title:'More projects.\nFewer unanswered questions.'})+faqSchema(homeFaqs));
   for (const [original, versioned] of assetNames) html = html.replaceAll('"' + original + '"', '"' + versioned + '"');
+  html = html.replace('</body>', '<script>window.ORKA_APP_ID="66471b6efff6410a175c00b6";(function(){if(document.querySelector("script[data-orka-widget]"))return;var s=document.createElement("script");s.src="https://widget.orka.chat/app.js";s.async=true;s.dataset.orkaWidget="true";document.head.appendChild(s);})();</script></body>');
   await writeFile(path.join(output, 'client', filename), html);
   headers += '/' + filename + '\n  Cache-Control: no-cache\n';
   if (filename !== 'index.html') headers += '/' + filename.slice(0, -5) + '\n  Cache-Control: no-cache\n';
 }
+await buildFaqKnowledge(path.join(output, 'client'));
 headers += '/llm\n  Content-Type: text/markdown; charset=utf-8\n  Cache-Control: no-cache\n/*.md\n  Content-Type: text/markdown; charset=utf-8\n  Cache-Control: no-cache\n/llms.txt\n  Content-Type: text/plain; charset=utf-8\n  Cache-Control: no-cache\n/llms-full.txt\n  Content-Type: text/markdown; charset=utf-8\n  Cache-Control: no-cache\n/sitemap.xml\n  Cache-Control: no-cache\n/robots.txt\n  Cache-Control: no-cache\n';
 await writeFile(path.join(output, 'client/_headers'), headers);
 console.log('Built Orka for ' + (pages ? 'Cloudflare Pages' : 'Sites') + ' with versioned assets and website metadata preview.');

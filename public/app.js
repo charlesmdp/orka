@@ -1,18 +1,8 @@
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
-function setBrandTheme(theme) {
-  const chosen = theme === 'blue' ? 'blue' : 'green';
-  document.documentElement.dataset.brandTheme = chosen;
-  $$('button[data-brand-theme]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.brandTheme === chosen)));
-  $('meta[name="theme-color"]').setAttribute('content', chosen === 'blue' ? '#0B2347' : '#14211D');
-  try { localStorage.setItem('orka-brand-theme', chosen); } catch {}
-}
-let savedBrandTheme = 'green';
-try { savedBrandTheme = localStorage.getItem('orka-brand-theme') || 'green'; } catch {}
-setBrandTheme(savedBrandTheme);
-$$('button[data-brand-theme]').forEach(button => button.addEventListener('click', () => setBrandTheme(button.dataset.brandTheme)));
-
+document.documentElement.dataset.brandTheme = 'green';
+try { localStorage.removeItem('orka-brand-theme'); } catch {}
 
 const menuButton = $('.mobile-menu');
 const mobileNav = $('#mobile-nav');
@@ -883,42 +873,4 @@ quickSend.addEventListener('click',()=>{
   $('#quick-sent-result')?.remove();$('.quick-chat-context').after(result);
   $('#quick-action-status').textContent=isPrivate?'Private note saved in this example.':'Reply sent in this example. Pick another shortcut to try it.';
   quickSend.disabled=true;
-});
-
-// A floating messenger demo. Messages stay on this page and are never transmitted.
-const supportFloat = $('.support-float');
-const supportPanel = $('#support-chat-panel');
-const supportLauncher = $('[data-open-support-chat]');
-function setSupportChat(open) {
-  supportPanel.hidden = !open;
-  $('.support-launcher-wrap').hidden = open;
-  supportFloat.dataset.chatOpen = String(open);
-  supportLauncher.setAttribute('aria-expanded', String(open));
-  (open ? $('#support-chat-input') : supportLauncher).focus();
-}
-supportLauncher.addEventListener('click', () => setSupportChat(true));
-$('[data-close-support-chat]').addEventListener('click', () => setSupportChat(false));
-$('[data-collapse-support]').addEventListener('click', event => {
-  const compact = supportFloat.dataset.compact !== 'true';
-  supportFloat.dataset.compact = String(compact);
-  event.currentTarget.setAttribute('aria-expanded', String(!compact));
-  event.currentTarget.setAttribute('aria-label', compact ? 'Expand team widget' : 'Minimize team widget');
-  event.currentTarget.textContent = compact ? '+' : '−';
-});
-document.addEventListener('keydown', event => {
-  if (event.key === 'Escape' && !supportPanel.hidden && !sitePreviewDialog.open) setSupportChat(false);
-});
-$('#support-chat-form').addEventListener('submit', event => {
-  event.preventDefault();
-  const input = $('#support-chat-input');
-  const draft = input.value.trim();
-  if (!draft) return;
-  const message = document.createElement('p');
-  message.className = 'preview-sent-message';
-  message.textContent = draft;
-  const messages = $('#support-chat-messages');
-  messages.appendChild(message);
-  messages.scrollTop = messages.scrollHeight;
-  input.value = '';
-  input.focus();
 });

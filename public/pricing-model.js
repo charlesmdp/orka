@@ -34,3 +34,17 @@ export function vendorCost(vendor, planIndex, seats, quote=null) {
   if (plan.seats && seats > plan.seats) return plan.extra ? plan.base + (seats - plan.seats)*plan.extra : null;
   return plan.base;
 }
+
+// Planning examples, not measured averages. Ten visitor messages + ten AI replies.
+export const CONVERSATION_PROFILES = {
+  short: {name:'Short answers', turns:10, userTokens:30, replyTokens:60, contextTokens:500},
+  typical: {name:'Everyday support', turns:10, userTokens:60, replyTokens:120, contextTokens:1500},
+  detailed: {name:'Detailed support', turns:10, userTokens:120, replyTokens:300, contextTokens:4000}
+};
+export function conversationTokens(profile='typical',count=1){
+ const p=CONVERSATION_PROFILES[profile];
+ if(!p || !Number.isInteger(count) || count<0)return null;
+ // Each reply sees the new question, preceding exchanges, instructions and knowledge.
+ const n=p.turns;
+ return {input:count*(n*p.contextTokens+p.userTokens*n*(n+1)/2+p.replyTokens*n*(n-1)/2),output:count*n*p.replyTokens};
+}

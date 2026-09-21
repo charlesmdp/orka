@@ -560,3 +560,18 @@ html .site-preview-dialog[data-preview-theme=halloween] .preview-sent-message{ba
 .live-geographic-map{background:#87D8F8}
 .map-city-label{fill:#33484C;font:600 10px var(--sans);stroke:#FFFFFFD9;stroke-width:3px;paint-order:stroke;pointer-events:none}
 @media(max-width:600px){.live-geographic-map{position:absolute;height:100%}.geographic-viewport{height:470px;flex-shrink:0}.map-project-counters{position:absolute;display:flex;flex-direction:column;top:12px;left:12px;right:auto;bottom:auto;padding:0;border:0;background:none}.map-project-counters>.all-map-projects{grid-column:auto}.map-project-counters>button{width:100%}.map-zoom-controls{bottom:57px;right:13px}}
+/* Two extra costumes in the website preview. */
+.site-preview-dialog[data-preview-theme=summer]{--preview-header:#7c471c;--preview-paper:#fffdf4;--preview-bubble:#fff0cb;--preview-sent:#ce7228;--preview-sent-ink:#fff;--preview-muted:#876547;--preview-border:#efdcc2}
+.site-preview-dialog[data-preview-theme=ocean]{--preview-header:#123f50;--preview-paper:#f1faf9;--preview-bubble:#ddf1ed;--preview-sent:#176f84;--preview-sent-ink:#fff;--preview-muted:#507983;--preview-border:#c4e2df}
+.site-preview-dialog[data-preview-theme=summer] .preview-summer-ribbon{display:flex;background:#fff0ba;color:#81511d;background-image:radial-gradient(#dc962755 1px,transparent 1px);background-size:12px 12px;padding-block:8px}
+.site-preview-dialog[data-preview-theme=ocean] .preview-ocean-ribbon{display:flex;background:#cdeee8;color:#205b5c;padding-block:8px;border-bottom:2px solid #8fc9c1}
+.site-preview-dialog[data-preview-theme=summer] .preview-night-notice{background:#80501f}
+.site-preview-dialog[data-preview-theme=ocean] .preview-night-notice{background:#123f50}
+html .site-preview-dialog[data-preview-theme=summer] .preview-sent-message{background:#bd641e;color:#fff}
+html .site-preview-dialog[data-preview-theme=ocean] .preview-sent-message{background:#176f84;color:#fff}
+.site-preview-dialog[data-preview-theme=summer] .preview-chat-messages{background:linear-gradient(#fff1cbe6,#ffefd8e6),url('assets/ocean-pattern-v15.png') center/310px}
+.site-preview-dialog[data-preview-theme=ocean] .preview-chat-messages{background:linear-gradient(#d4eeeee3,#d7eee4e3),url('assets/ocean-pattern-v15.png') center/310px}
+.site-preview-dialog .preview-theme-picker>button[data-preview-theme=summer][aria-pressed=true]{background:#fff0cb;border-color:#efd293;color:#81511d}
+.site-preview-dialog .preview-theme-picker>button[data-preview-theme=ocean][aria-pressed=true]{background:#d8eeea;border-color:#abd4cd;color:#205b5c}
+.preview-widget-dock .preview-theme-picker{max-height:100%;overflow-y:auto}
+@media(max-width:600px){.preview-widget-dock .preview-theme-picker>button{min-height:36px;padding-block:5px}.preview-widget-dock .preview-theme-label{display:none}}

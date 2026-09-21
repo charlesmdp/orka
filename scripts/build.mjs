@@ -49,7 +49,7 @@ for (const filename of (await readdir(path.join(output, 'client'))).filter(name 
   if (!html.includes('href="guides.css"')) html = html.replace('</head>','<link rel="stylesheet" href="guides.css"></head>');
   if (!html.includes('href="site-chrome.css"')) html = html.replace('</head>','<link rel="stylesheet" href="site-chrome.css"></head>');
   html = html.replace('<html lang="en">','<html lang="en" data-brand-theme="green">');
-  html = html.replace('</head>','<script type="module" src="site-interactions.js"></script></head>');
+  html = html.replace('</head>','<script>try{if(sessionStorage.getItem("orka-letter-read")==="1")document.documentElement.dataset.letterRead="true";}catch{}</script><script type="module" src="site-interactions.js"></script></head>');
   html = html.replace('<!-- HOME_FAQ -->',faqSection(homeFaqs,{title:'More projects.\nFewer unanswered questions.'})+faqSchema(homeFaqs));
   for (const [original, versioned] of assetNames) html = html.replaceAll('"' + original + '"', '"' + versioned + '"');
   html = html.replace('</body>', '<script>window.ORKA_APP_ID="66471b6efff6410a175c00b6";(function(){if(document.querySelector("script[data-orka-widget]"))return;var s=document.createElement("script");s.src="https://widget.orka.chat/app.js";s.async=true;s.dataset.orkaWidget="true";document.head.appendChild(s);})();</script></body>');

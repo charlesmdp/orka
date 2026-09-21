@@ -4,7 +4,7 @@ import {mkdtemp,readFile,rm,access} from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
 import {conversationTokens,CONVERSATION_PROFILES,aiCost} from '../public/pricing-model.js';
-import {questionEmail} from '../public/site-interactions.js';
+import {openQuestionInChat} from '../public/site-interactions.js';
 import {installationGuides,exampleSnippet} from '../scripts/installation-content.mjs';
 import {bestChatGuides} from '../scripts/best-chat-content.mjs';
 import {generateEditorial} from '../scripts/editorial-pages.mjs';
@@ -30,13 +30,26 @@ test('conversation estimates count ten replies and reread only the preceding his
  assert.equal(conversationTokens('unknown',1),null);
 });
 
-test('FAQ questions produce an email draft with correctly encoded user content and no auto-send',()=>{
- assert.equal(questionEmail('  ','https://orka.chat'),null);
- const url=new URL(questionEmail(' Can I use A&B?\nWhat about café + SaaS? ','https://orka.chat/pricing'));
- assert.equal(url.protocol,'mailto:');assert.equal(url.pathname,'hello@orka.chat');
- assert.equal(url.searchParams.get('body'),'Can I use A&B?\nWhat about café + SaaS?\n\nPage: https://orka.chat/pricing');
- assert.equal(url.searchParams.get('subject'),'A question about Orka');
- assert.ok(questionEmail('x'.repeat(3000),'test').length<2200);
+test('FAQ handoff opens Orka with the question as an unsent draft after the widget is ready',async()=>{
+ const calls=[];let ticks=0;
+ const widget={showWidget(){calls.push('visible');},show(text){calls.push(text);}};
+ const options={getWidget:()=>ticks>0?widget:null,isReady:()=>ticks>1,wait:async()=>{ticks++;}};
+ assert.equal(await openQuestionInChat('  ',options),false);
+ assert.equal(ticks,0);
+ assert.equal(await openQuestionInChat(' Can I use A&B?\nWhat about café + SaaS? ',options),true);
+ assert.deepEqual(calls,['visible','Can I use A&B?\nWhat about café + SaaS?']);
+ assert.equal(ticks,2);
+ // No email, automatic send, account data or conversation history is passed.
+ assert.equal(calls.length,2);
+});
+
+test('FAQ handoff ends its wait and keeps a blocked widget retryable',async()=>{
+ let waits=0;
+ await assert.rejects(openQuestionInChat('Where do I start?',{getWidget:()=>null,isReady:()=>false,wait:async()=>{waits++;}}),/question is still here/);
+ assert.equal(waits,50);
+ let draft;
+ assert.equal(await openQuestionInChat('Where do I start?',{getWidget:()=>({show:text=>draft=text}),isReady:()=>true}),true);
+ assert.equal(draft,'Where do I start?');
 });
 
 test('installation guides protect the project ID and all buying guides have navigable, sourced shortlists',async()=>{

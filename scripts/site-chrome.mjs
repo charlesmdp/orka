@@ -1,0 +1,37 @@
+export const origin = 'https://orka.chat';
+export const signup = 'http://dashboard.orka.chat/signup';
+export const escapeHtml = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const marinePaths = {
+ compass:'<circle cx="24" cy="24" r="17"/><path d="m31 17-4 10-10 4 4-10Z"/><path d="M24 3v4m21 17h-4M24 45v-4M3 24h4"/>',
+ wave:'<path d="M5 25c7 0 6-14 16-14 8 0 10 10 4 14 8 4 13 3 18-2M5 34q6-5 12 0t12 0t14 0M8 41h32"/>',
+ anchor:'<circle cx="24" cy="10" r="4"/><path d="M24 14v27M16 20h16M7 28v8l5-3M41 28v8l-5-3M7 30c0 16 34 16 34 0"/>',
+ shell:'<path d="M19 38 7 21C-1 3 18 4 24 12 30 4 49 3 41 21L29 38Z"/><path d="m12 12 10 26M24 12v26m12-26L26 38M19 42h10"/>',
+ lighthouse:'<path d="m16 41 3-22h10l3 22M18 19h12V10H18Zm-3-9 9-6 9 6M11 41h26M4 13l8 2m24 0 8-2M22 28h4m-5 7h6"/>',
+ sail:'<path d="M24 5v29M20 9 7 30h13ZM28 15l12 15H28ZM6 35h36l-6 7H12Z"/>',
+ buoy:'<circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="8"/><path d="m12 12 6 6m12 12 6 6m-24 0 6-6m12-12 6-6"/>',
+ coral:'<path d="M24 43V14m0 18c-14 0-15-10-15-16m15 8c11 0 15-7 15-15M9 24l-5-5m10 9 2-9m17 2v-7M24 20l-7-8m7 3 7-8"/>'
+};
+export function marineIcon(name='compass'){return `<svg class="marine-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${marinePaths[name]||marinePaths.compass}</svg>`;}
+export function faqSection(items,{title='A few good questions.',kicker='YOUR BEARINGS, BEFORE YOU DIVE IN',id='faq'}={}){
+ const keys=Object.keys(marinePaths);
+ return `<section class="o-faq" id="${id}"><div class="o-faq-intro"><span class="o-kicker">${kicker}</span>${marineIcon('lighthouse')}<h2>${title}</h2><p>Still wondering about something?<br><a href="mailto:hello@orka.chat">Ask a human at Orka ↗</a></p></div><div class="o-faq-items">${items.map(([q,a],i)=>`<details><summary><span class="o-faq-icon">${marineIcon(keys[i%keys.length])}</span><span>${escapeHtml(q)}</span><b aria-hidden="true">+</b></summary><div class="o-faq-answer"><p>${escapeHtml(a)}</p></div></details>`).join('')}</div></section>`;
+}
+export function faqSchema(items){return `<script type="application/ld+json">${JSON.stringify({'@context':'https://schema.org','@type':'FAQPage',mainEntity:items.map(([q,a])=>({'@type':'Question',name:q,acceptedAnswer:{'@type':'Answer',text:a}}))}).replaceAll('<','\\u003c')}</script>`;}
+export const homeFaqs = [
+ ['Who is Orka built for?','Founders and small teams running several SaaS products, apps, Shopify stores or side projects. If your next launch should not require another support workspace, Orka is for you. It works for a single project too.'],
+ ['Can I really manage all my projects in one inbox?','Yes. Add your projects, see their conversations together and filter by project whenever you want to focus. Each conversation keeps its project context, and you choose which projects each teammate can access.'],
+ ['Is there a limit on the number of projects?','Every plan includes unlimited projects, including the free Solo plan. Plans are based on the size of your crew and the features you need, rather than the number of products you launch. AI usage is separate.'],
+ ['Can I use Orka for a SaaS, an app and a Shopify store together?','Yes. Orka is designed for a mixed portfolio, not just several copies of the same business. Install the appropriate widget or integration on each project and bring the conversations into your shared inbox.'],
+ ['Do I have to let AI answer my customers?','No. Reply yourself, use an Orky draft that you review before sending, or enable automatic replies. You decide when Orky participates, and a human can take over a conversation.'],
+ ['What does Orky know about my business?','Orky uses the knowledge you provide, including your website, FAQs and published help articles. Keep those sources accurate and review sensitive answers. AI can make mistakes; it does not replace your judgment.'],
+ ['Is the help center included for free?','Yes, on every plan. You get a public help center, custom-domain publishing, Markdown articles, collections, multilingual content and a searchable Help tab in the chat widget. Your articles also help Orky answer.'],
+ ['Can I talk to customers in another language?','Yes. Two-way conversation translation keeps the original and translated text together. The help center also supports automatic translation and manual corrections. Conversation translation on Solo requires your own AI provider key.'],
+ ['How much does it cost?','Solo is free for one person. Pod is $29 per month for up to three people. Fleet is $99 per month for up to twenty. All include unlimited projects. Managed AI is billed separately at the named model’s standard API rate ×2; bring your own key for no Orka markup.'],
+ ['Can my teammate help without seeing every project?','Yes. You choose project access for each teammate. Within the inbox, assignments, private notes, mentions and reminders make handovers clearer without losing the conversation’s context.'],
+ ['What happens when I am offline?','Use online and away status, expected reply times and night, break-day or emergency banners to explain when you will return. You can also let Orky cover familiar questions while you are unavailable.'],
+ ['Can I bring my existing help articles?','Yes. Orka supports imports from providers including GitBook, Intercom, Crisp, Gorgias and Gleap. Review formatting, links, collections and important policies before publishing the imported content.']
+];
+export function sharedFooter(items,credits=''){
+ const links=(kind)=>items.map(c=>`<a href="/${kind==='vs'?'orka-vs-'+c.id:c.id+'-'+kind}">${kind==='vs'?'Orka vs ':''}${escapeHtml(c.name)}${kind==='vs'?'':' '+kind}</a>`).join('');
+ return `<footer class="o-footer" data-shared-footer><div class="o-footer-inner"><div class="o-footer-brand"><a href="/" class="o-footer-logo"><img src="/assets/orka-logo.svg" width="42" height="39" alt="">orka<span>.</span></a><div><strong>One inbox. Unlimited projects.</strong><p>For the humans behind every product.</p></div><a class="o-footer-cta" href="${signup}">Bring your projects aboard ↗</a></div><div class="o-footer-columns"><nav aria-label="Product footer"><h2>YOUR WORKSPACE</h2><a href="/features">All features</a><a href="/help-center">Help center</a><a href="/ai">Orky AI</a><a href="/pricing">Pricing</a><a href="/#pod-heading">Multiple projects</a><a href="/#story">Our story</a><a href="/#faq">Frequently asked questions</a><a href="http://dashboard.orka.chat/">Log in ↗</a></nav><nav aria-label="Comparisons footer"><h2>COMPARE ORKA</h2><a href="/compare">All comparisons ↗</a>${links('vs')}</nav><nav aria-label="Alternatives footer"><h2>EXPLORE ALTERNATIVES</h2>${links('alternatives')}</nav><nav aria-label="Reviews footer"><h2>READ THE REVIEWS</h2>${links('review')}</nav><nav aria-label="Company footer"><h2>THE PRACTICAL THINGS</h2><a href="/terms">Terms &amp; conditions</a><a href="/privacy">Privacy policy</a><a href="/cookies">Cookie policy</a><a href="/llms.txt">For AI readers</a><a href="/sitemap.xml">Sitemap</a><a href="mailto:hello@orka.chat">hello@orka.chat</a></nav></div><div class="o-footer-bottom"><span>© <span id="year">2026</span> BIGMO SAS · Made for people who keep building.</span><a href="#">Back to the surface ↑</a></div>${credits}</div></footer>`;
+}

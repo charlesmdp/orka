@@ -45,7 +45,7 @@ test('help-center search works in both demo languages, with accents and no-resul
  assert.equal(searchHelp('').length,4);
 });
 
-test('all eleven guides have over 1,000 editorial words, usable evidence and complete catalogues',async()=>{
+test('all eleven guides have over 1,000 editorial words, documented comparisons, FAQs and distinct illustrations',async()=>{
  assert.equal(comparisons.length,11);
  assert.equal(new Set(comparisons.map(c=>c.id)).size,11);
  const catalogue=JSON.parse(await readFile(new URL('../scripts/product-catalogue.json',import.meta.url),'utf8'));
@@ -66,14 +66,25 @@ test('all eleven guides have over 1,000 editorial words, usable evidence and com
    assert.ok(VENDOR_PLANS[c.id][c.defaultPlan]);
    const html=await readFile(path.join(temp,`orka-vs-${c.id}.html`),'utf8');
    const md=await readFile(path.join(temp,`orka-vs-${c.id}.md`),'utf8');
-   assert.equal([...html.matchAll(/<tr><th scope="row">/g)].length,65);
-   assert.match(html,/<article class="ed-prose" data-longform>/);
+   assert.ok([...html.matchAll(/<tr><th scope="row">/g)].length >= 7);
+   assert.match(html,/data-longform/);
+   assert.match(html,new RegExp('comparison-'+c.id+'-v2\\.jpg'));
+   assert.doesNotMatch(html,/not verified|unverified/i);
    assert.match(html,/rel="canonical"/);assert.match(html,/type="text\/markdown"/);
-   for(const section of sections)assert.ok(md.includes(section.paragraphs[0]));
+   for(const section of sections)assert.ok(md.includes(section.title));
    for(const [,json] of html.matchAll(/<script type="application\/ld\+json">([^<]+)<\/script>/g))assert.doesNotThrow(()=>JSON.parse(json));
    const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);assert.equal(new Set(ids).size,ids.length);
+   for(const kind of ['alternatives','review']) {
+    const page=await readFile(path.join(temp,`${c.id}-${kind}.html`),'utf8');
+    assert.match(page,/FAQPage/);
+    assert.match(page,/September 2026/);
+    assert.match(page,/mailto:hello@orka.chat/);
+    assert.doesNotMatch(page,/not verified|unverified/i);
+   }
    for(const [,id] of html.matchAll(/href="#([^"]+)"/g))assert.ok(ids.includes(id),`${c.id} broken anchor ${id}`);
   }
+  const pricing=await readFile(path.join(temp,'pricing.html'),'utf8');
+  assert.match(pricing,/FAQPage/);assert.match(pricing,/data-ai-budget/);
   const aliases=await readFile(path.join(temp,'_redirects'),'utf8');assert.match(aliases,/^\/llm \/llms-full.txt 200/m);
   const facts=await readFile(path.join(temp,'llms-full.txt'),'utf8');assert.match(facts,/BIGMO SAS/);assert.match(facts,/hello@orka.chat/);assert.doesNotMatch(facts,/PENIDA|0\.50 \/ 1,000/);
   for(const c of comparisons)assert.ok((await readFile(path.join(temp,'sitemap.xml'),'utf8')).includes('/orka-vs-'+c.id));

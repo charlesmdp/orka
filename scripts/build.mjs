@@ -3,6 +3,8 @@ import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import {generateEditorial} from './editorial-pages.mjs';
+import {comparisons} from './comparison-content.mjs';
+import {sharedFooter,faqSection,faqSchema,homeFaqs} from './site-chrome.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const output = path.join(root, 'dist');
@@ -15,7 +17,7 @@ if (pages) {
   await writeFile(path.join(output, 'client/_worker.js'), worker);
   await writeFile(path.join(output, 'client/_routes.json'), JSON.stringify({
     version: 1,
-    include: ['/api/*'],
+    include: ['/*'],
     exclude: []
   }, null, 2) + '\n');
 } else {
@@ -24,9 +26,12 @@ if (pages) {
   await writeFile(path.join(output, 'server/index.js'), worker);
   await cp(path.join(root, '.openai/hosting.json'), path.join(output, '.openai/hosting.json'));
 }
+const homepage = await readFile(path.join(root, 'public/index.html'),'utf8');
+const credits = homepage.match(/<details class="artwork-credits">[\s\S]*?<\/details>/)?.[0] || '';
+const footer = sharedFooter(comparisons,credits);
 let headers = '/\n  Cache-Control: no-cache\n';
 const assetNames = new Map();
-for (const filename of ['map-model.js', 'live-map.js', 'style.css', 'refinement.css', 'refresh.css', 'product-polish.css', 'app.js', 'pages.css', 'pages.js', 'features.js', 'pricing-model.js', 'help-demo-data.js', 'editorial.css', 'editorial.js']) {
+for (const filename of ['map-model.js', 'live-map.js', 'style.css', 'refinement.css', 'refresh.css', 'product-polish.css', 'app.js', 'pages.css', 'pages.js', 'features.js', 'pricing-model.js', 'help-demo-data.js', 'editorial.css', 'comparison.css', 'site-chrome.css', 'editorial.js']) {
   let content = await readFile(path.join(root, 'public', filename), 'utf8');
   for (const [original, versioned] of assetNames) content = content.replaceAll('./' + original, './' + versioned);
   const hash = createHash('sha256').update(content).digest('hex').slice(0, 12);
@@ -38,6 +43,9 @@ for (const filename of ['map-model.js', 'live-map.js', 'style.css', 'refinement.
 }
 for (const filename of (await readdir(path.join(output, 'client'))).filter(name => name.endsWith('.html'))) {
   let html = await readFile(path.join(output, 'client', filename), 'utf8');
+  html = html.replace(/<footer class="(?:site-footer|page-footer|pages-footer|ed-footer|o-footer)"[^>]*>[\s\S]*?<\/footer>/, footer);
+  if (!html.includes('href="site-chrome.css"')) html = html.replace('</head>','<link rel="stylesheet" href="site-chrome.css"></head>');
+  html = html.replace('<!-- HOME_FAQ -->',faqSection(homeFaqs,{title:'More projects.\nFewer unanswered questions.'})+faqSchema(homeFaqs));
   for (const [original, versioned] of assetNames) html = html.replaceAll('"' + original + '"', '"' + versioned + '"');
   await writeFile(path.join(output, 'client', filename), html);
   headers += '/' + filename + '\n  Cache-Control: no-cache\n';

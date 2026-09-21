@@ -1,3 +1,4 @@
+import {answerFaq} from './faq.mjs';
 // Public homepage metadata only. No remote HTML, scripts or cookies reach the client.
 const MAX_HTML_BYTES = 512 * 1024;
 const SITE_TIMEOUT_MS = 9000;
@@ -154,6 +155,7 @@ export default {
       url.hostname = 'orka.chat';
       return Response.redirect(url.href, 301);
     }
+    if (url.pathname === '/api/faq-answer') return answerFaq(request,env);
     if (url.pathname !== '/api/website-preview') {
       const response = await env.ASSETS.fetch(request);
       if ((response.headers.get('content-type') || '').includes('text/html')) {

@@ -31,7 +31,7 @@ const credits = homepage.match(/<details class="artwork-credits">[\s\S]*?<\/deta
 const footer = sharedFooter(comparisons,credits);
 let headers = '/\n  Cache-Control: no-cache\n';
 const assetNames = new Map();
-for (const filename of ['map-model.js', 'live-map.js', 'style.css', 'refinement.css', 'refresh.css', 'product-polish.css', 'app.js', 'pages.css', 'pages.js', 'features.js', 'pricing-model.js', 'help-demo-data.js', 'editorial.css', 'comparison.css', 'site-chrome.css', 'editorial.js']) {
+for (const filename of ['map-model.js', 'live-map.js', 'style.css', 'refinement.css', 'refresh.css', 'product-polish.css', 'app.js', 'pages.css', 'pages.js', 'features.js', 'pricing-model.js', 'help-demo-data.js', 'editorial.css', 'comparison.css', 'site-chrome.css', 'guides.css', 'site-interactions.js', 'editorial.js']) {
   let content = await readFile(path.join(root, 'public', filename), 'utf8');
   for (const [original, versioned] of assetNames) content = content.replaceAll('./' + original, './' + versioned);
   const hash = createHash('sha256').update(content).digest('hex').slice(0, 12);
@@ -44,7 +44,9 @@ for (const filename of ['map-model.js', 'live-map.js', 'style.css', 'refinement.
 for (const filename of (await readdir(path.join(output, 'client'))).filter(name => name.endsWith('.html'))) {
   let html = await readFile(path.join(output, 'client', filename), 'utf8');
   html = html.replace(/<footer class="(?:site-footer|page-footer|pages-footer|ed-footer|o-footer)"[^>]*>[\s\S]*?<\/footer>/, footer);
+  if (!html.includes('href="guides.css"')) html = html.replace('</head>','<link rel="stylesheet" href="guides.css"></head>');
   if (!html.includes('href="site-chrome.css"')) html = html.replace('</head>','<link rel="stylesheet" href="site-chrome.css"></head>');
+  html = html.replace('</head>','<script type="module" src="site-interactions.js"></script></head>');
   html = html.replace('<!-- HOME_FAQ -->',faqSection(homeFaqs,{title:'More projects.\nFewer unanswered questions.'})+faqSchema(homeFaqs));
   for (const [original, versioned] of assetNames) html = html.replaceAll('"' + original + '"', '"' + versioned + '"');
   await writeFile(path.join(output, 'client', filename), html);

@@ -1,0 +1,57 @@
+{
+  "intercom": {
+    "path": "/assets/vendor-logos/intercom.png",
+    "source": "https://www.intercom.com/intercom-marketing-site/favicons/favicon-32x32.png",
+    "bytes": 1193
+  },
+  "tidio": {
+    "path": "/assets/vendor-logos/tidio.svg",
+    "source": "https://www.tidio.com/images/favicon/icon.svg",
+    "bytes": 13752
+  },
+  "rocketchat": {
+    "path": "/assets/vendor-logos/rocketchat.png",
+    "source": "https://cdn.prod.website-files.com/611a19b9853b7414a0f6b3f6/6132017f51d1acdee170210c_webclip%20256px.png",
+    "bytes": 7786
+  },
+  "crisp": {
+    "path": "/assets/vendor-logos/crisp.png",
+    "source": "https://crisp.chat/favicons/favicon-256x256.png",
+    "bytes": 6345
+  },
+  "chatra": {
+    "path": "/assets/vendor-logos/chatra.svg",
+    "source": "https://chatra.com/_i/icons/icon.svg",
+    "bytes": 1533
+  },
+  "willdesk": {
+    "path": "/assets/vendor-logos/willdesk.webp",
+    "source": "https://www.willdesk.com/wp-content/uploads/2024/04/favicon.webp",
+    "bytes": 298
+  },
+  "chatway": {
+    "path": "/assets/vendor-logos/chatway.png",
+    "source": "https://chatway.app/wp-content/uploads/2023/05/Favicon.png",
+    "bytes": 2935
+  },
+  "gorgias": {
+    "path": "/assets/vendor-logos/gorgias.png",
+    "source": "https://cdn.prod.website-files.com/5e4ff204e7b6f80e402d407a/655f0a311c75248c5ff9756b_Social%20Avatar.png",
+    "bytes": 1881
+  },
+  "tawk": {
+    "path": "/assets/vendor-logos/tawk.png",
+    "source": "https://www.tawk.to/apple-icon.png?apple-icon.2cb02985.png",
+    "bytes": 14871
+  },
+  "commslayer": {
+    "path": "/assets/vendor-logos/commslayer.svg",
+    "source": "https://commslayer.com/logo.svg",
+    "bytes": 4619
+  },
+  "bestchat": {
+    "path": "/assets/vendor-logos/bestchat.png",
+    "source": "https://bestchat.com/assets/images/logo.png",
+    "bytes": 8919
+  }
+}

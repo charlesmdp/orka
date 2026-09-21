@@ -1,4 +1,4 @@
-import {AI_MODELS,AI_MARKUP,aiCost,orkaPlan,vendorCost,VENDOR_PLANS} from './pricing-model.js';
+import {AI_MODELS,AI_MARKUP,aiCost,orkaPlan,vendorCost,VENDOR_PLANS,CONVERSATION_PROFILES,conversationTokens} from './pricing-model.js';
 import {helpArticles} from './help-demo-data.js';
 const money=(n)=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2}).format(n);
 const number=(n)=>new Intl.NumberFormat('en-US').format(n);
@@ -25,8 +25,12 @@ if(typeof document!=='undefined'){
  }
  for(const tool of document.querySelectorAll('[data-ai-budget]')){
   const update=()=>{
-   const id=tool.querySelector('[data-ai-model]').value,input=Number(tool.querySelector('[data-ai-input]').value),output=Number(tool.querySelector('[data-ai-output]').value),own=tool.querySelector('[data-own-key]').checked,model=AI_MODELS[id],multiplier=own?1:AI_MARKUP;
-   set(tool,'[data-input-label]',number(input));set(tool,'[data-output-label]',number(output));set(tool,'[data-ai-total]',money(aiCost(id,input,output,own)));
+   const id=tool.querySelector('[data-ai-model]').value, count=Number(tool.querySelector('[data-ai-conversations]').value),profile=tool.querySelector('[data-ai-profile]').value,own=tool.querySelector('[data-own-key]').checked,model=AI_MODELS[id],multiplier=own?1:AI_MARKUP;
+   const {input,output}=conversationTokens(profile,count),p=CONVERSATION_PROFILES[profile],unit=conversationTokens(profile);
+   set(tool,'[data-conversation-label]',number(count));set(tool,'[data-input-label]',number(input));set(tool,'[data-output-label]',number(output));set(tool,'[data-ai-total]',money(aiCost(id,input,output,own)));
+   set(tool,'[data-ai-conversation-summary]',`for ${number(count)} conversations / month`);
+   set(tool,'[data-ai-unit]',`About $${aiCost(id,unit.input,unit.output,own).toFixed(3)} per conversation in this example`);
+   set(tool,'[data-ai-assumption]',`Example: ${p.userTokens} tokens per customer message, ${p.replyTokens} per reply, plus ${number(p.contextTokens)} tokens of instructions and knowledge per reply. The growing conversation history is read again.`);
    set(tool,'[data-ai-billing]',own?'Estimated provider bill · Orka markup $0':'Estimated managed AI usage');
    set(tool,'[data-ai-equation]',`${number(input)} input × ${money(model.input*multiplier)}/M + ${number(output)} output × ${money(model.output*multiplier)}/M`);
   };tool.addEventListener('input',update);tool.addEventListener('change',update);update();

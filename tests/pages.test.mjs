@@ -1,3 +1,4 @@
+import {selectFaqSources} from '../server/faq.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
@@ -44,11 +45,18 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   await assert.rejects(access(new URL('.openai/hosting.json', output)));
 
   const pageNames=(await readdir(output)).filter(n=>n.endsWith('.html'));
+  assert.equal(pageNames.length,67);
+  const knowledge=JSON.parse(await readFile(new URL('faq-knowledge.json',output),'utf8'));
+  assert.equal(selectFaqSources('What does Pod cost?',knowledge.documents)[0].url,'https://orka.chat/pricing');
   const homepageFooter=html.match(/<footer class="o-footer"[\s\S]*?<\/footer>/)[0];
   const sitemap=await readFile(new URL('sitemap.xml',output),'utf8');
   assert.equal([...sitemap.matchAll(/<loc>/g)].length,pageNames.length);
   for(const name of pageNames){
     const document=await readFile(new URL(name,output),'utf8');
+    assert.equal((document.match(/window.ORKA_APP_ID="66471b6efff6410a175c00b6"/g)||[]).length,1,name);
+    assert.doesNotMatch(document,/class="(?:support-float|brand-theme-switcher)"/);
+    assert.match(document,/data-brand-theme="green"/);
+    assert.match(document,/two dreamers/);
     const canonical='https://orka.chat/'+(name==='index.html'?'':name.slice(0,-5));
     assert.ok(document.includes('rel="canonical" href="'+canonical+'"'),name);
     assert.ok(sitemap.includes('<loc>'+canonical+'</loc>'),name);

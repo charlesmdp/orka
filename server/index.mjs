@@ -148,6 +148,12 @@ async function requestJson(request) {
 export default {
   async fetch(request,env) {
     const url = new URL(request.url);
+    // Redirect only the public Pages hostname; custom and preview domains stay independent.
+    if (url.hostname === 'orka-1t3.pages.dev') {
+      url.protocol = 'https:';
+      url.hostname = 'orka.chat';
+      return Response.redirect(url.href, 301);
+    }
     if (url.pathname !== '/api/website-preview') {
       const response = await env.ASSETS.fetch(request);
       if ((response.headers.get('content-type') || '').includes('text/html')) {

@@ -29,11 +29,10 @@
 .letter-nav-stamp:hover{transform:rotate(0) translateY(-2px)}
 .letter-nav-stamp:focus-visible{outline:2px solid #648541;outline-offset:4px}
 html[data-letter-read=true] .letter-nav-stamp{display:none!important}
-/* An invitation below the real widget, present only before the first scroll. */
+/* An invitation above the real widget, present only before the first scroll. */
 .hero-widget-invite{position:fixed;bottom:16px;z-index:999999997;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-height:72px;padding:13px 18px;border-radius:19px;border:1px solid #ffffffe6;background:#fffffff5;box-shadow:0 9px 35px #12281e22;text-align:center;font:14px/1.5 var(--sans,sans-serif);color:#365360;backdrop-filter:blur(10px)}
 .hero-widget-invite[hidden]{display:none}
 .hero-widget-invite a{color:#315bec;font-size:15px;font-weight:750;text-decoration:underline;text-underline-offset:4px}
-html.hero-widget-intro .orka-container.orka-closed .orka-button{bottom:104px!important}
 .o-faq-ask button.faq-ask-human{display:inline-flex;align-items:center;width:auto;height:auto;border:0;border-radius:0;padding:8px 0;margin-top:13px;background:transparent;color:#245f48;font-family:inherit;font-size:14px;font-weight:650;line-height:1.6;text-align:left;text-decoration:underline;text-underline-offset:4px;transform:none}
 .o-faq-ask button.faq-ask-human:hover{color:#42813a;background:transparent;transform:none}
 .o-faq-ask button.faq-ask-human:disabled{opacity:.6;cursor:wait}

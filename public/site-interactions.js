@@ -28,8 +28,7 @@ if(typeof document!=='undefined'){
  const invite=document.querySelector('[data-hero-widget-invite]');
  if(invite){
   let dismissed=window.scrollY>0,widgetObserver,resizeObserver;
-  const root=document.documentElement;
-  const hide=()=>{invite.hidden=true;root.classList.remove('hero-widget-intro');};
+  const hide=()=>{invite.hidden=true;};
   const bindWidget=()=>{
    if(dismissed)return;
    const container=document.querySelector('.orka-container');
@@ -37,12 +36,12 @@ if(typeof document!=='undefined'){
    if(!launcher)return;
    const position=()=>{
     if(dismissed||window.scrollY>0||!container.classList.contains('orka-closed')){hide();return;}
-    root.classList.add('hero-widget-intro');
     const bounds=container.querySelector('.orka-button')?.getBoundingClientRect();
     if(!bounds?.width||!bounds.height){hide();return;}
     const width=Math.min(Math.max(bounds.width,250),420,window.innerWidth-32);
     const left=Math.min(Math.max(16,bounds.right-width),window.innerWidth-width-16);
-    invite.style.width=width+'px';invite.style.left=left+'px';invite.hidden=false;
+    invite.style.width=width+'px';invite.style.left=left+'px';
+    invite.style.bottom=(window.innerHeight-bounds.top+12)+'px';invite.hidden=false;
    };
    widgetObserver?.disconnect();
    widgetObserver=new MutationObserver(position);

@@ -1,0 +1,22 @@
+{
+  "cowlendar": {
+    "source": "https://apps.shopify.com/cowlendar",
+    "icon": "https://cdn.shopify.com/app-store/listing_images/e297c43d07c087a231c656afcdca283f/icon/CMnisvit1pADEAE=.jpeg",
+    "bytes": 99069
+  },
+  "big-download": {
+    "source": "https://apps.shopify.com/digital-download-products",
+    "icon": "https://cdn.shopify.com/app-store/listing_images/817a90f35936cdf58072f90611991a6a/icon/CKSLjdDA0YcDEAE=.png",
+    "bytes": 289271
+  },
+  "ez-translate": {
+    "source": "https://apps.shopify.com/ez-product-image-translate",
+    "icon": "https://cdn.shopify.com/app-store/listing_images/270176a4529eb9c7822ac25eb2e53f53/icon/CJqitNvngZQDEAE=.png",
+    "bytes": 847667
+  },
+  "rapi": {
+    "source": "https://apps.shopify.com/rapi",
+    "icon": "https://cdn.shopify.com/app-store/listing_images/4f0abcae9142b74f84ff409226f16220/icon/COiJ4dPi5JUDEAE=.png",
+    "bytes": 1213491
+  }
+}

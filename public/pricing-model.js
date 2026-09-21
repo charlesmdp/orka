@@ -22,7 +22,7 @@ export const VENDOR_PLANS = {
   willdesk: [{name:'Free · 20 conversations',base:0},{name:'Basic · 100 conversations',base:16.90},{name:'Pro · 1,000 conversations',base:89.90}],
   chatway: [{name:'Free',base:0,seats:1},{name:'Solo',base:29,seats:1,extra:19},{name:'Team · help center included',base:79,seats:4,extra:19},{name:'Plus',base:149,seats:10,extra:19}],
   gorgias: [{name:'Your actual helpdesk quote',quote:true}],
-  tawk: [{name:'Free core product',base:0},{name:'Core + monthly Remove Branding',base:29}],
+  tawk: [{name:'Free core product',base:0},{name:'Core + Whitelabel · one property',base:29}],
   bestchat: [{name:'Free · 80 AI chats',base:0,seats:1},{name:'Starter · 300 AI chats',base:10,seats:1},{name:'Basic · 1,000 AI chats',base:30,seats:3},{name:'Growth · 3,000 AI chats',base:60,seats:6}],
   commslayer: [{name:'Free · 300 billable conversations',base:0},{name:'Plus · starting at 800 conversations',base:39},{name:'Scale · starting at 6,000 conversations',base:299}]
 };

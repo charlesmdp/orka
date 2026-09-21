@@ -1,0 +1,64 @@
+{
+  "orka-ios": {
+    "name": "Orka Chat",
+    "source": "https://apps.apple.com/fr/app/orka-chat/id6473671891?uo=4",
+    "checked": "2026-09-21",
+    "images": {
+      "icon": {
+        "path": "/assets/mobile-apps/orka-ios-icon.jpg",
+        "source": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/66/d2/24/66d2243c-d744-39f7-e5f3-262aa00fef41/AppIcon-0-0-1x_U007epad-0-1-85-220.png/512x512bb.jpg"
+      }
+    }
+  },
+  "garden-ai": {
+    "name": "Jardin AI : Aménagement 3D IA",
+    "source": "https://apps.apple.com/fr/app/jardin-ai-am%C3%A9nagement-3d-ia/id6751772833?uo=4",
+    "checked": "2026-09-21",
+    "images": {
+      "icon": {
+        "path": "/assets/mobile-apps/garden-ai-icon.jpg",
+        "source": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/0e/66/c1/0e66c1eb-0fe0-7bc5-4753-dcd7eb7acb16/AppIcon-0-0-1x_U007epad-0-1-85-220.png/512x512bb.jpg"
+      },
+      "screen-1": {
+        "path": "/assets/mobile-apps/garden-ai-screen-1.jpg",
+        "source": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/fe/ad/4d/fead4de4-4376-da17-f22b-3969c3ae4510/FR1.png/320x480bb.jpg"
+      },
+      "screen-2": {
+        "path": "/assets/mobile-apps/garden-ai-screen-2.jpg",
+        "source": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/81/1c/96/811c9604-88ac-953a-aada-56976d067a9e/FR2.png/320x480bb.jpg"
+      }
+    }
+  },
+  "fish-spots": {
+    "name": "Fish Spots : App de Pêche IA",
+    "source": "https://apps.apple.com/fr/app/fish-spots-app-de-p%C3%AAche-ia/id6792068884?uo=4",
+    "checked": "2026-09-21",
+    "images": {
+      "icon": {
+        "path": "/assets/mobile-apps/fish-spots-icon.jpg",
+        "source": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/3b/d1/e1/3bd1e10d-177e-f32b-7d10-aa13b4be717b/AppIcon-0-0-1x_U007ephone-0-1-85-220.png/512x512bb.jpg"
+      },
+      "screen-1": {
+        "path": "/assets/mobile-apps/fish-spots-screen-1.jpg",
+        "source": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/7b/12/f1/7b12f1b8-b051-bf07-0c89-0a2f47645edd/FR1_Copy_2.jpg/320x480bb.jpg"
+      },
+      "screen-2": {
+        "path": "/assets/mobile-apps/fish-spots-screen-2.jpg",
+        "source": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/62/8a/d6/628ad636-9b88-9523-0afb-3b14181143d5/05_analysis.png/320x480bb.jpg"
+      }
+    }
+  },
+  "store-badges": {
+    "checked": "2026-09-21",
+    "images": {
+      "app-store": {
+        "path": "/assets/mobile-apps/app-store-badge.svg",
+        "source": "https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
+      },
+      "google-play": {
+        "path": "/assets/mobile-apps/google-play-badge.png",
+        "source": "https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+      }
+    }
+  }
+}

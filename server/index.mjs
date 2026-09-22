@@ -149,6 +149,10 @@ async function requestJson(request) {
 export default {
   async fetch(request,env) {
     const url = new URL(request.url);
+    // Consolidate legacy homepage URLs before the static asset fallback.
+    if (['/home', '/home/', '/home.html'].includes(url.pathname)) {
+      return Response.redirect('https://orka.chat/' + url.search, 301);
+    }
     // Redirect only the public Pages hostname; custom and preview domains stay independent.
     if (url.hostname === 'orka-1t3.pages.dev') {
       url.protocol = 'https:';

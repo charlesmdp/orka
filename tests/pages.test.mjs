@@ -50,6 +50,7 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   assert.equal(selectFaqSources('What does Pod cost?',knowledge.documents)[0].url,'https://orka.chat/pricing');
   const homepageFooter=html.match(/<footer class="o-footer"[\s\S]*?<\/footer>/)[0];
   const sitemap=await readFile(new URL('sitemap.xml',output),'utf8');
+  assert.doesNotMatch(sitemap, /<loc>https:\/\/orka\.chat\/home(?:\/|\.html)?<\/loc>/);
   for (const route of ['sdk','how-to-add-orka-to-single-page-application','ios-app','android-app','performance','is-orka-right-for-you',...['lovable','bolt','replit','base44','v0'].map(tool=>'how-to-add-live-chat-to-a-'+tool+'-app')]) {
     const page=await readFile(new URL(route+'.html',output),'utf8');
     assert.ok(homepageFooter.includes('href="/'+route+'"'),route+' is discoverable');
@@ -88,6 +89,21 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   assert.match(html,/FAQPage/);
   assert.ok(html.indexOf('class="section pod-section"')<html.indexOf('id="why-orka"'));
   const {default:worker} = await import(new URL('_worker.js', output));
+  for (const host of ['orka.chat','orka-1t3.pages.dev']) {
+    for (const pathname of ['/home','/home/','/home.html']) {
+      for (const method of ['GET','HEAD']) {
+        const redirect=await worker.fetch(new Request('https://'+host+pathname+'?utm_source=old-link',{method}),{});
+        assert.equal(redirect.status,301);
+        assert.equal(redirect.headers.get('Location'),'https://orka.chat/?utm_source=old-link');
+      }
+    }
+  }
+  for (const pathname of ['/homepage','/home/guide']) {
+    const untouched=await worker.fetch(new Request('https://orka.chat'+pathname),{
+      ASSETS:{fetch:async()=>new Response('Not found',{status:404})}
+    });
+    assert.equal(untouched.status,404);
+  }
   const invalid = await worker.fetch(new Request('https://orka.pages.dev/api/website-preview', {
     method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({url:'https://localhost'})
   }), {});

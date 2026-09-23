@@ -6,6 +6,7 @@ import {buildFaqKnowledge} from './faq-knowledge.mjs';
 import {generateEditorial} from './editorial-pages.mjs';
 import {comparisons} from './comparison-content.mjs';
 import {sharedFooter,faqSection,faqSchema,homeFaqs} from './site-chrome.mjs';
+import {projectHelp,projectDialog,byokSpotlight} from './pricing-explainers.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const output = path.join(root, 'dist');
@@ -51,6 +52,7 @@ for (const filename of (await readdir(path.join(output, 'client'))).filter(name 
   html = html.replace('<html lang="en">','<html lang="en" data-brand-theme="green">');
   html = html.replace('</head>','<script>try{if(sessionStorage.getItem("orka-letter-read")==="1")document.documentElement.dataset.letterRead="true";}catch{}</script><script type="module" src="site-interactions.js"></script></head>');
   html = html.replace('<!-- HOME_FAQ -->',faqSection(homeFaqs,{title:'More projects.\nFewer unanswered questions.'})+faqSchema(homeFaqs));
+  html = html.replaceAll('<!-- PROJECT_HELP -->',projectHelp()).replace('<!-- PROJECT_DIALOG -->',projectDialog()).replace('<!-- BYOK_SPOTLIGHT -->',byokSpotlight());
   for (const [original, versioned] of assetNames) html = html.replaceAll('"' + original + '"', '"' + versioned + '"');
   html = html.replace('</body>', '<script>window.ORKA_APP_ID="66471b6efff6410a175c00b6";(function(){if(document.querySelector("script[data-orka-widget]"))return;var s=document.createElement("script");s.src="https://widget.orka.chat/app.js";s.async=true;s.dataset.orkaWidget="true";document.head.appendChild(s);})();</script></body>');
   await writeFile(path.join(output, 'client', filename), html);

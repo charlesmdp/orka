@@ -45,13 +45,13 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   await assert.rejects(access(new URL('.openai/hosting.json', output)));
 
   const pageNames=(await readdir(output)).filter(n=>n.endsWith('.html'));
-  assert.equal(pageNames.length,78);
+  assert.equal(pageNames.length,79);
   const knowledge=JSON.parse(await readFile(new URL('faq-knowledge.json',output),'utf8'));
   assert.equal(selectFaqSources('What does Pod cost?',knowledge.documents)[0].url,'https://orka.chat/pricing');
   const homepageFooter=html.match(/<footer class="o-footer"[\s\S]*?<\/footer>/)[0];
   const sitemap=await readFile(new URL('sitemap.xml',output),'utf8');
   assert.doesNotMatch(sitemap, /<loc>https:\/\/orka\.chat\/home(?:\/|\.html)?<\/loc>/);
-  for (const route of ['sdk','how-to-add-orka-to-single-page-application','ios-app','android-app','performance','is-orka-right-for-you',...['lovable','bolt','replit','base44','v0'].map(tool=>'how-to-add-live-chat-to-a-'+tool+'-app')]) {
+  for (const route of ['about','sdk','how-to-add-orka-to-single-page-application','ios-app','android-app','performance','is-orka-right-for-you',...['lovable','bolt','replit','base44','v0'].map(tool=>'how-to-add-live-chat-to-a-'+tool+'-app')]) {
     const page=await readFile(new URL(route+'.html',output),'utf8');
     assert.ok(homepageFooter.includes('href="/'+route+'"'),route+' is discoverable');
     assert.ok(knowledge.documents.some(doc=>doc.url==='https://orka.chat/'+route),route+' is available to the FAQ');

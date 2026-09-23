@@ -55,3 +55,15 @@ html[data-letter-read=true] .letter-nav-stamp{display:none!important}
 @keyframes pod-message-swim{0%{offset-distance:0%;opacity:0;transform:scale(.7)}12%{opacity:1;transform:scale(1)}80%{opacity:1;transform:scale(.85)}100%{offset-distance:100%;opacity:0;transform:scale(.35)}}
 @media(max-width:700px){.pod-marquee{padding:30px 23px;gap:13px;border-radius:20px}.pod-marquee-sea{display:none}.pod-marquee-jackpot{width:58px;flex-basis:58px;padding:11px 5px}.pod-marquee-jackpot img{width:30px;height:auto}.pod-marquee-jackpot>span{font-size:7px}.pod-marquee .mono{font-size:7px;letter-spacing:.06em;line-height:1.7}.pod-marquee p{font-size:12px}.pod-marquee strong{font-size:26px}.pod-audience-diagram .pod-lines{display:block;opacity:.25}.pod-flow-bubble{width:21px;height:16px;gap:2px}.hero-widget-invite{min-height:70px;font-size:12px}.hero-widget-invite a{font-size:14px}}
 @media(prefers-reduced-motion:reduce){.pod-flow-bubble{display:none}.letter-nav-stamp{transition:none}}
+/* Feeding-time easter egg: loaded only after the fifth click. */
+.orca-surprise{width:min(96vw,1120px);padding:32px 24px 20px;border:1px solid #8faf7459;border-radius:28px;background:#071f1b;color:#f3f7e8;box-shadow:0 35px 150px #000a}
+.orca-surprise::backdrop{background:#031410e6;backdrop-filter:blur(12px)}
+.orca-surprise>span{color:#d9fa98;font-size:10px;letter-spacing:.2em}
+.orca-surprise h2{font-size:clamp(25px,4vw,42px);margin:10px 32px 18px;letter-spacing:-.04em;line-height:1.15}
+.orca-surprise>button:not(.orca-feast-pause){color:#dcedd2;border-radius:50%;width:38px;height:38px;line-height:1;background:#ffffff0c;z-index:2}
+.orca-surprise>button:focus-visible{outline:2px solid #d8ff80;outline-offset:3px}
+.orca-surprise .orca-feast-media{display:block;width:100%;height:auto;max-height:65dvh;aspect-ratio:8/5;object-fit:contain;border-radius:18px;background:#031d18}
+.orca-surprise>p{margin:12px 0 8px;color:#adc8b5;font-size:14px}
+.orca-surprise>button.orca-feast-pause{position:static;display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:8px 15px;border:1px solid #a0c98b45;border-radius:30px;background:#d9ff9510;color:#deefcf;font:12px/1.4 var(--sans,sans-serif);cursor:pointer}
+.orca-surprise>button.orca-feast-pause[hidden]{display:none}
+@media(max-width:600px){.orca-surprise{padding:32px 10px 16px;border-radius:20px}.orca-surprise h2{margin:12px 20px 15px}.orca-surprise .orca-feast-media{border-radius:12px}.orca-surprise>p{font-size:12px}}

@@ -109,12 +109,38 @@ if(typeof document!=='undefined'){
    count=0;
    const dialog=document.createElement('dialog');dialog.className='orca-surprise';dialog.setAttribute('aria-labelledby','orca-surprise-title');
    const close=document.createElement('button');close.type='button';close.textContent='×';close.setAttribute('aria-label','Close the orca surprise');
-   const label=document.createElement('span');label.textContent='YOU FOUND OUR HAPPY PLACE';
-   const title=document.createElement('h2');title.id='orca-surprise-title';title.textContent='One day, in the wild.';
-   const img=document.createElement('img');img.width=560;img.height=360;img.alt='An orca jumping above the green ocean';
-   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;img.src=reduced?'/assets/orca-surprise-still.png':'/assets/orca-surprise.gif';
-   const copy=document.createElement('p');copy.textContent='Until then, we’ll keep building little things with a lot of heart.';
-   dialog.append(close,label,title,img,copy);document.body.append(dialog);dialog.showModal();close.focus();
+   const label=document.createElement('span');label.textContent='YOU FOUND FEEDING TIME';
+   const title=document.createElement('h2');title.id='orca-surprise-title';title.textContent='Orky was feeling peckish.';
+   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+   const description='A giant orca playfully gobbles the Crisp, Intercom, tawk.to, Help Scout, Zendesk, Chatway and Gorgias logos.';
+   const poster='/assets/orca-feast-still.jpg';
+   const media=document.createElement(reduced?'img':'video');media.width=960;media.height=600;
+   media.className='orca-feast-media';media.setAttribute('aria-label',description);
+   const pause=document.createElement('button');pause.type='button';pause.className='orca-feast-pause';pause.textContent='Pause animation';pause.hidden=reduced;
+   let fallback=null,playing=true;
+   if(reduced){media.src=poster;media.alt=description;}
+   else{
+    media.muted=true;media.loop=true;media.autoplay=true;media.playsInline=true;media.poster=poster;media.preload='auto';
+    media.src='/assets/orca-feast.mp4';
+    const useGif=()=>{
+     if(!media.isConnected||fallback)return;
+     fallback=document.createElement('img');fallback.className='orca-feast-media';fallback.width=960;fallback.height=600;fallback.alt=description;
+     fallback.src=playing?'/assets/orca-feast.gif':poster;media.replaceWith(fallback);
+    };
+    media.addEventListener('error',useGif,{once:true});
+    pause.addEventListener('click',async()=>{
+     if(fallback){playing=!playing;fallback.src=playing?'/assets/orca-feast.gif':poster;}
+     else if(media.paused){try{await media.play();playing=true;}catch{playing=false;}}
+     else{media.pause();playing=false;}
+     pause.textContent=playing?'Pause animation':'Play animation';
+    });
+    media.addEventListener('pause',()=>{playing=false;pause.textContent='Play animation';});
+    media.addEventListener('play',()=>{playing=true;pause.textContent='Pause animation';});
+    dialog.addEventListener('close',()=>{media.pause();media.removeAttribute('src');media.load();},{once:true});
+   }
+   const copy=document.createElement('p');copy.textContent='One inbox. A very big appetite.';
+   dialog.append(close,label,title,media,copy,pause);document.body.append(dialog);dialog.showModal();close.focus();
+   if(!reduced)media.play().catch(()=>{playing=false;pause.textContent='Play animation';});
    close.addEventListener('click',()=>dialog.close());dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});dialog.addEventListener('close',()=>{dialog.remove();logo.focus();},{once:true});
   });
  });

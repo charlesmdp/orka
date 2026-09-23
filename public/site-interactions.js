@@ -19,6 +19,30 @@ export function safeFaqSource(url){try{const u=new URL(url);return u.origin==='h
 if(typeof document!=='undefined'){
  document.documentElement.dataset.brandTheme='green';
  try{localStorage.removeItem('orka-brand-theme');}catch{}
+ const projectDialog=document.getElementById('project-explainer');
+ if(projectDialog){
+  let projectTrigger;
+  document.querySelectorAll('[data-project-help]').forEach(button=>button.addEventListener('click',()=>{
+   projectTrigger=button;
+   if(!projectDialog.open){projectDialog.showModal();projectDialog.scrollTop=0;}
+  }));
+  projectDialog.querySelectorAll('[data-close-project]').forEach(button=>button.addEventListener('click',()=>projectDialog.close()));
+  projectDialog.addEventListener('click',event=>{
+   if(event.target!==projectDialog)return;
+   const bounds=projectDialog.getBoundingClientRect();
+   if(event.clientX<bounds.left||event.clientX>bounds.right||event.clientY<bounds.top||event.clientY>bounds.bottom)projectDialog.close();
+  });
+  projectDialog.addEventListener('close',()=>projectTrigger?.focus({preventScroll:true}));
+ }
+ const selectOwnKey=()=>{
+  const choice=document.querySelector('[data-own-key]');
+  if(!choice)return;
+  choice.checked=true;choice.dispatchEvent(new Event('change',{bubbles:true}));
+ };
+ if(new URLSearchParams(window.location.search).get('billing')==='own-key')selectOwnKey();
+ document.querySelectorAll('[data-byok-estimate]').forEach(link=>link.addEventListener('click',()=>{
+  if(link.getAttribute('href')==='#ai-pricing')selectOwnKey();
+ }));
  // sessionStorage follows this tab across pages and reloads, not future sessions.
  try{if(sessionStorage.getItem('orka-letter-read')==='1')document.documentElement.dataset.letterRead='true';}catch{}
  document.querySelectorAll('.letter-nav-stamp').forEach(link=>link.addEventListener('click',()=>{

@@ -57,11 +57,10 @@ for (const filename of (await readdir(path.join(output, 'client'))).filter(name 
   for (const [original, versioned] of assetNames) html = html.replaceAll('"' + original + '"', '"' + versioned + '"');
   html = html.replace('</body>', '<script>window.ORKA_APP_ID="66471b6efff6410a175c00b6";(function(){if(document.querySelector("script[data-orka-widget]"))return;var s=document.createElement("script");s.src="https://widget.orka.chat/app.js";s.async=true;s.dataset.orkaWidget="true";document.head.appendChild(s);})();</script></body>');
   await writeFile(path.join(output, 'client', filename), html);
-  headers += '/' + filename + '\n  Cache-Control: no-cache\n';
-  if (filename !== 'index.html') headers += '/' + filename.slice(0, -5) + '\n  Cache-Control: no-cache\n';
+  // The Worker adds no-cache to every HTML response; avoid exceeding Pages' 100-rule limit.
 }
 await generateHeroExperiments(path.join(output, 'client'), assetNames.get('hero-experiments.css'), assetNames.get('hero-experiments.js'), assetNames.get('new2-mosaic.css'));
-for (const route of ['new','new2','new3','new4']) headers += '/' + route + '\n  Cache-Control: no-cache\n  X-Robots-Tag: noindex, follow\n/' + route + '.html\n  Cache-Control: no-cache\n  X-Robots-Tag: noindex, follow\n';
+for (const route of ['new','new2','new3','new4','old']) headers += '/' + route + '\n  Cache-Control: no-cache\n  X-Robots-Tag: noindex, follow\n/' + route + '.html\n  Cache-Control: no-cache\n  X-Robots-Tag: noindex, follow\n';
 await buildFaqKnowledge(path.join(output, 'client'));
 headers += '/llm\n  Content-Type: text/markdown; charset=utf-8\n  Cache-Control: no-cache\n/*.md\n  Content-Type: text/markdown; charset=utf-8\n  Cache-Control: no-cache\n/llms.txt\n  Content-Type: text/plain; charset=utf-8\n  Cache-Control: no-cache\n/llms-full.txt\n  Content-Type: text/markdown; charset=utf-8\n  Cache-Control: no-cache\n/sitemap.xml\n  Cache-Control: no-cache\n/robots.txt\n  Cache-Control: no-cache\n';
 await writeFile(path.join(output, 'client/_headers'), headers);

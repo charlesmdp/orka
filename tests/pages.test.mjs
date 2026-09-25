@@ -11,12 +11,23 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   execFileSync(process.execPath, ['scripts/build.mjs', '--pages'], {cwd:root});
   const output = new URL('../dist/client/', import.meta.url);
   const html = await readFile(new URL('index.html', output), 'utf8');
+  const old = await readFile(new URL('old.html', output), 'utf8');
+  assert.match(html,/<body class="hero-experiment experiment-mosaic new2-mosaic"/);
+  assert.doesNotMatch(html,/<meta name="robots" content="noindex/);
+  assert.match(old,/<section class="hero dark-section"/);
+  assert.doesNotMatch(old,/mosaic-dashboard-fresco/);
+  assert.match(old,/<meta name="robots" content="noindex, follow">/);
+  assert.match(old,/rel="canonical" href="https:\/\/orka.chat\/old"/);
+  for(const tier of ['solo','pod','fleet']) assert.ok(html.includes('mosaic-pricing-'+tier+'.jpg'));
+  assert.match(html,/data-map-search/);
+  assert.match(html,/data-map-location/);
   const headers = await readFile(new URL('_headers', output), 'utf8');
   const routes = JSON.parse(await readFile(new URL('_routes.json', output), 'utf8'));
   assert.equal(routes.version, 1);
   assert.ok(routes.include.includes('/*'));
   assert.ok(!routes.exclude.includes('/api/*'));
   assert.match(headers, /Cache-Control: no-cache/);
+  assert.ok(headers.split("\n").filter(line=>line.startsWith("/")).length<=100);
   for (const basename of ['style', 'refinement', 'refresh', 'product-polish', 'app', 'live-map']) {
     const ext = ['app', 'live-map'].includes(basename) ? 'js' : 'css';
     const match = html.match(new RegExp('"(' + basename + '\\.[a-f0-9]{12}\\.' + ext + ')"'));
@@ -31,8 +42,6 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   assert.ok(headers.includes('/' + modelFile + '\n  Cache-Control: public, max-age=31536000, immutable'));
   for (const page of ['features', 'terms', 'privacy', 'cookies']) {
     const source = await readFile(new URL(page + '.html', output), 'utf8');
-    assert.ok(headers.includes('/' + page + '\n  Cache-Control: no-cache'));
-    assert.ok(headers.includes('/' + page + '.html\n  Cache-Control: no-cache'));
     assert.doesNotMatch(source, /content="noindex/);
     assert.match(source, /href="pages\.[a-f0-9]{12}\.css"/);
     assert.ok(new RegExp('src="' + (page === 'features' ? 'features' : 'pages') + '\\.[a-f0-9]{12}\\.js"').test(source));
@@ -45,13 +54,15 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   await assert.rejects(access(new URL('.openai/hosting.json', output)));
 
   const allPages=(await readdir(output)).filter(n=>n.endsWith('.html'));
-  const pageNames=allPages.filter(n=>!['new.html','new2.html','new3.html','new4.html'].includes(n));
-  assert.equal(allPages.length,83);
+  const pageNames=allPages.filter(n=>!['new.html','new2.html','new3.html','new4.html','old.html'].includes(n));
+  assert.equal(allPages.length,84);
   assert.equal(pageNames.length,79);
   const knowledge=JSON.parse(await readFile(new URL('faq-knowledge.json',output),'utf8'));
   assert.equal(selectFaqSources('What does Pod cost?',knowledge.documents)[0].url,'https://orka.chat/pricing');
+  assert.ok(!knowledge.documents.some(doc=>doc.url==='https://orka.chat/old'));
   const homepageFooter=html.match(/<footer class="o-footer"[\s\S]*?<\/footer>/)[0];
   const sitemap=await readFile(new URL('sitemap.xml',output),'utf8');
+  assert.ok(!sitemap.includes('<loc>https://orka.chat/old</loc>'));
   for (const [route,style] of [['new','pixel'],['new2','mosaic'],['new3','mosaic'],['new4','mosaic']]) {
     const preview=await readFile(new URL(route+'.html',output),'utf8');
     assert.match(preview,new RegExp('seascape-hero seascape-'+style));
@@ -76,7 +87,7 @@ test('Pages output includes the API, linked assets and cache headers', async () 
       await access(new URL(mosaicCss,output));
       await access(new URL('assets/new2-mosaic-dashboard-frame.jpg',output));
     } else {
-      assert.equal(belowHero(preview),belowHero(html),'Other previews preserve every section after the hero');
+      assert.equal(belowHero(preview),belowHero(old),'Other previews preserve every section after the hero');
       assert.doesNotMatch(preview,/mosaic-dashboard-fresco|new2-mosaic\./);
     }
     assert.equal((preview.match(/<h1\b/g)||[]).length,1);

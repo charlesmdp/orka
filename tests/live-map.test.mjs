@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {expandVisitors,PROJECT_KEYS,clusterVisitors,clampView,zoomView,worldView,WORLD_SIZE,projectLocation} from '../public/map-model.js';
+import {expandVisitors,PROJECT_KEYS,clusterVisitors,clampView,zoomView,worldView,WORLD_SIZE,projectLocation,inhabitedWorldView,filterMapVisitors} from '../public/map-model.js';
 
 test('visitor expansion preserves all six project totals and named profiles',()=>{
   const points=expandVisitors();
@@ -65,4 +65,21 @@ test('the world map includes visitors beyond North America without changing proj
   }
   assert.ok(points.every(p=>p.x>=0 && p.x<=WORLD_SIZE && p.y>=0 && p.y<=WORLD_SIZE));
   assert.deepEqual(projectLocation(0,0),{x:1024,y:1024});
+});
+
+test('mosaic world view contains all demo cities at every supported size',()=>{
+  for(const [width,height] of [[280,368],[600,450],[1100,450]]){
+    const view=inhabitedWorldView(width,height);
+    assert.ok(Math.abs(view.width/view.height-width/height)<1e-9);
+    for(const point of expandVisitors()) assert.ok(point.x>=view.x&&point.x<=view.x+view.width&&point.y>=view.y&&point.y<=view.y+view.height,point.city);
+  }
+});
+test('live map search combines a project with names and locations without losing visitor counts',()=>{
+  const points=expandVisitors(),names={caps:'Cap store'},profiles={ny:'Alex Rivera'};
+  assert.equal(filterMapVisitors(points,'all','',names,profiles).length,214);
+  assert.equal(filterMapVisitors(points,'caps','',names,profiles).length,36);
+  const alex=filterMapVisitors(points,'caps','ALEX New York',names,profiles);
+  assert.equal(alex.length,1);assert.equal(alex[0].profileId,'ny');
+  assert.equal(filterMapVisitors(points,'booking','Alex',names,profiles).length,0);
+  assert.equal(filterMapVisitors(points,'all','no such visitor',names,profiles).length,0);
 });

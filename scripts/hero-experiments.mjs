@@ -45,6 +45,8 @@ export async function generateHeroExperiments(directory, stylesheet, script, mos
   const home = await readFile(path.join(directory,'index.html'),'utf8');
   const originalHero = home.match(/<section class="hero\b[^>]*>[\s\S]*?<\/section>/)?.[0];
   if (!originalHero) throw new Error('Homepage hero was not found; refusing to create incomplete previews.');
+  const old = home.replace(/<link rel="canonical" href="[^"]+">/,'<link rel="canonical" href="https://orka.chat/old">').replace('</head>','<meta name="robots" content="noindex, follow"></head>');
+  await writeFile(path.join(directory,'old.html'),old);
   for (const variant of variants) {
     const isMosaicPage = variant.slug === 'new2';
     let page = home.replace(originalHero,hero(variant,mascot)+(isMosaicPage?mosaicDashboard(originalHero):''))
@@ -54,5 +56,9 @@ export async function generateHeroExperiments(directory, stylesheet, script, mos
       .replace('</head>',`<meta name="robots" content="noindex, follow"><link rel="stylesheet" href="${stylesheet}"><script type="module" src="${script}"></script><link rel="preload" as="image" href="/assets/${variant.asset}"></head>`);
     if (isMosaicPage) page = applyMosaicArtwork(page).replace('</head>',`<link rel="stylesheet" href="${mosaicStylesheet}"></head>`);
     await writeFile(path.join(directory,variant.slug+'.html'),page);
+    if (isMosaicPage) {
+      const published = page.replace('<meta name="robots" content="noindex, follow">','').replace(/<title>[^<]*<\/title>/,home.match(/<title>[^<]*<\/title>/)[0]);
+      await writeFile(path.join(directory,'index.html'),published);
+    }
   }
 }

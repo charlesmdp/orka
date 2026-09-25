@@ -61,7 +61,7 @@ for (const filename of (await readdir(path.join(output, 'client'))).filter(name 
   if (filename !== 'index.html') headers += '/' + filename.slice(0, -5) + '\n  Cache-Control: no-cache\n';
 }
 await generateHeroExperiments(path.join(output, 'client'), assetNames.get('hero-experiments.css'), assetNames.get('hero-experiments.js'), assetNames.get('new2-mosaic.css'));
-for (const route of ['new','new2','new3','new4']) headers += '/' + route + '\n  Cache-Control: no-cache\n  X-Robots-Tag: noindex, follow\n/' + route + '.html\n  Cache-Control: no-cache\n  X-Robots-Tag: noindex, follow\n';
+for (const route of ['new','new2','new3','new4','old']) headers += '/' + route + '\n  Cache-Control: no-cache\n  X-Robots-Tag: noindex, follow\n/' + route + '.html\n  Cache-Control: no-cache\n  X-Robots-Tag: noindex, follow\n';
 await buildFaqKnowledge(path.join(output, 'client'));
 headers += '/llm\n  Content-Type: text/markdown; charset=utf-8\n  Cache-Control: no-cache\n/*.md\n  Content-Type: text/markdown; charset=utf-8\n  Cache-Control: no-cache\n/llms.txt\n  Content-Type: text/plain; charset=utf-8\n  Cache-Control: no-cache\n/llms-full.txt\n  Content-Type: text/markdown; charset=utf-8\n  Cache-Control: no-cache\n/sitemap.xml\n  Cache-Control: no-cache\n/robots.txt\n  Cache-Control: no-cache\n';
 await writeFile(path.join(output, 'client/_headers'), headers);

@@ -7,6 +7,7 @@ import {generateEditorial} from './editorial-pages.mjs';
 import {comparisons} from './comparison-content.mjs';
 import {sharedFooter,faqSection,faqSchema,homeFaqs} from './site-chrome.mjs';
 import {projectHelp,projectDialog,byokSpotlight} from './pricing-explainers.mjs';
+import {generateHeroExperiments} from './hero-experiments.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const output = path.join(root, 'dist');
@@ -34,7 +35,7 @@ const credits = homepage.match(/<details class="artwork-credits">[\s\S]*?<\/deta
 const footer = sharedFooter(comparisons,credits);
 let headers = '/\n  Cache-Control: no-cache\n';
 const assetNames = new Map();
-for (const filename of ['map-model.js', 'live-map.js', 'style.css', 'refinement.css', 'refresh.css', 'product-polish.css', 'app.js', 'pages.css', 'pages.js', 'features.js', 'pricing-model.js', 'help-demo-data.js', 'editorial.css', 'about.css', 'comparison.css', 'site-chrome.css', 'guides.css', 'site-interactions.js', 'editorial.js']) {
+for (const filename of ['map-model.js', 'live-map.js', 'style.css', 'refinement.css', 'refresh.css', 'product-polish.css', 'app.js', 'pages.css', 'pages.js', 'features.js', 'pricing-model.js', 'help-demo-data.js', 'editorial.css', 'about.css', 'comparison.css', 'site-chrome.css', 'guides.css', 'site-interactions.js', 'editorial.js', 'hero-experiments.css']) {
   let content = await readFile(path.join(root, 'public', filename), 'utf8');
   for (const [original, versioned] of assetNames) content = content.replaceAll('./' + original, './' + versioned);
   const hash = createHash('sha256').update(content).digest('hex').slice(0, 12);
@@ -59,6 +60,8 @@ for (const filename of (await readdir(path.join(output, 'client'))).filter(name 
   headers += '/' + filename + '\n  Cache-Control: no-cache\n';
   if (filename !== 'index.html') headers += '/' + filename.slice(0, -5) + '\n  Cache-Control: no-cache\n';
 }
+await generateHeroExperiments(path.join(output, 'client'), assetNames.get('hero-experiments.css'));
+for (const route of ['new','new2']) headers += '/' + route + '\n  Cache-Control: no-cache\n  X-Robots-Tag: noindex, follow\n/' + route + '.html\n  Cache-Control: no-cache\n  X-Robots-Tag: noindex, follow\n';
 await buildFaqKnowledge(path.join(output, 'client'));
 headers += '/llm\n  Content-Type: text/markdown; charset=utf-8\n  Cache-Control: no-cache\n/*.md\n  Content-Type: text/markdown; charset=utf-8\n  Cache-Control: no-cache\n/llms.txt\n  Content-Type: text/plain; charset=utf-8\n  Cache-Control: no-cache\n/llms-full.txt\n  Content-Type: text/markdown; charset=utf-8\n  Cache-Control: no-cache\n/sitemap.xml\n  Cache-Control: no-cache\n/robots.txt\n  Cache-Control: no-cache\n';
 await writeFile(path.join(output, 'client/_headers'), headers);

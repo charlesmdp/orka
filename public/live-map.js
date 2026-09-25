@@ -1,4 +1,4 @@
-import {expandVisitors, clusterVisitors, clampView, zoomView, worldView, WORLD_LABELS, CITY_LABELS} from './map-model.js';
+import {expandVisitors, clusterVisitors, clampView, zoomView, worldView, WORLD_LABELS, CITY_LABELS, inhabitedWorldView, filterMapVisitors} from './map-model.js';
 
 const svg = document.querySelector('.live-geographic-map');
 const layer = svg.querySelector('.live-map-markers');
@@ -9,10 +9,36 @@ const projectButtons = [...document.querySelectorAll('[data-map-project]')];
 const rows = [...document.querySelectorAll('.live-visitor-row')];
 const points = expandVisitors();
 const projectNames = Object.fromEntries(projectButtons.map(button => [button.dataset.mapProject, button.querySelector('span:nth-child(2)').textContent]));
+const mosaic = document.body.classList.contains('new2-mosaic');
+const search = document.querySelector('[data-map-search]');
+const locationPanel = document.querySelector('[data-map-location]');
+const profileNames = Object.fromEntries(rows.map(row=>[row.dataset.visitor,row.querySelector('strong').textContent.trim()]));
+let query='', locationCluster=null, locationTrigger=null;
+const filteredPoints=()=>filterMapVisitors(points,project,query,projectNames,profileNames);
+function dimensions(){return {width:svg.clientWidth || viewport.clientWidth,height:svg.clientHeight || viewport.clientHeight};}
+function closeLocation(){if(locationPanel)locationPanel.hidden=true;}
+function showLocation(members,trigger){
+  if(!locationPanel)return;
+  locationCluster=members;locationTrigger=trigger || null;
+  const cities=[...new Set(members.map(p=>p.city))];
+  document.querySelector('[data-map-location-title]').textContent=cities.length===1?cities[0]:cities.slice(0,2).join(' & ')+(cities.length>2?' + more':'');
+  document.querySelector('[data-map-location-count]').textContent=members.length+' '+(members.length===1?'visitor':'visitors')+' at this location';
+  const list=document.querySelector('[data-map-location-list]');list.replaceChildren();
+  members.forEach(point=>{
+    const row=document.createElement('div');row.className='map-location-person';
+    const avatar=document.createElement('img');avatar.src='/assets/orky-swim-mascot.svg';avatar.alt='';avatar.width=32;avatar.height=32;
+    const detail=document.createElement('div'),name=document.createElement('strong'),meta=document.createElement('small');
+    name.textContent=profileNames[point.profileId]||'Visitor '+(points.indexOf(point)+1001);
+    meta.textContent=projectNames[point.project]+' · '+point.city;
+    detail.append(name,meta);row.append(avatar,detail);list.append(row);
+  });
+  document.querySelector('[data-map-location-zoom]').disabled=zoom>=maxZoom;
+  locationPanel.hidden=false;
+}
 const maxZoom = 64;
 let project = 'all', zoom = 1, selectedId = null, view, drag, suppressClick = false;
 
-function homeView() { return worldView(viewport.clientWidth,viewport.clientHeight); }
+function homeView() { const {width,height}=dimensions();return mosaic?inhabitedWorldView(width,height):worldView(width,height); }
 function renderLabels(scale) {
   const labels=document.createDocumentFragment(), placed=[];
   for (const country of [...CITY_LABELS,...WORLD_LABELS]) {
@@ -34,8 +60,10 @@ function element(name, attributes, text) {
 function render() {
   if (!view || !viewport.clientWidth) return;
   svg.setAttribute('viewBox', `${view.x} ${view.y} ${view.width} ${view.height}`);
-  const scale = Math.min(viewport.clientWidth/view.width,viewport.clientHeight/view.height);
-  const filtered = points.filter(point => project === 'all' || point.project === project);
+  const {width,height}=dimensions();
+  const scale = Math.min(width/view.width,height/view.height);
+  const filtered = filteredPoints();
+  if(mosaic){document.querySelector('[data-map-total]').textContent=filtered.length;document.querySelector('[data-map-visible-count]').textContent=filtered.length+' visitors';}
   const clusters = clusterVisitors(filtered, scale, zoom>=32?18:36);
   renderLabels(scale);
   const fragment = document.createDocumentFragment();
@@ -54,6 +82,7 @@ function render() {
     if (count>1) marker.append(element('text',{dy:'.35em'},count));
     const activate = () => {
       if (suppressClick) return;
+      if(mosaic){selectedId=point.id;showLocation(cluster.members,marker);layer.querySelectorAll('[aria-pressed]').forEach(node=>{node.classList.toggle('active',node===marker);node.setAttribute('aria-pressed',String(node===marker));});return;}
       if (count>1 && zoom<maxZoom) {
         const next = Math.min(maxZoom,zoom*2);
         const width = homeView().width/next, height = view.height*width/view.width;
@@ -100,7 +129,9 @@ function localPoint(event) {
 projectButtons.forEach(button=>button.addEventListener('click',()=>{
   project = button.dataset.mapProject;
   projectButtons.forEach(item=>{const active=item===button;item.classList.toggle('active',active);item.setAttribute('aria-pressed',String(active));});
-  rows.forEach(row=>row.hidden=project!=='all'&&row.dataset.visitorProject!==project);
+  closeLocation();
+  const matched=new Set(filteredPoints().map(point=>point.profileId));
+  rows.forEach(row=>row.hidden=!matched.has(row.dataset.visitor));
   document.querySelector('#map-project-summary').textContent = project==='all'?'6 projects. One live view.':projectNames[project]+' · live visitors';
   zoom=1;view=homeView();selectedId=null;popup.hidden=true;
   rows.find(row=>!row.hidden)?.click();
@@ -108,14 +139,16 @@ projectButtons.forEach(button=>button.addEventListener('click',()=>{
 }));
 rows.forEach(row=>row.addEventListener('click',()=>{
   const next=points.find(point=>point.profileId===row.dataset.visitor)?.id || null;
-  if(selectedId===next)return;
+  if(selectedId===next){if(mosaic){const point=points.find(p=>p.id===next);if(point)showLocation(filteredPoints().filter(p=>p.city===point.city),row);}return;}
   selectedId=next;
   const selected=points.find(point=>point.id===next);
   if(selected && zoom>1)view=clampView({...view,x:selected.x-view.width/2,y:selected.y-view.height/2});
   popup.hidden=true;
+  if(mosaic&&selected)showLocation(filteredPoints().filter(point=>point.city===selected.city),row);
   render();
 }));
 document.querySelectorAll('[data-map-zoom]').forEach(button=>button.addEventListener('click',()=>{
+  closeLocation();
   if(button.dataset.mapZoom==='reset'){zoom=1;view=homeView();popup.hidden=true;render();}
   else changeZoom(button.dataset.mapZoom==='in'?1.6:1/1.6);
 }));
@@ -144,7 +177,7 @@ svg.addEventListener('keydown',event=>{
   if(moves[event.key]){event.preventDefault();const [x,y]=moves[event.key];view=clampView({...view,x:view.x+x*view.width*.15,y:view.y+y*view.height*.15});render();}
   else if(['+','=','-'].includes(event.key)){event.preventDefault();changeZoom(event.key==='-'?1/1.6:1.6);}
   else if(event.key==='Home'){event.preventDefault();zoom=1;view=homeView();render();}
-  else if(event.key==='Escape')popup.hidden=true;
+  else if(event.key==='Escape'){popup.hidden=true;closeLocation();}
 });
 function resize(){
   const base=homeView();
@@ -155,3 +188,18 @@ function resize(){
 if('ResizeObserver'in window)new ResizeObserver(resize).observe(viewport);
 else window.addEventListener('resize',resize);
 resize();
+
+if(search)search.addEventListener('input',()=>{
+  query=search.value;closeLocation();
+  const matched=new Set(filteredPoints().map(point=>point.profileId));
+  rows.forEach(row=>row.hidden=!matched.has(row.dataset.visitor));
+  zoom=1;view=homeView();selectedId=null;render();
+});
+document.querySelector('[data-map-location-close]')?.addEventListener('click',()=>{closeLocation();locationTrigger?.focus({preventScroll:true});});
+document.querySelector('[data-map-location-zoom]')?.addEventListener('click',()=>{
+  if(!locationCluster?.length)return;
+  const x=locationCluster.reduce((sum,p)=>sum+p.x,0)/locationCluster.length,y=locationCluster.reduce((sum,p)=>sum+p.y,0)/locationCluster.length;
+  const next=Math.min(maxZoom,zoom*2),base=homeView(),width=base.width/next,height=base.height/next;
+  zoom=next;view=clampView({x:x-width/2,y:y-height/2,width,height});closeLocation();render();svg.focus({preventScroll:true});
+});
+locationPanel?.addEventListener('keydown',event=>{if(event.key==='Escape'){closeLocation();locationTrigger?.focus({preventScroll:true});}});

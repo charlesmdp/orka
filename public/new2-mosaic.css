@@ -90,6 +90,7 @@
  /* Let the first screen breathe; the real chat returns below the hero.
     An already-open conversation is never hidden. */
  .new2-mosaic[data-mosaic-hero-visible="true"] .orka-container.orka-closed,.new2-mosaic[data-mosaic-hero-visible="true"] .orka-container.orka-closed #orka-iframe{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
+ .new2-mosaic[data-mosaic-hero-visible="true"]:has(> .orka-container.orka-closed) #orka-launcher{display:none!important}
  .new2-mosaic [data-hero-widget-invite]{display:none!important}
 }
 @media(max-width:360px){

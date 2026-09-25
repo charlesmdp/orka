@@ -74,7 +74,7 @@ test('Pages output includes the API, linked assets and cache headers', async () 
     const night=preview.match(/data-night-art data-src="([^"]+)"/)[1];
     await access(new URL(night.slice(1),output));
     assert.match(preview,/data-mascot-handle aria-label="Orky/);
-    assert.match(preview,/data-motion-toggle/);
+    assert.doesNotMatch(preview,/data-motion-toggle|ILLUSTRATIVE CONVERSATIONS|seascape-mascot-shadow/);
     const header=preview.match(/<header[\s\S]*?<\/header>/)[0];
     assert.match(header,/data-night-toggle/);
     assert.doesNotMatch(preview,/seascape-versions|A little less support chaos/);

@@ -214,3 +214,13 @@
  .new2-mosaic .real-livemap-footer{padding:12px 10px}.new2-mosaic .real-livemap-footer>a{max-width:90px}.new2-mosaic .real-livemap-footer>span>span{display:none}
 }
 @media(prefers-reduced-motion:reduce){.new2-mosaic .closing-sonar-sweep{animation:none}}
+/* Explicit card colors also replace the former inverted Pod treatment. */
+.new2-mosaic .price-card{padding:28px;color:#254837}
+.new2-mosaic .mosaic-tier-art{width:calc(100% + 56px);margin:-28px -28px 25px}
+.new2-mosaic .price-card :is(.price,.price-card-heading,.plan-projects){color:#254837}
+.new2-mosaic .price-card :is(.plan-description,.plan-features,.plan-footnote){color:#60755e}
+.new2-mosaic.hero-night .price-card :is(.price,.price-card-heading,.plan-projects){color:#edf4da}
+.new2-mosaic.hero-night .price-card :is(.plan-description,.plan-features,.plan-footnote){color:#b9cfca}
+.new2-mosaic.hero-night :is(.human-copy h2,.human-copy h3){color:#edf4da}
+.new2-mosaic.hero-night .human-copy>p{color:#b9cfca}
+.new2-mosaic.hero-night .feature-group li{color:#bed1c3}

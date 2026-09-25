@@ -3,10 +3,10 @@ import path from 'node:path';
 import {projectHelp} from './pricing-explainers.mjs';
 
 const variants = [
-  {slug:'new',style:'pixel',name:'Pixel cove',asset:'hero-pixel-cove.jpg'},
+  {slug:'new',style:'pixel',name:'Pixel cove',asset:'hero-pixel-cove-front.jpg'},
   {slug:'new2',style:'mosaic',name:'Ceramic mosaic',asset:'hero-ceramic-mosaic.jpg'},
   {slug:'new3',style:'mosaic',name:'Aerial ocean mosaic',asset:'hero-ocean-mosaic.jpg',aerial:true},
-  {slug:'new4',style:'pixel',name:'Aerial pixel ocean',asset:'hero-ocean-pixel.jpg',aerial:true}
+  {slug:'new4',style:'mosaic',name:'Orky’s message mosaic',asset:'hero-mosaic-chat-source.jpg',chatSource:true}
 ];
 const arrow = '<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>';
 
@@ -14,14 +14,14 @@ function notifications() {
   const messages=[['orca-cap.webp','My cap store','Emma','Does this cap come in green?'],['cowlendar-official-home.png','My booking app','Alex','Can I move my booking?'],['calorie-app.svg','My calorie tracker','Sam','How do I upgrade my plan?']];
   return `<div class="seascape-notifications" aria-label="Example message notifications from different projects">
     <div class="seascape-note-stack">${messages.map(([icon,project,name,message],i)=>`<article class="seascape-note" data-slot="${i}"><div class="seascape-note-surface"><div class="seascape-note-app"><img src="/assets/orka-logo.svg" width="18" height="17" alt=""><span>ORKA <b>· NEW MESSAGE</b></span><small>now</small></div><div class="seascape-note-body"><img data-note-icon src="/assets/${icon}" width="38" height="38" alt=""><div><strong><span data-note-name>${name}</span><span class="seascape-note-project" data-note-project>${project}</span></strong><p data-note-message>${message}</p></div><span class="seascape-unread" aria-label="Unread"></span></div></div></article>`).join('')}</div>
-    <div class="seascape-caught"><img src="/assets/orka-logo.svg" alt="" width="23" height="22"><span>All caught. <strong>One inbox.</strong></span><span aria-hidden="true">✓</span></div>
+    <div class="seascape-caught"><img src="/assets/orka-logo.svg" alt="" width="23" height="22"><span>All caught. <strong>One inbox.</strong></span><span class="seascape-online-dot" role="img" aria-label="Online"></span></div>
   </div>`;
 }
 
 const sceneTools = `<div class="seascape-scene-tools" role="group" aria-label="Scene settings"><button class="seascape-night-toggle" type="button" role="switch" aria-checked="false" aria-label="Night mode" data-night-toggle><span class="seascape-toggle-track" aria-hidden="true"><span>☀</span><span>☾</span><i></i></span><span data-night-label>Night mode</span></button></div>`;
 
 function hero(variant, mascot) {
-  return `<section class="seascape-hero seascape-${variant.style}${variant.aerial?' seascape-aerial':''}" aria-labelledby="hero-title">
+  return `<section class="seascape-hero seascape-${variant.style}${variant.aerial?' seascape-aerial':''}${variant.chatSource?' seascape-chat-source':''}" aria-labelledby="hero-title">
     <img class="seascape-art" src="/assets/${variant.asset}" width="1672" height="941" alt="" fetchpriority="high" decoding="async">
     <img class="seascape-art seascape-art-night" data-night-art data-src="/assets/${variant.asset.replace('.jpg','-night.jpg')}" width="1672" height="941" alt="" decoding="async">
     <div class="seascape-wash" aria-hidden="true"></div>

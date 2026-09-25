@@ -60,7 +60,25 @@ test('Pages output includes the API, linked assets and cache headers', async () 
     assert.ok(!sitemap.includes('<loc>https://orka.chat/'+route+'</loc>'));
     assert.ok(!knowledge.documents.some(doc=>doc.url==='https://orka.chat/'+route));
     const belowHero=source=>source.slice(source.indexOf('<section class="ecosystem">'));
-    assert.equal(belowHero(preview),belowHero(html),'Preview preserves every section after the hero');
+    if(route==='new2') {
+      assert.match(preview,/new2-mosaic/);
+      assert.equal((preview.match(/id="product"/g)||[]).length,1);
+      assert.match(preview,/mosaic-dashboard-fresco/);
+      for(const art of ['pod','night-shift','dialogue','context','learning','wide-net']) {
+        assert.ok(preview.includes('new2-mosaic-'+art+'.jpg'));
+        await access(new URL('assets/new2-mosaic-'+art+'.jpg',output));
+      }
+      assert.doesNotMatch(preview,/orky-head-v2|orca-swimming.svg|orca-dialogue-v11|trawler-dorsal-v14/);
+      const headings=source=>[...belowHero(source).matchAll(/<h[23][^>]*>[\s\S]*?<\/h[23]>/g)].map(m=>m[0]);
+      assert.deepEqual(headings(preview),headings(html),'Mosaic art preserves all lower-section content');
+      assert.ok(preview.includes(homepageFooter),'Mosaic keeps the shared footer');
+      const mosaicCss=preview.match(/href="(new2-mosaic\.[a-f0-9]{12}\.css)"/)[1];
+      await access(new URL(mosaicCss,output));
+      await access(new URL('assets/new2-mosaic-dashboard-frame.jpg',output));
+    } else {
+      assert.equal(belowHero(preview),belowHero(html),'Other previews preserve every section after the hero');
+      assert.doesNotMatch(preview,/mosaic-dashboard-fresco|new2-mosaic\./);
+    }
     assert.equal((preview.match(/<h1\b/g)||[]).length,1);
     const ids=[...preview.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
     assert.equal(new Set(ids).size,ids.length,'Preview has unique anchors');

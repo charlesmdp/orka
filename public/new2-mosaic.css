@@ -1,0 +1,112 @@
+/* /new2 alone: a quiet mobile introduction and a continuous ceramic world. */
+.new2-mosaic{--ocean-wallpaper:linear-gradient(#eff4e9ec,#eff4e9ec),url('/assets/new2-mosaic-pod.jpg')}
+.new2-mosaic .copilot-surface{--ocean-wallpaper:linear-gradient(#fff1c8ed,#fff1c8ed),url('/assets/new2-mosaic-pod.jpg')}
+.new2-mosaic .autopilot-surface{--ocean-wallpaper:linear-gradient(#e8ddfaed,#e8ddfaed),url('/assets/new2-mosaic-pod.jpg')}
+.new2-mosaic .quick-action-workspace{--ocean-wallpaper:linear-gradient(#ffe0eded,#ffe0eded),url('/assets/new2-mosaic-pod.jpg')}
+.new2-mosaic .site-preview-dialog:is([data-preview-theme=summer],[data-preview-theme=ocean]) .preview-chat-messages{background-image:var(--ocean-wallpaper)}
+.new2-mosaic .mosaic-dashboard-section{padding:70px 28px 85px;background:#f5f2e7}
+.new2-mosaic .mosaic-dashboard-heading{text-align:center;margin:0 auto 32px;max-width:720px}
+.new2-mosaic .mosaic-dashboard-heading .eyebrow{color:#557264;font-size:10px;letter-spacing:.14em}
+.new2-mosaic .mosaic-dashboard-heading h2{margin:14px 0 12px;color:#183e32;font-size:clamp(30px,3.5vw,48px);line-height:1.15;letter-spacing:-.05em}
+.new2-mosaic .mosaic-dashboard-heading h2 em{font-family:Georgia,serif;font-weight:400;color:#4e7b65}
+.new2-mosaic .mosaic-dashboard-heading p{color:#617568;font-size:15px;line-height:1.6;margin:0}
+.new2-mosaic .mosaic-dashboard-fresco{max-width:1360px;margin:auto;padding:60px;background:#e9e6d4;border:1px solid #a9b5a0;border-image:url('/assets/new2-mosaic-dashboard-frame.jpg') 150 175 185 175 fill / 60px / 0 stretch;box-shadow:0 24px 60px #163e3218}
+.new2-mosaic .mosaic-dashboard-fresco .hero-product{margin:0;width:100%;max-width:none;padding:0}
+.new2-mosaic .mosaic-dashboard-fresco .dashboard-frame{margin:0;padding:0;border:1px solid #e0e8d8;border-radius:18px;box-shadow:0 0 0 5px #f4f0dd,0 10px 24px #14382940;overflow:hidden}
+.new2-mosaic .orca-story-card{background:#f7f4e9;border-color:#d5dfcd;box-shadow:0 5px 0 #dae3d4;overflow:hidden}
+.new2-mosaic .orca-story-card .orca-story-art{padding:0;background:#7fbbb0;height:235px;overflow:hidden}
+.new2-mosaic .orca-story-art>img{display:block;width:100%;height:100%;object-fit:cover;max-width:none;transform:none}
+.new2-mosaic :is(.story-echoes,.story-knowledge) .orca-story-art{height:auto;align-self:stretch;width:44%;min-height:225px;flex-shrink:0}
+.new2-mosaic :is(.story-echoes,.story-knowledge) .orca-story-art>img{position:absolute;inset:0}
+.new2-mosaic .orca-story-copy{padding:24px}
+.new2-mosaic .orca-language-scene>img{opacity:1;filter:none}
+.new2-mosaic .orca-speech{background:#fffdf3ed;color:#254d40;border-color:#d0dcc8;box-shadow:0 3px 10px #0c463020}
+.new2-mosaic .speech-french{top:12px;left:12px}.new2-mosaic .speech-english{top:12px;right:12px;bottom:auto}
+.new2-mosaic .rest-statuses{bottom:12px}
+.new2-mosaic .wide-net-art{background:#6aab9d}
+.new2-mosaic .wide-net-art>img{object-fit:cover;width:100%;height:100%;min-height:350px}
+.new2-mosaic img[src$="orky-swim-mascot.svg"]{object-fit:contain}
+.new2-mosaic .orky-avatar-halo{width:175px;height:140px;background:none;box-shadow:none;border-radius:0;transform:none}
+.new2-mosaic .orky-avatar-halo>.orky-head{padding:0;transform:scaleX(-1)}
+.new2-mosaic .orky-head.suggestion-avatar{width:36px;height:30px;flex-basis:36px;padding:0;background:none;border-radius:0}
+.new2-mosaic .message-avatar:has(img[src$="orky-swim-mascot.svg"]){background:#ecf2e6}
+.new2-mosaic .story-knowledge.motion-visible .mosaic-story-image{animation:mosaic-orky-dance 3s ease-in-out infinite;scale:1.05}
+@keyframes mosaic-orky-dance{0%,100%{transform:rotate(-1deg) translateY(1px)}50%{transform:rotate(1deg) translateY(-3px)}}
+@media(max-width:1000px){
+ .new2-mosaic .mosaic-dashboard-fresco{padding:36px;border-image-width:36px}
+ .new2-mosaic .orca-story-card .orca-story-art{height:220px}
+ .new2-mosaic :is(.story-echoes,.story-knowledge) .orca-story-art{height:auto}
+}
+@media(max-width:800px){
+ .new2-mosaic :is(.story-echoes,.story-knowledge) .orca-story-art{width:100%;height:220px;min-height:0}
+ .new2-mosaic :is(.story-echoes,.story-knowledge) .orca-story-art>img{position:static}
+}
+@media(max-width:700px){
+ .new2-mosaic .site-header{top:12px;margin-top:12px;margin-bottom:-72px}
+ .new2-mosaic .nav-wrap{width:calc(100% - 32px);height:60px;padding-inline:17px}
+ .new2-mosaic .seascape-hero{height:auto;min-height:0;background:#f5f2e7}
+ .new2-mosaic .seascape-content{margin:0 24px;padding:115px 0 290px}
+ .new2-mosaic .seascape-content .seascape-eyebrow{font-size:9px;line-height:1.5;letter-spacing:.055em;gap:8px;margin:0 0 19px}
+ .new2-mosaic .seascape-content h1{font-size:clamp(31px,8.8vw,52px);line-height:1.12;letter-spacing:-.065em;max-width:100%}
+ .new2-mosaic .seascape-content h1 em{font-size:1.08em}
+ .new2-mosaic .seascape-content .seascape-lead{margin-top:19px;font-size:15px;line-height:1.65;max-width:470px;color:#4f6859}
+ .new2-mosaic .seascape-actions{display:flex;flex-direction:column;align-items:stretch;gap:3px;margin-top:23px}
+ .new2-mosaic .seascape-primary{min-height:52px;padding:13px 18px;font-size:13px;gap:5px;width:100%;max-width:470px}
+ .new2-mosaic .seascape-primary .icon{margin-left:auto;width:18px;height:18px}
+ .new2-mosaic .seascape-secondary{align-self:center;border:0;border-radius:8px;background:transparent;box-shadow:none;backdrop-filter:none;min-height:43px;font-size:12px;padding:10px 4px;color:#315e49}
+ .new2-mosaic .seascape-secondary>span{font-size:16px}
+ .new2-mosaic .seascape-content .seascape-trust{justify-content:center;width:100%;max-width:470px;gap:7px;padding:0;margin:8px 0 0;background:none;border:0;border-radius:0;font-size:11px;line-height:1.4}
+ .new2-mosaic .seascape-trust>span:last-child{display:none}
+ .new2-mosaic .seascape-trust .project-help{font-size:11px;min-height:32px;padding:5px 0}
+ .new2-mosaic .seascape-art{height:295px;top:auto;bottom:0;object-position:79% 63%;object-fit:cover}
+ .new2-mosaic .seascape-wash{background:linear-gradient(to bottom,#f5f2e7 calc(100% - 300px),#f5f2e700 calc(100% - 230px))}
+ .new2-mosaic .seascape-notifications,.new2-mosaic .seascape-sparkles{display:none}
+ .new2-mosaic .seascape-mascot{left:20px;right:auto;bottom:19px;width:96px;height:88px}
+ .new2-mosaic .seascape-mascot-hint{font-size:9px}
+ .new2-mosaic.hero-night .seascape-hero{background:#082331}
+ .new2-mosaic.hero-night .seascape-hero::after{background:none}
+ .new2-mosaic.hero-night .seascape-wash{background:linear-gradient(to bottom,#082331 calc(100% - 300px),#08233100 calc(100% - 230px));opacity:1}
+ .new2-mosaic.hero-night .seascape-content .seascape-lead{color:#c6d9d4}
+ .new2-mosaic.hero-night .seascape-secondary{background:none;border:0;color:#d3e7da}
+ .new2-mosaic.hero-night .seascape-content .seascape-trust{background:none;border:0}
+ .new2-mosaic .mosaic-dashboard-section{padding:38px 14px 50px}
+ .new2-mosaic .mosaic-dashboard-heading{margin-bottom:24px;padding:0 14px}
+ .new2-mosaic .mosaic-dashboard-heading h2{font-size:31px;line-height:1.15;margin-top:10px}
+ .new2-mosaic .mosaic-dashboard-heading h2 em{display:block}
+ .new2-mosaic .mosaic-dashboard-heading p{font-size:13px;max-width:300px;margin:auto}
+ .new2-mosaic .mosaic-dashboard-fresco{padding:17px;border-image-width:17px;box-shadow:0 12px 25px #163e3214}
+ .new2-mosaic .mosaic-dashboard-fresco .dashboard-frame{border-radius:12px;box-shadow:0 0 0 3px #f4f0dd,0 6px 14px #14382930}
+ .new2-mosaic .mosaic-dashboard-fresco .workspace-preview{border-radius:10px}
+ .new2-mosaic .dashboard-current .workspace-resolve{font-size:0;gap:0;padding:8px}
+ .new2-mosaic .dashboard-current .workspace-resolve .icon{width:15px;height:15px}
+ .new2-mosaic .dashboard-current .workspace-chat-top>div>strong{white-space:normal;font-size:11px}
+ .new2-mosaic .dashboard-current .workspace-chat-top>div>span{white-space:normal}
+ .new2-mosaic .dashboard-current .workspace-received,.new2-mosaic .dashboard-current .workspace-reply{font-size:12px!important}
+ .new2-mosaic .orca-story-card .orca-story-art{height:230px}
+ .new2-mosaic :is(.story-echoes,.story-knowledge) .orca-story-art{width:100%;height:230px;min-height:0}
+ .new2-mosaic :is(.story-echoes,.story-knowledge) .orca-story-art>img{position:static}
+ .new2-mosaic .orca-story-copy{padding:22px}
+ .new2-mosaic .orky-avatar-halo{width:130px;height:108px}
+ /* Let the first screen breathe; the real chat returns below the hero.
+    An already-open conversation is never hidden. */
+ .new2-mosaic[data-mosaic-hero-visible="true"] .orka-container.orka-closed,.new2-mosaic[data-mosaic-hero-visible="true"] .orka-container.orka-closed #orka-iframe{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
+ .new2-mosaic[data-mosaic-hero-visible="true"]:has(> .orka-container.orka-closed) #orka-launcher{display:none!important}
+ .new2-mosaic [data-hero-widget-invite]{display:none!important}
+}
+@media(max-width:360px){
+ .new2-mosaic .seascape-content{margin-inline:20px}
+ .new2-mosaic .seascape-content .seascape-eyebrow{font-size:8px;letter-spacing:.025em}
+ .new2-mosaic .seascape-content .seascape-lead{font-size:14px}
+ .new2-mosaic .seascape-primary{font-size:12px}
+ .new2-mosaic .mosaic-dashboard-section{padding-inline:8px}
+ .new2-mosaic .mosaic-dashboard-fresco{padding:12px;border-image-width:12px}
+}
+@media(prefers-reduced-motion:reduce){.new2-mosaic .mosaic-story-image{animation:none!important}}
+
+.new2-mosaic .mosaic-feast{position:relative;isolation:isolate;aspect-ratio:8/5;overflow:hidden;background:#509a92 url('/assets/new2-mosaic-dashboard-frame.jpg') center/cover}
+.new2-mosaic .mosaic-feast-orky{position:absolute;width:65%;height:85%;object-fit:contain;left:0;top:10%;transform:scaleX(-1);z-index:2;filter:drop-shadow(0 12px 9px #163e3230);animation:mosaic-feast-swim 2s ease-in-out infinite}
+.new2-mosaic .mosaic-feast-snack{position:absolute;width:9%;aspect-ratio:1;object-fit:contain;right:5%;top:45%;padding:6px;background:#fffdf5;border-radius:20%;opacity:0;animation:mosaic-snack 5s calc(var(--snack)*1s) linear infinite}
+.new2-mosaic .mosaic-feast.is-paused *{animation-play-state:paused}
+@keyframes mosaic-feast-swim{0%,100%{translate:0 0}50%{translate:1% -3%}}
+@keyframes mosaic-snack{0%{opacity:0;translate:20% -60%;rotate:-12deg}10%{opacity:1}70%{opacity:1;scale:1}85%,100%{translate:-390% 40%;scale:.1;opacity:0;rotate:30deg}}
+@media(prefers-reduced-motion:reduce){.new2-mosaic .mosaic-feast *{animation:none!important}.new2-mosaic .mosaic-feast-snack{opacity:1;top:calc(12% + var(--snack)*16%);width:7%}}

@@ -1,6 +1,7 @@
 import {readFile,writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {projectHelp} from './pricing-explainers.mjs';
+import {mosaicDashboard,applyMosaicArtwork} from './new2-mosaic.mjs';
 
 const variants = [
   {slug:'new',style:'pixel',name:'Pixel cove',asset:'hero-pixel-cove-front.jpg'},
@@ -38,18 +39,20 @@ function hero(variant, mascot) {
   </section>`;
 }
 
-// Clone the final homepage so everything after its first section stays identical.
-export async function generateHeroExperiments(directory, stylesheet, script) {
+// Share the homepage content, with an explicitly scoped mosaic treatment for /new2.
+export async function generateHeroExperiments(directory, stylesheet, script, mosaicStylesheet) {
   const mascot = (await readFile(path.join(directory,'assets/orky-swim-mascot.svg'),'utf8')).replace('<svg ', '<svg class="seascape-mascot-drawing" aria-hidden="true" ');
   const home = await readFile(path.join(directory,'index.html'),'utf8');
   const originalHero = home.match(/<section class="hero\b[^>]*>[\s\S]*?<\/section>/)?.[0];
   if (!originalHero) throw new Error('Homepage hero was not found; refusing to create incomplete previews.');
   for (const variant of variants) {
-    const page = home.replace(originalHero,hero(variant,mascot))
+    const isMosaicPage = variant.slug === 'new2';
+    let page = home.replace(originalHero,hero(variant,mascot)+(isMosaicPage?mosaicDashboard(originalHero):''))
       .replace('<div class="nav-actions">','<div class="nav-actions">'+sceneTools)
-      .replace('<body>',`<body class="hero-experiment experiment-${variant.style}">`)
+      .replace('<body>',`<body class="hero-experiment experiment-${variant.style}${isMosaicPage?' new2-mosaic':''}"${isMosaicPage?' data-mosaic-hero-visible="true"':''}>`)
       .replace(/<title>[^<]*<\/title>/,`<title>Orka · ${variant.name} hero preview</title>`)
       .replace('</head>',`<meta name="robots" content="noindex, follow"><link rel="stylesheet" href="${stylesheet}"><script type="module" src="${script}"></script><link rel="preload" as="image" href="/assets/${variant.asset}"></head>`);
+    if (isMosaicPage) page = applyMosaicArtwork(page).replace('</head>',`<link rel="stylesheet" href="${mosaicStylesheet}"></head>`);
     await writeFile(path.join(directory,variant.slug+'.html'),page);
   }
 }

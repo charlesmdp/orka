@@ -138,11 +138,17 @@ if(typeof document!=='undefined'){
    const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
    const description='A giant orca playfully gobbles the Crisp, Intercom, tawk.to, Help Scout, Zendesk, Chatway and Gorgias logos.';
    const poster='/assets/orca-feast-still.jpg';
-   const media=document.createElement(reduced?'img':'video');media.width=960;media.height=600;
+   const ceramic=document.body.classList.contains('new2-mosaic');
+   const media=document.createElement(ceramic?'div':reduced?'img':'video');media.width=960;media.height=600;
    media.className='orca-feast-media';media.setAttribute('aria-label',description);
    const pause=document.createElement('button');pause.type='button';pause.className='orca-feast-pause';pause.textContent='Pause animation';pause.hidden=reduced;
    let fallback=null,playing=true;
-   if(reduced){media.src=poster;media.alt=description;}
+   if(ceramic){
+    media.classList.add('mosaic-feast');media.setAttribute('role','img');
+    media.innerHTML='<img class="mosaic-feast-orky" src="/assets/orky-swim-mascot.svg" alt="">'+['crisp','intercom','tawk','gorgias','chatway'].map((name,i)=>'<img class="mosaic-feast-snack" src="/assets/vendor-logos/'+name+'.png" alt="" style="--snack:'+i+'">').join('');
+    pause.addEventListener('click',()=>{playing=!playing;media.classList.toggle('is-paused',!playing);pause.textContent=playing?'Pause animation':'Play animation';});
+   }
+   else if(reduced){media.src=poster;media.alt=description;}
    else{
     media.muted=true;media.loop=true;media.autoplay=true;media.playsInline=true;media.poster=poster;media.preload='auto';
     media.src='/assets/orca-feast.mp4';
@@ -164,7 +170,7 @@ if(typeof document!=='undefined'){
    }
    const copy=document.createElement('p');copy.textContent='One inbox. A very big appetite.';
    dialog.append(close,label,title,media,copy,pause);document.body.append(dialog);dialog.showModal();close.focus();
-   if(!reduced)media.play().catch(()=>{playing=false;pause.textContent='Play animation';});
+   if(!reduced&&!ceramic)media.play().catch(()=>{playing=false;pause.textContent='Play animation';});
    close.addEventListener('click',()=>dialog.close());dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});dialog.addEventListener('close',()=>{dialog.remove();logo.focus();},{once:true});
   });
  });

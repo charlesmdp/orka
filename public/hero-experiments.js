@@ -161,3 +161,11 @@ function initializeHero(hero) {
  new ResizeObserver(()=>{stop();pointer=null;mascot.classList.remove('is-dragging');position={x:0,y:0};velocity={x:0,y:0};heading={facing:-1,pitch:0};paint();}).observe(hero);
  document.addEventListener('visibilitychange',()=>{if(document.hidden){stop();position={x:0,y:0};velocity={x:0,y:0};heading={facing:-1,pitch:0};paint();}});
 }
+
+// Keep the large closed widget out of the mobile hero, without hiding an open chat.
+if (typeof document !== 'undefined' && document.body.classList.contains('new2-mosaic')) {
+ const scene=document.querySelector('.seascape-hero');
+ if(scene) new IntersectionObserver(entries=>{
+  document.body.dataset.mosaicHeroVisible=String(entries[0].isIntersecting);
+ },{threshold:0}).observe(scene);
+}

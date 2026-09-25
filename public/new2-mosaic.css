@@ -231,3 +231,5 @@
 .new2-mosaic.hero-night :is(.human-copy h2,.human-copy h3){color:#edf4da}
 .new2-mosaic.hero-night .human-copy>p{color:#b9cfca}
 .new2-mosaic.hero-night .feature-group li{color:#bed1c3}
+.new2-mosaic.hero-night .founder-trust :is(strong,b){color:#d7eab7}
+.new2-mosaic.hero-night .founder-trust :is(div>span,small),.new2-mosaic.hero-night .founder-signature>div>span{color:#b9cfca}

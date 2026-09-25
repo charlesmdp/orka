@@ -555,6 +555,7 @@ if (legacyTyping) {
 }
 // An unsent message in a normal chat bubble, with gentle three-dot typing.
 function liveTypingDemo(root, selector, message, replayButton) {
+  if (!root) return;
   const fields = $$(selector, root);
   let timer = null;
   let visible = false;

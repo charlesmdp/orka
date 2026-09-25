@@ -15,7 +15,7 @@ if(typeof document!=='undefined') {
 
 function initializeHero(hero) {
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
- const motionButton=hero.querySelector('[data-motion-toggle]');
+ const motionButton=document.querySelector('[data-motion-toggle]');
  let paused=reduced.matches,visible=false,timer;
  const active=()=>!paused&&!document.hidden&&visible;
  const cards=[...hero.querySelectorAll('.seascape-note')];
@@ -72,7 +72,7 @@ function initializeHero(hero) {
  document.addEventListener('visibilitychange',schedule);
  syncMotion();
 
- const nightButton=hero.querySelector('[data-night-toggle]');
+ const nightButton=document.querySelector('[data-night-toggle]');
  const nightArt=hero.querySelector('[data-night-art]');
  let night=false,request=0;
  async function setNight(value) {
@@ -94,23 +94,23 @@ function initializeHero(hero) {
  const handle=hero.querySelector('[data-mascot-handle]');
  const hint=hero.querySelector('[data-mascot-hint]');
  const status=hero.querySelector('[data-mascot-status]');
- let position={x:0,y:0},velocity={x:0,y:0},pointer=null,frame=0,returnTimer,lastTime=0;
- const bounds=()=>({left:12-mascot.offsetLeft,right:hero.clientWidth-mascot.offsetWidth-mascot.offsetLeft-12,top:105-mascot.offsetTop,bottom:hero.clientHeight-mascot.offsetHeight-mascot.offsetTop-78});
+ let position={x:0,y:0},velocity={x:0,y:0},pointer=null,frame=0,returnTimer,swimTimer,lastTime=0;
+ const bounds=()=>({left:12-mascot.offsetLeft,right:hero.clientWidth-mascot.offsetWidth-mascot.offsetLeft-12,top:105-mascot.offsetTop,bottom:hero.clientHeight-mascot.offsetHeight-mascot.offsetTop-12});
  const paint=()=>{mascot.style.transform=`translate3d(${position.x}px,${position.y}px,0)`;handle.style.setProperty('--mascot-tilt',`${Math.max(-16,Math.min(16,velocity.x*.025))}deg`);};
- const stop=()=>{cancelAnimationFrame(frame);clearTimeout(returnTimer);frame=0;mascot.classList.remove('is-returning');};
+ const stop=()=>{cancelAnimationFrame(frame);clearTimeout(returnTimer);clearTimeout(swimTimer);frame=0;mascot.classList.remove('is-returning','is-swimming');};
  const splash=()=>{
   if(!paused)handle.animate([{transform:'translateY(0) rotate(0)'},{transform:'translateY(-16px) rotate(-10deg)',offset:.4},{transform:'translateY(0) rotate(0)'}],{duration:700,easing:'cubic-bezier(.22,.68,.24,1)'});
  };
  const home=()=>{
   stop();mascot.classList.remove('is-dragging');
-  if(paused){position={x:0,y:0};velocity={x:0,y:0};paint();hint.textContent='Take Orky for a swim ↗';return;}
-  mascot.classList.add('is-returning');hint.textContent='Back to my little cove…';lastTime=0;
+  if(paused){position={x:0,y:0};velocity={x:0,y:0};paint();hint.textContent='Make me swim';return;}
+  mascot.classList.add('is-returning');hint.textContent='Make me swim';lastTime=0;
   const step=time=>{
    if(paused){home();return;}
    const result=springStep(position,velocity,lastTime?(time-lastTime)/1000:1/60);lastTime=time;
    position=constrainMascot(result.position.x,result.position.y,bounds());velocity=result.velocity;paint();
    if(Math.hypot(position.x,position.y)<.3&&Math.hypot(velocity.x,velocity.y)<2){
-    position={x:0,y:0};velocity={x:0,y:0};paint();mascot.classList.remove('is-returning');hint.textContent='Take Orky for a swim ↗';frame=0;
+    position={x:0,y:0};velocity={x:0,y:0};paint();mascot.classList.remove('is-returning');hint.textContent='Make me swim';frame=0;
    }else frame=requestAnimationFrame(step);
   };
   frame=requestAnimationFrame(step);
@@ -120,7 +120,7 @@ function initializeHero(hero) {
   if(!event.isPrimary||event.button!==0)return;
   stop();event.preventDefault();handle.setPointerCapture(event.pointerId);
   pointer={id:event.pointerId,x:event.clientX,y:event.clientY,time:event.timeStamp};velocity={x:0,y:0};
-  mascot.classList.add('is-dragging');hint.textContent='Wheee!';handle.focus({preventScroll:true});
+  mascot.classList.add('is-dragging');hint.textContent='Make me swim';handle.focus({preventScroll:true});
  });
  handle.addEventListener('pointermove',event=>{
   if(!pointer||pointer.id!==event.pointerId)return;
@@ -132,7 +132,7 @@ function initializeHero(hero) {
   if(!pointer||event.pointerId!==pointer.id)return;
   pointer=null;mascot.classList.remove('is-dragging');handle.style.setProperty('--mascot-tilt','0deg');
   if(event.type==='pointercancel'){home();return;}
-  hint.textContent='Nice spot. I’ll swim back.';status.textContent='Orky found a new swimming spot.';splash();later();
+  hint.textContent='Make me swim';status.textContent='Orky found a new swimming spot.';splash();later();
  };
  handle.addEventListener('pointerup',release);handle.addEventListener('pointercancel',release);handle.addEventListener('lostpointercapture',release);
  handle.addEventListener('keydown',event=>{
@@ -140,7 +140,7 @@ function initializeHero(hero) {
   if(event.key==='Enter'||event.key===' '){event.preventDefault();splash();return;}
   const move={ArrowLeft:[-24,0],ArrowRight:[24,0],ArrowUp:[0,-24],ArrowDown:[0,24]}[event.key];
   if(!move)return;
-  event.preventDefault();stop();position=constrainMascot(position.x+move[0],position.y+move[1],bounds());velocity={x:0,y:0};paint();hint.textContent='A little adventure.';later();
+  event.preventDefault();stop();position=constrainMascot(position.x+move[0],position.y+move[1],bounds());velocity={x:0,y:0};paint();mascot.classList.add('is-swimming');swimTimer=setTimeout(()=>mascot.classList.remove('is-swimming'),450);later();
  });
  new ResizeObserver(()=>{stop();pointer=null;mascot.classList.remove('is-dragging');position={x:0,y:0};velocity={x:0,y:0};paint();}).observe(hero);
  document.addEventListener('visibilitychange',()=>{if(document.hidden){stop();position={x:0,y:0};velocity={x:0,y:0};paint();}});

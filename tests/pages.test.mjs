@@ -67,6 +67,14 @@ test('Pages output includes the API, linked assets and cache headers', async () 
     for (const [,src] of preview.matchAll(/src="(\/assets\/[^\"]+)"/g)) await access(new URL(src.slice(1),output));
     const css=preview.match(/href="(hero-experiments\.[a-f0-9]{12}\.css)"/)[1];
     await access(new URL(css,output));
+    const js=preview.match(/src="(hero-experiments\.[a-f0-9]{12}\.js)"/)[1];
+    await access(new URL(js,output));
+    assert.match(preview.slice(0,preview.indexOf('<section class="ecosystem">')),/data-project-help/);
+    assert.match(preview,/role="switch" aria-checked="false" aria-label="Night mode"/);
+    const night=preview.match(/data-night-art data-src="([^"]+)"/)[1];
+    await access(new URL(night.slice(1),output));
+    assert.match(preview,/data-mascot-handle aria-label="Orky/);
+    assert.match(preview,/data-motion-toggle/);
     assert.ok(headers.includes('/'+route+'\n  Cache-Control: no-cache\n  X-Robots-Tag: noindex, follow'));
   }
   assert.doesNotMatch(sitemap, /<loc>https:\/\/orka\.chat\/home(?:\/|\.html)?<\/loc>/);

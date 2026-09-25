@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 184 124" fill="none">
+<title>Orky, your little swimming companion</title>
+<defs><linearGradient id="body" x1="72" y1="29" x2="86" y2="102" gradientUnits="userSpaceOnUse"><stop stop-color="#243F46"/><stop offset="1" stop-color="#101F26"/></linearGradient></defs>
+<path d="M132 66c20-5 16-25 42-29-2 13-9 22-19 29 15-1 24 6 27 17-19 5-30-2-41-11" fill="#142830" stroke="#456269" stroke-width="1.5" stroke-linejoin="round"/>
+<path d="M77 46c1-15-2-25 1-37 9 5 16 19 20 35" fill="#183039" stroke="#456269" stroke-width="1.5" stroke-linejoin="round"/>
+<path d="M9 67c1-21 25-37 54-37 32 0 47 19 78 34 4 2 7 6 3 11-17 17-40 26-72 26C41 101 7 91 9 67Z" fill="url(#body)" stroke="#547277" stroke-width="1.4"/>
+<path d="M11 75c18 10 24 4 39 8 29 9 55 8 93-12-17 23-41 29-71 29-30 0-55-9-61-25Z" fill="#F6FCF6"/>
+<path d="M57 44c9-6 22-4 25 2 3 7-11 15-22 13-10-1-11-8-3-15Z" fill="#F7FCF6"/>
+<path d="M68 86c13 3 18 14 17 30-15-2-25-15-28-26" fill="#19343D" stroke="#4B6970" stroke-width="1.2"/>
+<ellipse cx="32" cy="67" rx="6.8" ry="7.3" fill="#F3FCF6"/>
+<ellipse cx="30.9" cy="67.4" rx="4.5" ry="5.3" fill="#0A1920"/>
+<circle cx="29.5" cy="65.5" r="1.7" fill="white"/>
+<path d="M23 58c3-3 7-4 11-3" stroke="#789597" stroke-width="2" stroke-linecap="round"/>
+<path d="M13 78c8 4 16 5 22 1" stroke="#152C33" stroke-width="1.6" stroke-linecap="round"/>
+<path d="M37 40c8-4 17-5 24-4" stroke="#9DBBB9" stroke-opacity=".45" stroke-width="2" stroke-linecap="round"/>
+</svg>

@@ -15,11 +15,10 @@ function notifications() {
   return `<div class="seascape-notifications" aria-label="Example message notifications from different projects">
     <div class="seascape-note-stack">${messages.map(([icon,project,name,message],i)=>`<article class="seascape-note" data-slot="${i}"><div class="seascape-note-surface"><div class="seascape-note-app"><img src="/assets/orka-logo.svg" width="18" height="17" alt=""><span>ORKA <b>· NEW MESSAGE</b></span><small>now</small></div><div class="seascape-note-body"><img data-note-icon src="/assets/${icon}" width="38" height="38" alt=""><div><strong><span data-note-name>${name}</span><span class="seascape-note-project" data-note-project>${project}</span></strong><p data-note-message>${message}</p></div><span class="seascape-unread" aria-label="Unread"></span></div></div></article>`).join('')}</div>
     <div class="seascape-caught"><img src="/assets/orka-logo.svg" alt="" width="23" height="22"><span>All caught. <strong>One inbox.</strong></span><span aria-hidden="true">✓</span></div>
-    <span class="seascape-demo-label">ILLUSTRATIVE CONVERSATIONS</span>
   </div>`;
 }
 
-const sceneTools = `<div class="seascape-scene-tools" role="group" aria-label="Scene settings"><button class="seascape-night-toggle" type="button" role="switch" aria-checked="false" aria-label="Night mode" data-night-toggle><span class="seascape-toggle-track" aria-hidden="true"><span>☀</span><span>☾</span><i></i></span><span data-night-label>Night mode</span></button><button type="button" class="seascape-motion-toggle" data-motion-toggle aria-label="Pause animations" aria-pressed="false"><span data-motion-icon aria-hidden="true">Ⅱ</span></button></div>`;
+const sceneTools = `<div class="seascape-scene-tools" role="group" aria-label="Scene settings"><button class="seascape-night-toggle" type="button" role="switch" aria-checked="false" aria-label="Night mode" data-night-toggle><span class="seascape-toggle-track" aria-hidden="true"><span>☀</span><span>☾</span><i></i></span><span data-night-label>Night mode</span></button></div>`;
 
 function hero(variant, mascot) {
   return `<section class="seascape-hero seascape-${variant.style}${variant.aerial?' seascape-aerial':''}" aria-labelledby="hero-title">
@@ -35,7 +34,7 @@ function hero(variant, mascot) {
       <div class="seascape-trust"><span>Unlimited projects.</span>${projectHelp()}<span>Real humans. Helpful AI.</span></div>
     </div>
     ${notifications()}
-    <div class="seascape-mascot" data-mascot><span class="seascape-mascot-shadow" aria-hidden="true"></span><button class="seascape-mascot-handle" type="button" data-mascot-handle aria-label="Orky the orca. Drag to play" aria-describedby="mascot-instructions">${mascot}<span class="seascape-mascot-bubbles" aria-hidden="true"><i></i><i></i><i></i></span></button><span class="seascape-mascot-hint" aria-hidden="true" data-mascot-hint>Make me swim</span></div><p id="mascot-instructions" class="sr-only">Drag Orky with your mouse or finger and release. Or use the arrow keys to move, Enter to make a splash, and Escape to return home.</p><span class="sr-only" role="status" data-mascot-status></span>
+    <div class="seascape-mascot" data-mascot><button class="seascape-mascot-handle" type="button" data-mascot-handle aria-label="Orky the orca. Drag to play" aria-describedby="mascot-instructions"><span class="seascape-mascot-swimmer">${mascot}<span class="seascape-mascot-bubbles" aria-hidden="true"><i></i><i></i><i></i></span></span></button><span class="seascape-mascot-hint" aria-hidden="true" data-mascot-hint>Make me swim</span></div><p id="mascot-instructions" class="sr-only">Drag Orky with your mouse or finger and release. Or use the arrow keys to move, Enter to make a splash, and Escape to return home.</p><span class="sr-only" role="status" data-mascot-status></span>
   </section>`;
 }
 

@@ -8,8 +8,13 @@ export function springStep(position, velocity, seconds) {
   return {position:{x:position.x+v.x*dt,y:position.y+v.y*dt},velocity:v};
 }
 
+// Time scaling keeps the same spring path while making the homeward swim 3× slower.
+export function returnStep(position, velocity, seconds) {
+  return springStep(position,velocity,Math.min(Math.max(seconds,0),1/30)/3);
+}
+
 // The illustration faces left; mirror it when travelling right, and pitch into the path.
-export function swimmingHeading(dx, dy, previous={facing:1,pitch:0}) {
+export function swimmingHeading(dx, dy, previous={facing:-1,pitch:0}) {
   if(Math.hypot(dx,dy)<.15)return previous;
   const facing=Math.abs(dx)>.15?(dx>0?-1:1):previous.facing;
   const pitch=-facing*Math.atan2(dy,Math.abs(dx))*180/Math.PI;
@@ -39,7 +44,7 @@ function initializeHero(hero) {
  const arrive=(card,delay=0)=>{
   if(!active())return;
   card.querySelector('.seascape-note-surface').animate([
-   {opacity:0,transform:'translateY(-28px) scale(.94)'},
+   {opacity:0,transform:hero.classList.contains('seascape-chat-source')?'translateY(95px) scale(.72)':'translateY(-28px) scale(.94)'},
    {opacity:1,transform:'translateY(3px) scale(1.008)',offset:.72},
    {opacity:1,transform:'translateY(0) scale(1)'}
   ],{duration:780,delay,easing:'cubic-bezier(.2,.8,.2,1)',fill:'backwards'});
@@ -97,7 +102,7 @@ function initializeHero(hero) {
  const handle=hero.querySelector('[data-mascot-handle]');
  const hint=hero.querySelector('[data-mascot-hint]');
  const status=hero.querySelector('[data-mascot-status]');
- let heading={facing:1,pitch:0};
+ let heading={facing:-1,pitch:0};
  let position={x:0,y:0},velocity={x:0,y:0},pointer=null,frame=0,returnTimer,swimTimer,lastTime=0;
  const bounds=()=>({left:12-mascot.offsetLeft,right:hero.clientWidth-mascot.offsetWidth-mascot.offsetLeft-12,top:105-mascot.offsetTop,bottom:hero.clientHeight-mascot.offsetHeight-mascot.offsetTop-12});
  const paint=(dx=0,dy=0)=>{
@@ -112,15 +117,15 @@ function initializeHero(hero) {
  };
  const home=()=>{
   stop();mascot.classList.remove('is-dragging');velocity={x:0,y:0};
-  if(paused){position={x:0,y:0};velocity={x:0,y:0};paint();hint.textContent='Make me swim';return;}
+  if(paused){position={x:0,y:0};velocity={x:0,y:0};heading={facing:-1,pitch:0};paint();hint.textContent='Make me swim';return;}
   mascot.classList.add('is-returning');hint.textContent='Make me swim';lastTime=0;
   const step=time=>{
    if(paused){home();return;}
-   const result=springStep(position,velocity,lastTime?(time-lastTime)/1000:1/60);lastTime=time;
+   const result=returnStep(position,velocity,lastTime?(time-lastTime)/1000:1/60);lastTime=time;
    const next=constrainMascot(result.position.x,result.position.y,bounds());
    const dx=next.x-position.x,dy=next.y-position.y;position=next;velocity=result.velocity;paint(dx,dy);
    if(Math.hypot(position.x,position.y)<.3&&Math.hypot(velocity.x,velocity.y)<2){
-    position={x:0,y:0};velocity={x:0,y:0};heading.pitch=0;paint();mascot.classList.remove('is-returning');hint.textContent='Make me swim';frame=0;
+    position={x:0,y:0};velocity={x:0,y:0};heading={facing:-1,pitch:0};paint();mascot.classList.remove('is-returning');hint.textContent='Make me swim';frame=0;
    }else frame=requestAnimationFrame(step);
   };
   frame=requestAnimationFrame(step);
@@ -153,6 +158,6 @@ function initializeHero(hero) {
   if(!move)return;
   event.preventDefault();stop();const next=constrainMascot(position.x+move[0],position.y+move[1],bounds());const dx=next.x-position.x,dy=next.y-position.y;position=next;velocity={x:0,y:0};paint(dx,dy);mascot.classList.add('is-swimming');swimTimer=setTimeout(()=>mascot.classList.remove('is-swimming'),450);later();
  });
- new ResizeObserver(()=>{stop();pointer=null;mascot.classList.remove('is-dragging');position={x:0,y:0};velocity={x:0,y:0};paint();}).observe(hero);
- document.addEventListener('visibilitychange',()=>{if(document.hidden){stop();position={x:0,y:0};velocity={x:0,y:0};paint();}});
+ new ResizeObserver(()=>{stop();pointer=null;mascot.classList.remove('is-dragging');position={x:0,y:0};velocity={x:0,y:0};heading={facing:-1,pitch:0};paint();}).observe(hero);
+ document.addEventListener('visibilitychange',()=>{if(document.hidden){stop();position={x:0,y:0};velocity={x:0,y:0};heading={facing:-1,pitch:0};paint();}});
 }

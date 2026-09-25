@@ -26,8 +26,6 @@
 .seascape-note>img{width:34px;height:34px;border-radius:8px;object-fit:cover;background:white;padding:2px;flex-shrink:0}.seascape-note>div{flex:1;min-width:0}.seascape-note>div>span{display:flex;justify-content:space-between;gap:5px;color:#395547;font-size:10px;font-weight:700;line-height:1.4}.seascape-note small{font:7px/1.5 var(--mono);letter-spacing:.03em;opacity:.6;align-self:center}.seascape-note p{color:#254635;font-size:10px;line-height:1.5;margin:4px 0 0}.seascape-note>i{width:5px;height:5px;border-radius:50%;background:#4f9d68}
 .seascape-caught{display:flex;align-items:center;justify-content:center;gap:8px;justify-self:end;padding:8px 12px;margin:5px -20px 0 0;background:#193f31ed;color:#efffde;border:1px solid #a9dba663;border-radius:10px;box-shadow:0 6px 20px #173b321c;font-size:11px;animation:note-arrives .65s .7s both}.seascape-caught>span:last-child{background:#d5fb65;color:#183e30;border-radius:50%;width:17px;height:17px;display:grid;place-items:center;font-size:10px;margin-left:5px}.seascape-demo-label{justify-self:end;font:6px/1.5 var(--mono);letter-spacing:.1em;color:#1b4a37;opacity:.65}
 .seascape-bottom{position:absolute;bottom:88px;left:72px;right:72px;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;color:#fcffe9;text-shadow:0 1px 8px #123a305c}.seascape-bottom p{font-size:12px;line-height:1.8;margin:0;color:inherit}.seascape-bottom p>span{position:absolute;left:-23px;font-size:21px}.seascape-bottom strong{font-size:16px;font-weight:500;letter-spacing:-.02em}.seascape-bottom>a{display:flex;align-items:center;gap:18px;color:inherit;font-size:11px;border-bottom:1px solid #ffffff70;padding-bottom:6px;margin-right:calc(23% - 180px)}
-.seascape-versions{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:6px;border:1px solid #e1f5db4d;border-radius:50px;padding:5px 6px 5px 15px;background:#11352ee6;box-shadow:0 8px 24px #10251d22;backdrop-filter:blur(15px);color:#dceacd;white-space:nowrap}
-.seascape-versions>span{font:7px/1.5 var(--mono);letter-spacing:.08em;margin-right:5px;opacity:.75}.seascape-versions>a{border-radius:25px;padding:7px 11px;font:9px/1.3 var(--mono);color:#e0efd5}.seascape-versions>a>span{font:600 10px var(--sans);margin-left:3px}.seascape-versions>a[aria-current]{background:#d7f7aa;color:#183e30}.seascape-versions>a:last-child{font:9px var(--sans);opacity:.8;border-left:1px solid #9bba8966;border-radius:0;padding:3px 10px}.seascape-versions>a:hover{background:#eaffd82a}.seascape-versions>a[aria-current]:hover{background:#d7f7aa}
 .seascape-mosaic{background:#efeedb}.seascape-mosaic .seascape-art{object-position:65% 58%}.seascape-mosaic .seascape-wash{background:radial-gradient(ellipse 70% 66% at 10% 22%,#f7f4dfed 0%,#f7f4dfd6 37%,#f7f4df15 83%,transparent 100%),linear-gradient(0deg,#0d302aaa,transparent 30%)}
 .seascape-mosaic .seascape-content h1 em{font-family:Georgia,'Times New Roman',serif;font-size:1.04em;letter-spacing:-.06em;font-style:italic;color:#3d775c;font-weight:400}.seascape-mosaic .seascape-notifications{top:24%;right:6.5%;transform:rotate(3deg)}.seascape-mosaic .seascape-note{background:#fffcf0e8;border-color:#dddac3;border-radius:7px;box-shadow:3px 4px 0 #21433726}.seascape-mosaic .seascape-note:nth-child(2){margin-inline:-10px 10px}.seascape-mosaic .seascape-note:nth-child(3){margin-inline:-20px 20px}.seascape-mosaic .seascape-caught{margin-right:20px;border-radius:6px}.seascape-mosaic .seascape-demo-label{margin-right:20px}.seascape-mosaic .seascape-eyebrow{color:#556443}.experiment-mosaic .nav-wrap{background:#fffcefba}
 @keyframes note-arrives{from{opacity:0;translate:0 10px}to{opacity:1;translate:0 0}}
@@ -94,3 +92,46 @@
  .hero-night .seascape-hero::after{background:linear-gradient(180deg,#061d30 0%,#061d30 39%,#061d30db 45%,#061d3000 67%,#031722b3 100%)}
 }
 @media(prefers-reduced-motion:reduce){.seascape-hero *,.seascape-hero::after,.hero-experiment .nav-wrap{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* Shared, quieter controls for all four hero studies. */
+.hero-experiment .seascape-scene-tools{position:static;display:flex;gap:5px;flex-shrink:0;margin:0;z-index:auto}
+.hero-experiment .seascape-night-toggle{padding:4px;min-height:35px;box-shadow:none;background:#ffffff4d}
+.hero-experiment [data-night-label]{display:none}
+.hero-experiment .seascape-motion-toggle{width:30px;min-height:30px;border:0;background:transparent;box-shadow:none;font-size:12px}
+.hero-experiment .nav-wrap{gap:16px}.hero-experiment .nav-actions{gap:12px}
+.hero-night .seascape-night-toggle{background:#102d3b80}
+.seascape-mascot{left:44px;right:auto;bottom:max(26px,calc(100% - 100svh + 26px));width:138px;height:126px}
+.seascape-mascot-handle>svg{width:128px;height:102px;overflow:visible;pointer-events:none;animation:orky-bob 4s ease-in-out infinite;transform-origin:50% 70%}
+.seascape-mascot-hint{bottom:100%;left:50%;opacity:0;translate:0 5px;width:auto;transition:opacity .18s,translate .18s;font-size:10px;padding:7px 12px}
+.seascape-mascot:hover .seascape-mascot-hint,.seascape-mascot:has(:focus-visible) .seascape-mascot-hint{opacity:1;translate:0 0}
+.seascape-mascot.is-dragging .seascape-mascot-hint,.seascape-mascot.is-returning .seascape-mascot-hint{opacity:0}
+.is-dragging .seascape-mascot-handle>svg,.is-returning .seascape-mascot-handle>svg,.is-swimming .seascape-mascot-handle>svg{animation:none;scale:1.08}
+.orky-flipper,.orky-tail{transform-box:view-box}.orky-flipper-front{transform-origin:62px 87px}.orky-flipper-back{transform-origin:66px 58px}.orky-tail{transform-origin:140px 69px}
+:is(.is-dragging,.is-swimming) .orky-flipper-front{animation:orky-paddle-front .14s ease-in-out infinite alternate}
+:is(.is-dragging,.is-swimming) .orky-flipper-back{animation:orky-paddle-back .14s ease-in-out infinite alternate}
+:is(.is-dragging,.is-swimming) .orky-tail{animation:orky-tail-wiggle .19s ease-in-out infinite alternate}
+:is(.is-dragging,.is-swimming) .seascape-mascot-bubbles i{animation:orky-bubble .45s ease-out infinite}
+:is(.is-dragging,.is-swimming) .seascape-mascot-bubbles i:nth-child(2){animation-delay:.12s}
+:is(.is-dragging,.is-swimming) .seascape-mascot-bubbles i:nth-child(3){animation-delay:.24s}
+.motion-paused .seascape-mascot svg,.motion-paused .orky-flipper,.motion-paused .orky-tail{animation-play-state:paused}
+@keyframes orky-paddle-front{from{transform:rotate(-40deg)}to{transform:rotate(42deg)}}
+@keyframes orky-paddle-back{from{transform:rotate(38deg)}to{transform:rotate(-38deg)}}
+@keyframes orky-tail-wiggle{from{transform:rotate(-16deg)}to{transform:rotate(19deg)}}
+.seascape-aerial .seascape-art{object-position:50% 50%}
+.seascape-aerial .seascape-wash{background:radial-gradient(ellipse 78% 80% at 4% 22%,#e0f1dfeb 0%,#d8eddfa8 44%,transparent 87%),linear-gradient(0deg,#0b39394d,transparent 28%)}
+.hero-night .seascape-aerial::after{background:radial-gradient(ellipse 70% 80% at 0% 20%,#041d32b3,transparent 95%),linear-gradient(0deg,#03172260,transparent 26%)}
+@media(max-width:1200px){.hero-experiment .desktop-nav{display:none}.hero-experiment .mobile-menu{display:block}}
+@media(max-width:700px){
+ .hero-experiment .nav-cta{display:none}.hero-experiment .nav-actions{margin-left:auto;gap:12px}.hero-experiment .nav-wrap{gap:12px}
+ .hero-experiment .seascape-night-toggle{min-height:33px}.hero-experiment .seascape-motion-toggle{width:28px;min-height:28px}
+ .seascape-content{padding-top:125px;padding-bottom:370px}
+ .seascape-hero{min-height:820px}
+ .seascape-notifications,.seascape-mosaic .seascape-notifications{width:calc(100% - 145px);left:auto;right:24px;bottom:177px}
+ .seascape-mascot{left:14px;right:auto;bottom:max(174px,calc(100% - 100svh + 125px));width:96px;height:105px}
+ .seascape-mascot-handle{width:96px;height:82px}.seascape-mascot-handle>svg{width:96px;height:82px}
+ .seascape-mascot-shadow{bottom:24px}
+ .seascape-aerial{background:#bddfce}.seascape-aerial .seascape-art{height:100%;top:0;object-position:62% 50%}
+ .seascape-aerial .seascape-wash{background:linear-gradient(180deg,#d6edddf5 0%,#d6edddf2 39%,#d6eddd40 65%,#0b393960 100%)}
+ .hero-night .seascape-aerial::after{background:linear-gradient(180deg,#061d30ed 0%,#061d30d9 40%,#061d3000 65%,#03172260 100%)}
+}
+@media(prefers-reduced-motion:reduce){.seascape-mascot-handle>svg,.orky-flipper,.orky-tail{animation:none!important;transition:none!important}}

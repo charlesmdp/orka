@@ -4,7 +4,9 @@ import {projectHelp} from './pricing-explainers.mjs';
 
 const variants = [
   {slug:'new',style:'pixel',name:'Pixel cove',asset:'hero-pixel-cove.jpg'},
-  {slug:'new2',style:'mosaic',name:'Ceramic mosaic',asset:'hero-ceramic-mosaic.jpg'}
+  {slug:'new2',style:'mosaic',name:'Ceramic mosaic',asset:'hero-ceramic-mosaic.jpg'},
+  {slug:'new3',style:'mosaic',name:'Aerial ocean mosaic',asset:'hero-ocean-mosaic.jpg',aerial:true},
+  {slug:'new4',style:'pixel',name:'Aerial pixel ocean',asset:'hero-ocean-pixel.jpg',aerial:true}
 ];
 const arrow = '<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>';
 
@@ -17,13 +19,14 @@ function notifications() {
   </div>`;
 }
 
-function hero(variant) {
-  return `<section class="seascape-hero seascape-${variant.style}" aria-labelledby="hero-title">
+const sceneTools = `<div class="seascape-scene-tools" role="group" aria-label="Scene settings"><button class="seascape-night-toggle" type="button" role="switch" aria-checked="false" aria-label="Night mode" data-night-toggle><span class="seascape-toggle-track" aria-hidden="true"><span>☀</span><span>☾</span><i></i></span><span data-night-label>Night mode</span></button><button type="button" class="seascape-motion-toggle" data-motion-toggle aria-label="Pause animations" aria-pressed="false"><span data-motion-icon aria-hidden="true">Ⅱ</span></button></div>`;
+
+function hero(variant, mascot) {
+  return `<section class="seascape-hero seascape-${variant.style}${variant.aerial?' seascape-aerial':''}" aria-labelledby="hero-title">
     <img class="seascape-art" src="/assets/${variant.asset}" width="1672" height="941" alt="" fetchpriority="high" decoding="async">
     <img class="seascape-art seascape-art-night" data-night-art data-src="/assets/${variant.asset.replace('.jpg','-night.jpg')}" width="1672" height="941" alt="" decoding="async">
     <div class="seascape-wash" aria-hidden="true"></div>
     <div class="seascape-sparkles" aria-hidden="true">${Array.from({length:7},(_,i)=>`<i style="--spark:${i}"></i>`).join('')}</div>
-    <div class="seascape-scene-tools"><button class="seascape-night-toggle" type="button" role="switch" aria-checked="false" aria-label="Night mode" data-night-toggle><span class="seascape-toggle-track" aria-hidden="true"><span>☀</span><span>☾</span><i></i></span><span data-night-label>Night mode</span></button><button type="button" class="seascape-motion-toggle" data-motion-toggle aria-label="Pause animations" aria-pressed="false"><span data-motion-icon aria-hidden="true">Ⅱ</span></button></div>
     <div class="seascape-content">
       <p class="seascape-eyebrow"><span aria-hidden="true"></span>One Live Chat for Multiple Products</p>
       <h1 id="hero-title">Every product you run.<br><em>One support inbox.</em></h1>
@@ -32,19 +35,19 @@ function hero(variant) {
       <div class="seascape-trust"><span>Unlimited projects.</span>${projectHelp()}<span>Real humans. Helpful AI.</span></div>
     </div>
     ${notifications()}
-    <div class="seascape-mascot" data-mascot><span class="seascape-mascot-shadow" aria-hidden="true"></span><button class="seascape-mascot-handle" type="button" data-mascot-handle aria-label="Orky the orca. Drag to play" aria-describedby="mascot-instructions"><img src="/assets/orky-swim-mascot.svg" width="184" height="124" alt="" draggable="false"><span class="seascape-mascot-bubbles" aria-hidden="true"><i></i><i></i><i></i></span></button><span class="seascape-mascot-hint" aria-hidden="true" data-mascot-hint>Take Orky for a swim ↗</span></div><p id="mascot-instructions" class="sr-only">Drag Orky with your mouse or finger and release. Or use the arrow keys to move, Enter to make a splash, and Escape to return home.</p><span class="sr-only" role="status" data-mascot-status></span>
-    <div class="seascape-bottom"><p><span aria-hidden="true">↳</span> A little less support chaos.<br><strong>A little more room to breathe.</strong></p><a href="#pod-heading">Meet your shared inbox <span aria-hidden="true">↓</span></a></div>
-    <nav class="seascape-versions" aria-label="Hero design previews"><span>EXPLORE THE LOOK</span><a href="/new"${variant.slug==='new'?' aria-current="page"':''}>01 <span>Pixel</span></a><a href="/new2"${variant.slug==='new2'?' aria-current="page"':''}>02 <span>Mosaic</span></a><a href="/">Current home ↗</a></nav>
+    <div class="seascape-mascot" data-mascot><span class="seascape-mascot-shadow" aria-hidden="true"></span><button class="seascape-mascot-handle" type="button" data-mascot-handle aria-label="Orky the orca. Drag to play" aria-describedby="mascot-instructions">${mascot}<span class="seascape-mascot-bubbles" aria-hidden="true"><i></i><i></i><i></i></span></button><span class="seascape-mascot-hint" aria-hidden="true" data-mascot-hint>Make me swim</span></div><p id="mascot-instructions" class="sr-only">Drag Orky with your mouse or finger and release. Or use the arrow keys to move, Enter to make a splash, and Escape to return home.</p><span class="sr-only" role="status" data-mascot-status></span>
   </section>`;
 }
 
 // Clone the final homepage so everything after its first section stays identical.
 export async function generateHeroExperiments(directory, stylesheet, script) {
+  const mascot = (await readFile(path.join(directory,'assets/orky-swim-mascot.svg'),'utf8')).replace('<svg ', '<svg class="seascape-mascot-drawing" aria-hidden="true" ');
   const home = await readFile(path.join(directory,'index.html'),'utf8');
   const originalHero = home.match(/<section class="hero\b[^>]*>[\s\S]*?<\/section>/)?.[0];
   if (!originalHero) throw new Error('Homepage hero was not found; refusing to create incomplete previews.');
   for (const variant of variants) {
-    const page = home.replace(originalHero,hero(variant))
+    const page = home.replace(originalHero,hero(variant,mascot))
+      .replace('<div class="nav-actions">','<div class="nav-actions">'+sceneTools)
       .replace('<body>',`<body class="hero-experiment experiment-${variant.style}">`)
       .replace(/<title>[^<]*<\/title>/,`<title>Orka · ${variant.name} hero preview</title>`)
       .replace('</head>',`<meta name="robots" content="noindex, follow"><link rel="stylesheet" href="${stylesheet}"><script type="module" src="${script}"></script><link rel="preload" as="image" href="/assets/${variant.asset}"></head>`);

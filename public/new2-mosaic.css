@@ -221,6 +221,13 @@
 .new2-mosaic .price-card :is(.plan-description,.plan-features,.plan-footnote){color:#60755e}
 .new2-mosaic.hero-night .price-card :is(.price,.price-card-heading,.plan-projects){color:#edf4da}
 .new2-mosaic.hero-night .price-card :is(.plan-description,.plan-features,.plan-footnote){color:#b9cfca}
+.new2-mosaic .price-card :is(.price-card-heading>.mono,.plan-features>li strong,.project-help){color:#254837}
+.new2-mosaic .price-card :is(.price>.price-period,.plan-features>li,.plan-features small){color:#60755e}
+.new2-mosaic .price-card :is(.plan-projects>.icon,.plan-features>li>.icon){color:#517b67}
+.new2-mosaic.hero-night .price-card :is(.price-card-heading>.mono,.plan-features>li strong,.project-help){color:#edf4da}
+.new2-mosaic.hero-night .price-card :is(.price>.price-period,.plan-features>li,.plan-features small){color:#b9cfca}
+.new2-mosaic.hero-night .price-card :is(.plan-projects>.icon,.plan-features>li>.icon){color:#b8d992}
+.new2-mosaic.hero-night .pricing-included .project-help{color:#d8ebb9}
 .new2-mosaic.hero-night :is(.human-copy h2,.human-copy h3){color:#edf4da}
 .new2-mosaic.hero-night .human-copy>p{color:#b9cfca}
 .new2-mosaic.hero-night .feature-group li{color:#bed1c3}

@@ -45,14 +45,14 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   await assert.rejects(access(new URL('.openai/hosting.json', output)));
 
   const allPages=(await readdir(output)).filter(n=>n.endsWith('.html'));
-  const pageNames=allPages.filter(n=>!['new.html','new2.html'].includes(n));
-  assert.equal(allPages.length,81);
+  const pageNames=allPages.filter(n=>!['new.html','new2.html','new3.html','new4.html'].includes(n));
+  assert.equal(allPages.length,83);
   assert.equal(pageNames.length,79);
   const knowledge=JSON.parse(await readFile(new URL('faq-knowledge.json',output),'utf8'));
   assert.equal(selectFaqSources('What does Pod cost?',knowledge.documents)[0].url,'https://orka.chat/pricing');
   const homepageFooter=html.match(/<footer class="o-footer"[\s\S]*?<\/footer>/)[0];
   const sitemap=await readFile(new URL('sitemap.xml',output),'utf8');
-  for (const [route,style] of [['new','pixel'],['new2','mosaic']]) {
+  for (const [route,style] of [['new','pixel'],['new2','mosaic'],['new3','mosaic'],['new4','pixel']]) {
     const preview=await readFile(new URL(route+'.html',output),'utf8');
     assert.match(preview,new RegExp('seascape-hero seascape-'+style));
     assert.match(preview,/<meta name="robots" content="noindex, follow">/);
@@ -75,6 +75,11 @@ test('Pages output includes the API, linked assets and cache headers', async () 
     await access(new URL(night.slice(1),output));
     assert.match(preview,/data-mascot-handle aria-label="Orky/);
     assert.match(preview,/data-motion-toggle/);
+    const header=preview.match(/<header[\s\S]*?<\/header>/)[0];
+    assert.match(header,/data-night-toggle/);
+    assert.doesNotMatch(preview,/seascape-versions|A little less support chaos/);
+    assert.match(preview,/Make me swim/);
+    assert.match(preview,/orky-flipper-front/);
     assert.ok(headers.includes('/'+route+'\n  Cache-Control: no-cache\n  X-Robots-Tag: noindex, follow'));
   }
   assert.doesNotMatch(sitemap, /<loc>https:\/\/orka\.chat\/home(?:\/|\.html)?<\/loc>/);

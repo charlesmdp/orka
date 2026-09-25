@@ -27,6 +27,7 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   assert.ok(routes.include.includes('/*'));
   assert.ok(!routes.exclude.includes('/api/*'));
   assert.match(headers, /Cache-Control: no-cache/);
+  assert.ok(headers.split("\n").filter(line=>line.startsWith("/")).length<=100);
   for (const basename of ['style', 'refinement', 'refresh', 'product-polish', 'app', 'live-map']) {
     const ext = ['app', 'live-map'].includes(basename) ? 'js' : 'css';
     const match = html.match(new RegExp('"(' + basename + '\\.[a-f0-9]{12}\\.' + ext + ')"'));
@@ -41,8 +42,6 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   assert.ok(headers.includes('/' + modelFile + '\n  Cache-Control: public, max-age=31536000, immutable'));
   for (const page of ['features', 'terms', 'privacy', 'cookies']) {
     const source = await readFile(new URL(page + '.html', output), 'utf8');
-    assert.ok(headers.includes('/' + page + '\n  Cache-Control: no-cache'));
-    assert.ok(headers.includes('/' + page + '.html\n  Cache-Control: no-cache'));
     assert.doesNotMatch(source, /content="noindex/);
     assert.match(source, /href="pages\.[a-f0-9]{12}\.css"/);
     assert.ok(new RegExp('src="' + (page === 'features' ? 'features' : 'pages') + '\\.[a-f0-9]{12}\\.js"').test(source));

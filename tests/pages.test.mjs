@@ -44,12 +44,31 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   }
   await assert.rejects(access(new URL('.openai/hosting.json', output)));
 
-  const pageNames=(await readdir(output)).filter(n=>n.endsWith('.html'));
+  const allPages=(await readdir(output)).filter(n=>n.endsWith('.html'));
+  const pageNames=allPages.filter(n=>!['new.html','new2.html'].includes(n));
+  assert.equal(allPages.length,81);
   assert.equal(pageNames.length,79);
   const knowledge=JSON.parse(await readFile(new URL('faq-knowledge.json',output),'utf8'));
   assert.equal(selectFaqSources('What does Pod cost?',knowledge.documents)[0].url,'https://orka.chat/pricing');
   const homepageFooter=html.match(/<footer class="o-footer"[\s\S]*?<\/footer>/)[0];
   const sitemap=await readFile(new URL('sitemap.xml',output),'utf8');
+  for (const [route,style] of [['new','pixel'],['new2','mosaic']]) {
+    const preview=await readFile(new URL(route+'.html',output),'utf8');
+    assert.match(preview,new RegExp('seascape-hero seascape-'+style));
+    assert.match(preview,/<meta name="robots" content="noindex, follow">/);
+    assert.match(preview,/rel="canonical" href="https:\/\/orka.chat\/"/);
+    assert.ok(!sitemap.includes('<loc>https://orka.chat/'+route+'</loc>'));
+    assert.ok(!knowledge.documents.some(doc=>doc.url==='https://orka.chat/'+route));
+    const belowHero=source=>source.slice(source.indexOf('<section class="ecosystem">'));
+    assert.equal(belowHero(preview),belowHero(html),'Preview preserves every section after the hero');
+    assert.equal((preview.match(/<h1\b/g)||[]).length,1);
+    const ids=[...preview.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
+    assert.equal(new Set(ids).size,ids.length,'Preview has unique anchors');
+    for (const [,src] of preview.matchAll(/src="(\/assets\/[^\"]+)"/g)) await access(new URL(src.slice(1),output));
+    const css=preview.match(/href="(hero-experiments\.[a-f0-9]{12}\.css)"/)[1];
+    await access(new URL(css,output));
+    assert.ok(headers.includes('/'+route+'\n  Cache-Control: no-cache\n  X-Robots-Tag: noindex, follow'));
+  }
   assert.doesNotMatch(sitemap, /<loc>https:\/\/orka\.chat\/home(?:\/|\.html)?<\/loc>/);
   for (const route of ['about','sdk','how-to-add-orka-to-single-page-application','ios-app','android-app','performance','is-orka-right-for-you',...['lovable','bolt','replit','base44','v0'].map(tool=>'how-to-add-live-chat-to-a-'+tool+'-app')]) {
     const page=await readFile(new URL(route+'.html',output),'utf8');

@@ -98,14 +98,6 @@
 }
 @media(prefers-reduced-motion:reduce){.new2-mosaic .mosaic-story-image{animation:none!important}}
 
-.new2-mosaic .mosaic-feast{position:relative;isolation:isolate;aspect-ratio:8/5;overflow:hidden;background:#509a92 url('/assets/new2-mosaic-dashboard-frame.jpg') center/cover}
-.new2-mosaic .mosaic-feast-orky{position:absolute;width:65%;height:85%;object-fit:contain;left:0;top:10%;transform:scaleX(-1);z-index:2;filter:drop-shadow(0 12px 9px #163e3230);animation:mosaic-feast-swim 2s ease-in-out infinite}
-.new2-mosaic .mosaic-feast-snack{position:absolute;width:9%;aspect-ratio:1;object-fit:contain;right:5%;top:45%;padding:6px;background:#fffdf5;border-radius:20%;opacity:0;animation:mosaic-snack 5s calc(var(--snack)*1s) linear infinite}
-.new2-mosaic .mosaic-feast.is-paused *{animation-play-state:paused}
-@keyframes mosaic-feast-swim{0%,100%{translate:0 0}50%{translate:1% -3%}}
-@keyframes mosaic-snack{0%{opacity:0;translate:20% -60%;rotate:-12deg}10%{opacity:1}70%{opacity:1;scale:1}85%,100%{translate:-390% 40%;scale:.1;opacity:0;rotate:30deg}}
-@media(prefers-reduced-motion:reduce){.new2-mosaic .mosaic-feast *{animation:none!important}.new2-mosaic .mosaic-feast-snack{opacity:1;top:calc(12% + var(--snack)*16%);width:7%}}
-
 /* Small tesserae repeat at a fixed physical scale; they never stretch with a frame. */
 .new2-mosaic{background:#f5f2e7;color:#193e33}
 .new2-mosaic .mosaic-dashboard-fresco{background-size:220px 220px}

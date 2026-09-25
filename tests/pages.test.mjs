@@ -52,7 +52,7 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   assert.equal(selectFaqSources('What does Pod cost?',knowledge.documents)[0].url,'https://orka.chat/pricing');
   const homepageFooter=html.match(/<footer class="o-footer"[\s\S]*?<\/footer>/)[0];
   const sitemap=await readFile(new URL('sitemap.xml',output),'utf8');
-  for (const [route,style] of [['new','pixel'],['new2','mosaic'],['new3','mosaic'],['new4','pixel']]) {
+  for (const [route,style] of [['new','pixel'],['new2','mosaic'],['new3','mosaic'],['new4','mosaic']]) {
     const preview=await readFile(new URL(route+'.html',output),'utf8');
     assert.match(preview,new RegExp('seascape-hero seascape-'+style));
     assert.match(preview,/<meta name="robots" content="noindex, follow">/);

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {constrainMascot,springStep,swimmingHeading} from '../public/hero-experiments.js';
+import {constrainMascot,springStep,returnStep,swimmingHeading} from '../public/hero-experiments.js';
 
 test('dragging keeps Orky inside the hero on desktop and narrow screens',()=>{
  for(const bounds of [{left:-690,right:440,top:-410,bottom:60},{left:-210,right:20,top:-620,bottom:32}]){
@@ -34,4 +34,21 @@ test('Orky faces the direction of travel when dragged and when swimming home',()
  const home=swimmingHeading(next.position.x-state.position.x,next.position.y-state.position.y,right);
  assert.equal(home.facing,1);
  assert.ok(home.pitch<0);
+});
+
+
+test('the homeward swim takes three times as long and rests facing right',()=>{
+ assert.equal(swimmingHeading(0,0).facing,-1);
+ const duration=(step,dt)=>{
+  let state={position:{x:400,y:-180},velocity:{x:0,y:0}},time=0;
+  while(time<20){
+   state=step(state.position,state.velocity,dt);time+=dt;
+   if(Math.hypot(state.position.x,state.position.y)<.3&&Math.hypot(state.velocity.x,state.velocity.y)<2)return time;
+  }
+  throw new Error('Orky never reached home');
+ };
+ for(const dt of [1/120,1/60,1/30]){
+  const ratio=duration(returnStep,dt)/duration(springStep,dt);
+  assert.ok(ratio>2.7&&ratio<3.3,`Return duration ratio: ${ratio}`);
+ }
 });

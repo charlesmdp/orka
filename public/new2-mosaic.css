@@ -241,6 +241,8 @@
 .new2-mosaic .mosaic-current>:is(.section,.human-section):not(.dark-section){background:transparent;border-color:transparent}
 .new2-mosaic .mosaic-current>section:not(.dark-section) :is(.section-heading,.orca-story-heading,.real-livemap-heading,.pod-included,.founder-aside){background:var(--current-halo);border-radius:20px;box-shadow:0 0 32px 18px var(--current-halo)}
 .new2-mosaic.hero-night .mosaic-current{background:#082331;--current-halo:#082331ed}
+.new2-mosaic.hero-night :is(.orca-story-heading>p,.pod-included p){color:#b9cfca}
+.new2-mosaic.hero-night .pod-included strong{color:#edf4da}
 .new2-mosaic.hero-night .mosaic-current-ribbon{background-image:linear-gradient(90deg,#08233155,#082331dc 27%,#082331dc 73%,#08233155),url('/assets/mosaic-tiles.jpg')}
 @media(min-width:1700px){
  .new2-mosaic .mosaic-current-ribbon{-webkit-mask-size:100% 2700px;mask-size:100% 2700px;-webkit-mask-position:0 -988px;mask-position:0 -988px}

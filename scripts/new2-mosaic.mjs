@@ -20,6 +20,10 @@ export function applyMosaicArtwork(html) {
     html = html.replace(pattern,`<img class="mosaic-story-image" src="/assets/new2-mosaic-${asset}.jpg" alt="${alt}" width="1200" height="800" loading="lazy" decoding="async">`);
   }
   html = decorateMosaicSections(html);
+  // One decorative current connects the content, behind every card and heading.
+  // Its mask repeats independently from the tiles so neither stretches on long pages.
+  html = html.replace('<section class="section pod-section"', '<div class="mosaic-current"><div class="mosaic-current-ribbon" aria-hidden="true"></div><section class="section pod-section"');
+  html = html.replace('<section class="closing-section dark-section">', '</div><section class="closing-section dark-section">');
   return html
     .replaceAll('assets/orca-dialogue-v11.png','assets/new2-mosaic-dialogue.jpg')
     .replaceAll('assets/trawler-dorsal-v14.png','assets/new2-mosaic-wide-net.jpg')

@@ -228,7 +228,7 @@
 
 /* A broad ceramic current weaves behind the page. Only the silhouette scales;
    the original tesserae repeat at a constant size instead of being distorted. */
-.new2-mosaic .mosaic-current{position:relative;isolation:isolate;background:#f5f2e7}
+.new2-mosaic .mosaic-current{position:relative;isolation:isolate;background:#f5f2e7;--current-halo:#f5f2e7ed}
 .new2-mosaic .mosaic-current-ribbon{position:absolute;inset:0;z-index:0;pointer-events:none;user-select:none;
  background:linear-gradient(90deg,#f5f2e72b,#f5f2e7bf 27%,#f5f2e7bf 73%,#f5f2e72b),url('/assets/mosaic-tiles.jpg') repeat;
  background-size:auto,260px 260px;
@@ -238,7 +238,8 @@
  -webkit-mask-repeat:repeat-y;mask-repeat:repeat-y}
 .new2-mosaic .mosaic-current>section{position:relative;z-index:1}
 .new2-mosaic .mosaic-current>:is(.section,.human-section):not(.dark-section){background:transparent;border-color:transparent}
-.new2-mosaic.hero-night .mosaic-current{background:#082331}
+.new2-mosaic .mosaic-current>section:not(.dark-section) :is(.section-heading,.orca-story-heading,.real-livemap-heading,.pod-included,.founder-aside){background:var(--current-halo);border-radius:20px;box-shadow:0 0 32px 18px var(--current-halo)}
+.new2-mosaic.hero-night .mosaic-current{background:#082331;--current-halo:#082331ed}
 .new2-mosaic.hero-night .mosaic-current-ribbon{background-image:linear-gradient(90deg,#08233155,#082331dc 27%,#082331dc 73%,#08233155),url('/assets/mosaic-tiles.jpg')}
 @media(min-width:1700px){
  .new2-mosaic .mosaic-current-ribbon{-webkit-mask-size:100% 2700px;mask-size:100% 2700px;-webkit-mask-position:0 -988px;mask-position:0 -988px}

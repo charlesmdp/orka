@@ -236,7 +236,8 @@
  -webkit-mask-size:100% 2240px;mask-size:100% 2240px;
  -webkit-mask-position:0 -820px;mask-position:0 -820px;
  -webkit-mask-repeat:repeat-y;mask-repeat:repeat-y}
-.new2-mosaic .mosaic-current>section{position:relative;z-index:1}
+.new2-mosaic .mosaic-current>section,.new2-mosaic .mosaic-current>.o-faq{position:relative;z-index:1}
+.new2-mosaic .mosaic-current>.o-faq{background:var(--current-halo);border-radius:20px;box-shadow:0 0 32px 18px var(--current-halo)}
 .new2-mosaic .mosaic-current>:is(.section,.human-section):not(.dark-section){background:transparent;border-color:transparent}
 .new2-mosaic .mosaic-current>section:not(.dark-section) :is(.section-heading,.orca-story-heading,.real-livemap-heading,.pod-included,.founder-aside){background:var(--current-halo);border-radius:20px;box-shadow:0 0 32px 18px var(--current-halo)}
 .new2-mosaic.hero-night .mosaic-current{background:#082331;--current-halo:#082331ed}

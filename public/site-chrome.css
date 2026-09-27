@@ -121,3 +121,4 @@ html[data-letter-read=true] .letter-nav-stamp{display:none!important}
 .new2-mosaic.hero-night .byok-story :is(h2,strong){color:#edf4da}
 .new2-mosaic.hero-night .byok-story h2 em{color:#c7e8a1}
 .new2-mosaic.hero-night :is(.byok-story>p,.byok-providers>span,.byok-spotlight .byok-fineprint){color:#bfd3c6}
+.new2-mosaic.hero-night .byok-spotlight .byok-receipt :is(p,.project-eyebrow){color:#506744}

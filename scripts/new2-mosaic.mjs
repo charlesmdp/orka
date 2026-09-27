@@ -27,14 +27,10 @@ export function applyMosaicArtwork(html) {
   return html
     .replaceAll('assets/orca-dialogue-v11.png','assets/new2-mosaic-dialogue.jpg')
     .replaceAll('assets/trawler-dorsal-v14.png','assets/new2-mosaic-wide-net.jpg')
-    .replaceAll('assets/orky-head-v2.svg','assets/orky-swim-mascot.svg')
     .replaceAll('assets/orca-swimming.svg','assets/orky-swim-mascot.svg');
 }
 
 function decorateMosaicSections(html) {
-  for (const [tier,description] of [['solo','One orca finding its own current'],['pod','Three orcas swimming together'],['fleet','A whole family of orcas, moving as one']]) {
-    html = html.replace(new RegExp('(<article class="price-card price-'+tier+'[^\"]*"[^>]*>)'),`$1<img class="mosaic-tier-art" src="/assets/mosaic-pricing-${tier}.jpg" alt="${description}, in ceramic mosaic" width="1000" height="666" loading="lazy" decoding="async">`);
-  }
   html = html.replace('<article class="founder-letter">','<div class="mosaic-letter-frame"><article class="founder-letter"><div class="letter-postage" aria-hidden="true"><img src="/assets/mosaic-pricing-solo.jpg" alt="" width="110" height="80" loading="lazy"><span>FROM FRANCE, WITH CARE</span></div>');
   html = html.replace(/(<article class="founder-letter">[\s\S]*?<\/article>)/,'$1</div>');
   html = html.replace('<div class="closing-sonar" aria-hidden="true">','<div class="closing-sonar" aria-hidden="true"><img class="closing-mosaic-sea" src="/assets/hero-ocean-mosaic.jpg" alt="" width="1672" height="941" loading="lazy">');

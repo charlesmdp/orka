@@ -158,3 +158,11 @@ img[src$="orky-app-icon.svg"]{object-fit:contain}
 .features-page .catalogue-layout{grid-template-columns:210px minmax(0,1fr)}.features-page .catalogue-nav{min-width:0}.features-page .catalogue-nav>div{max-width:100%}
 @media(max-width:1050px){.features-page .catalogue-layout{grid-template-columns:175px minmax(0,1fr)}}
 @media(max-width:760px){.features-page .catalogue-layout{grid-template-columns:minmax(0,1fr)}.features-page .site-header{height:auto}.features-page .nav-wrap{width:100%;height:auto;min-height:0;padding:14px 20px;gap:13px;align-items:center}.features-page .nav-actions{margin-left:auto}.features-page .nav-actions .login{display:none}.features-page .nav-cta{font-size:10px;padding:10px 12px;white-space:nowrap}.features-page .desktop-nav{order:3;flex-basis:100%;width:100%;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:10px;padding:4px 0 0}.features-page .desktop-nav>a{display:inline-flex}.features-page .catalogue-results{max-width:100%}}
+/* The editorial pages share the homepage's glazed ceramic art direction. */
+.editorial-mosaic,.c-hero-scene.comparison-mosaic{margin:0;min-width:0;overflow:hidden;border:6px solid #e8dfc9;border-radius:25px;background:#12515a;box-shadow:0 18px 48px #193e3012}
+.editorial-mosaic>img,.c-hero-scene.comparison-mosaic>img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover}
+.editorial-mosaic>figcaption,.c-hero-scene.comparison-mosaic>figcaption{position:static;max-width:none;display:flex;flex-direction:column;align-items:flex-start;gap:5px;margin:0;padding:17px 21px;border:0;border-top:1px solid #dbd1b7;border-radius:0;background:#f5f0e4;color:#254c3e;font:12px/1.5 var(--sans,sans-serif);letter-spacing:0;backdrop-filter:none}
+.editorial-mosaic>figcaption strong{font-size:16px;font-weight:600}
+.editorial-mosaic>figcaption span{color:#677a6f}
+.c-hero-scene.comparison-mosaic>figcaption{flex-direction:row;align-items:center;gap:10px;font:10px/1.5 var(--mono,monospace);letter-spacing:.06em}
+@media(max-width:740px){.editorial-mosaic,.c-hero-scene.comparison-mosaic{border-width:4px;border-radius:19px}.editorial-mosaic>figcaption{padding:14px 16px}.editorial-mosaic>figcaption strong{font-size:15px}.c-hero-scene.comparison-mosaic>figcaption{font-size:8px;padding:12px 14px}}

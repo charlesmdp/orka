@@ -68,7 +68,7 @@ test('all eleven guides have over 1,000 editorial words, documented comparisons,
    const md=await readFile(path.join(temp,`orka-vs-${c.id}.md`),'utf8');
    assert.ok([...html.matchAll(/<tr><th scope="row">/g)].length >= 7);
    assert.match(html,/data-longform/);
-   assert.match(html,new RegExp('comparison-'+c.id+'-v2\\.jpg'));
+   assert.match(html,new RegExp('mosaic-comparison-'+c.id+'\\.webp'));
    assert.doesNotMatch(html,/not verified|unverified/i);
    assert.match(html,/rel="canonical"/);assert.match(html,/type="text\/markdown"/);
    for(const section of sections)assert.ok(md.includes(section.title));

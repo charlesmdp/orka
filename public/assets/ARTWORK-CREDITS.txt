@@ -66,3 +66,9 @@ Original standard tiles at zoom 3, x=1..3, y=1..4; displayed with local example 
 27 September 2026 — product-page artwork refresh
 - mosaic-page-features.webp, mosaic-page-ai.webp, mosaic-page-help-center.webp, mosaic-page-sdk.webp: original illustrations generated with the built-in imagegen tool; prompt set in scripts/mosaic-product-pages-artwork.md.
 - orky-app-icon.svg: vector recreation of the Orky app icon supplied by the site owner.
+
+Comparison and audience ceramic mosaics — 27 September 2026
+17 original scenes generated with the built-in OpenAI imagegen tool for Orka.
+Files: mosaic-comparison-*.webp and mosaic-audience-*.webp.
+Optimized WebP exports, 1200 x 800. Full prompts: scripts/mosaic-editorial-artwork.md.
+Competitor trademarks remain separate HTML logo assets; generated artwork contains no competitor branding.

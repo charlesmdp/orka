@@ -11,7 +11,7 @@ export function selectFaqSources(question,documents) {
  const ranked=documents.map(doc=>{
   const title=new Set(faqWords(doc.title+' '+doc.url)),body=new Set(faqWords(doc.text));
   const core=['/features','/pricing','/help-center','/ai'].some(p=>doc.url==='https://orka.chat'+p)?5:0;
-  const pricing=doc.url==='https://orka.chat/pricing'&&['price','pricing','cost','pod','fleet','solo','plan','plans'].some(w=>words.has(w))?25:0;
+  const pricing=doc.url==='https://orka.chat/pricing'&&['price','pricing','cost','free','pro','max','pod','fleet','solo','plan','plans','openrouter','anthropic','key'].some(w=>words.has(w))?25:0;
   const help=doc.url==='https://orka.chat/help-center'&&['help','articles','markdown','translation','import'].some(w=>words.has(w))?18:0;
   const match=[...words].reduce((n,w)=>n+(title.has(w)?5:0)+(body.has(w)?2:0),0);
   return {doc,score:match?match+core+pricing+help:0};

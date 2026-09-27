@@ -112,3 +112,12 @@ html[data-letter-read=true] .letter-nav-stamp{display:none!important}
 .ai-budget .key-choice{padding:15px 17px;background:#e0efc5;border:1px solid #b6ce94;border-radius:10px;font-size:13px;color:#2e532f;line-height:1.5}.ai-budget .key-choice input{flex-shrink:0;width:20px;height:20px}
 @media(max-width:700px){.byok-spotlight{grid-template-columns:1fr;gap:24px;border-radius:20px;padding:25px 22px;margin-bottom:35px}.byok-story h2{font-size:35px}.byok-story>p{font-size:13px}.byok-receipt{padding:22px}.byok-providers{gap:13px}.byok-providers .byok-all-plans{padding-left:10px}.byok-spotlight .byok-fineprint{grid-column:1}.plan-projects .project-help{margin-left:0}.pricing-byok-badge{font-size:11px}.project-help{min-height:30px}}
 .c-plan-featured .project-help,.c-plan-featured .plan-byok-link{color:#d9ff83}.c-plan-featured .project-help:hover,.c-plan-featured .plan-byok-link:hover{color:#fff}
+.plan-ai-choice{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid #b9cea6;border-radius:12px;background:#edf6df;padding:13px 15px;margin-top:22px;color:#2d5538;font-size:13px;font-weight:650}
+.plan-ai-choice:hover{background:#e0efca}
+.openrouter-monogram{display:grid;place-items:center;width:25px;height:25px;border:1px solid #c8d1c5;border-radius:7px;background:#fff;color:#353941;font-size:23px;line-height:1}
+.ai-provider-note{font-size:11px;line-height:1.7;color:#65775c;margin:10px 0 15px;max-width:440px}
+.price-card .plan-footnote{line-height:1.7}
+.new2-mosaic.hero-night .plan-ai-choice{background:#254b42;border-color:#587564;color:#dceeb8}
+.new2-mosaic.hero-night .byok-story :is(h2,strong){color:#edf4da}
+.new2-mosaic.hero-night .byok-story h2 em{color:#c7e8a1}
+.new2-mosaic.hero-night :is(.byok-story>p,.byok-providers>span,.byok-spotlight .byok-fineprint){color:#bfd3c6}

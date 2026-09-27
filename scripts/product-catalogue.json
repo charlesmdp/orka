@@ -75,7 +75,7 @@
       "Pick up an earlier conversation and find messages by keyword.",
       "team legal shop saas agency",
       "4",
-      "Message search: Pod & Fleet"
+      "Message search: Pro & Max"
     ],
     [
       "saved-replies",
@@ -93,7 +93,7 @@
       "Share a document, screenshot or image right inside a conversation.",
       "team legal shop saas agency",
       "6",
-      "Image sharing: Pod & Fleet"
+      "Image sharing: Pro & Max"
     ],
     [
       "emoji",
@@ -201,7 +201,7 @@
       "Start with one person, work as a small pod, or bring a larger team into the same inbox.",
       "team legal agency",
       "",
-      "Solo: 1 member · Pod: 3 · Fleet: 20"
+      "Free: 1 member · Pro: 3 · Max: 20"
     ],
     [
       "knowledge",
@@ -210,7 +210,7 @@
       "Give Orky your website, help articles, documentation and FAQs to ground replies in your business.",
       "solo team shop saas agency",
       "23",
-      ""
+      "Pro & Max · AI usage separate"
     ],
     [
       "automatic-replies",
@@ -219,7 +219,7 @@
       "Let Orky cover conversations when you are busy or offline, with a handover to a person when help is needed.",
       "solo team shop saas",
       "24",
-      ""
+      "Pro & Max · AI usage separate"
     ],
     [
       "ai-drafts",
@@ -228,7 +228,7 @@
       "Ask for a suggested reply, edit the wording and decide when to send it. A draft is not sent on its own.",
       "solo team legal shop saas agency",
       "25",
-      ""
+      "Pro & Max · AI usage separate"
     ],
     [
       "human-takeover",
@@ -237,7 +237,7 @@
       "Step into an AI conversation with its context whenever a human answer is the right next step.",
       "team legal shop saas",
       "26",
-      ""
+      "Pro & Max · AI usage separate"
     ],
     [
       "ai-per-chat",
@@ -246,7 +246,7 @@
       "Enable or disable AI in an individual conversation and keep control of where it helps.",
       "solo team legal agency",
       "27",
-      ""
+      "Pro & Max · AI usage separate"
     ],
     [
       "translation",
@@ -255,7 +255,7 @@
       "Read the original message, detected language and translation together. Reply in your language while your visitor reads theirs.",
       "solo team legal shop saas agency",
       "29",
-      "Solo translation: bring your own AI key"
+      "Pro & Max · AI usage separate"
     ],
     [
       "ai-shortcuts",
@@ -264,7 +264,7 @@
       "Say hi, say goodbye, make small talk, talk about the weather or draft an AI answer from the composer.",
       "solo team shop saas",
       "33",
-      ""
+      "Pro & Max · AI usage separate"
     ],
     [
       "summaries",
@@ -273,43 +273,43 @@
       "Catch up on the key points before you take over or hand a conversation to someone else.",
       "team legal agency saas",
       "34",
-      ""
+      "Pro & Max · AI usage separate"
     ],
     [
       "ai-providers",
       "ai",
-      "ChatGPT or Claude",
-      "Choose an AI provider for the way your team works.",
+      "Your AI provider, your choice",
+      "Let Orka manage AI without a key, or connect your own OpenAI, Anthropic or OpenRouter API key.",
       "solo team saas agency",
       "",
-      ""
+      "Pro & Max · AI usage separate"
     ],
     [
       "own-key",
       "ai",
       "Bring your own AI key",
-      "Use your provider’s key and pay the provider directly, with no Orka markup.",
+      "Connect an OpenAI, Anthropic or OpenRouter API key and pay that provider directly, with no Orka markup.",
       "solo team saas agency",
       "",
-      "AI usage is separate from the plan"
+      "Pro & Max · AI usage separate"
     ],
     [
       "usage-pricing",
       "ai",
       "Pay-as-you-go AI",
-      "Prefer not to connect a key? Pay for the AI you use through Orka.",
+      "No API key needed: choose Orka-managed AI on Pro or Max and pay for the usage separately.",
       "solo team shop",
       "",
-      "See current AI rates on the pricing section"
+      "Pro & Max · AI usage separate"
     ],
     [
       "custom-orky",
       "ai",
-      "Give Orky your own name",
-      "Make your AI teammate part of your brand with a custom name.",
+      "Your name & image for Orky",
+      "Make your AI teammate part of your brand with a custom name and image.",
       "team shop agency",
       "",
-      "Fleet"
+      "Max"
     ],
     [
       "live-map",
@@ -318,7 +318,7 @@
       "See where visitors are, zoom into a group and explore individual visitors across your projects.",
       "solo team shop saas agency",
       "20",
-      "Pod & Fleet"
+      "Pro & Max"
     ],
     [
       "visitor-list",
@@ -372,7 +372,7 @@
       "Review your support activity and how your conversations are handled.",
       "solo team shop saas agency",
       "30",
-      "Pod & Fleet"
+      "Pro & Max"
     ],
     [
       "help-center",
@@ -471,7 +471,7 @@
       "Give visitors a widget that carries your own brand throughout.",
       "team legal shop agency",
       "",
-      "Fleet"
+      "Max"
     ],
     [
       "installation",
@@ -667,7 +667,7 @@
       "We’re a team of 10",
       "Ten people. One conversation that makes sense.",
       "Know who is replying, share context privately, and keep the next step clear.",
-      "Assign an owner, leave a note and set a reminder. Fleet has room for up to 20 teammates.",
+      "Assign an owner, leave a note and set a reminder. Max has room for up to 20 teammates.",
       [
         "assignment",
         "private-notes",

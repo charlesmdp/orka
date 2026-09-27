@@ -33,7 +33,7 @@ export function applyMosaicArtwork(html) {
 
 function decorateMosaicSections(html) {
   for (const [tier,description] of [['solo','One orca finding its own current'],['pod','Three orcas swimming together'],['fleet','A whole family of orcas, moving as one']]) {
-    html = html.replace(new RegExp('(<article class="price-card price-'+tier+'[^\"]*">)'),`$1<img class="mosaic-tier-art" src="/assets/mosaic-pricing-${tier}.jpg" alt="${description}, in ceramic mosaic" width="1000" height="666" loading="lazy" decoding="async">`);
+    html = html.replace(new RegExp('(<article class="price-card price-'+tier+'[^\"]*"[^>]*>)'),`$1<img class="mosaic-tier-art" src="/assets/mosaic-pricing-${tier}.jpg" alt="${description}, in ceramic mosaic" width="1000" height="666" loading="lazy" decoding="async">`);
   }
   html = html.replace('<article class="founder-letter">','<div class="mosaic-letter-frame"><article class="founder-letter"><div class="letter-postage" aria-hidden="true"><img src="/assets/mosaic-pricing-solo.jpg" alt="" width="110" height="80" loading="lazy"><span>FROM FRANCE, WITH CARE</span></div>');
   html = html.replace(/(<article class="founder-letter">[\s\S]*?<\/article>)/,'$1</div>');

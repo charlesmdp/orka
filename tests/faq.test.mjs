@@ -4,17 +4,17 @@ import {answerFaq,selectFaqSources,allowFaqRequest} from '../server/faq.mjs';
 import {safeFaqSource} from '../public/site-interactions.js';
 import {appGuidePages} from '../scripts/app-guides.mjs';
 import {readFile,access} from 'node:fs/promises';
-const documents=[{id:'pricing-0',title:'Orka pricing',url:'https://orka.chat/pricing',text:'Solo free. Pod $29 for 3 people. Fleet $99 for 20 people. Unlimited projects. AI costs separate.'},{id:'help-0',title:'Help center',url:'https://orka.chat/help-center',text:'Markdown help articles, multilingual content, translation and custom domains.'},{id:'features-0',title:'Features',url:'https://orka.chat/features',text:'Live chat and shared inbox for unlimited projects.'}];
+const documents=[{id:'pricing-0',title:'Orka pricing',url:'https://orka.chat/pricing',text:'Free free. Pro $29 for 3 people. Max $99 for 20 people. Unlimited projects. AI costs separate.'},{id:'help-0',title:'Help center',url:'https://orka.chat/help-center',text:'Markdown help articles, multilingual content, translation and custom domains.'},{id:'features-0',title:'Features',url:'https://orka.chat/features',text:'Live chat and shared inbox for unlimited projects.'}];
 const request=(question,options={})=>new Request('https://orka.chat/api/faq-answer',{method:'POST',headers:{Origin:'https://orka.chat','Content-Type':'application/json','CF-Connecting-IP':Math.random().toString(),...options.headers},body:JSON.stringify({question,...options.body})});
 const env={OPENAI_API_KEY:'test-secret-never-real',ASSETS:{fetch:async()=>Response.json({documents})}};
-const result=(answer='Pod is $29 per month for up to three people.',ids=['pricing-0'])=>Response.json({status:'completed',output:[{type:'message',content:[{type:'output_text',text:JSON.stringify({answer,supported:true,source_ids:ids})}]}]});
+const result=(answer='Pro is $29 per month for up to three people.',ids=['pricing-0'])=>Response.json({status:'completed',output:[{type:'message',content:[{type:'output_text',text:JSON.stringify({answer,supported:true,source_ids:ids})}]}]});
 test('FAQ retrieves relevant website facts and supports French price questions',()=>{
  assert.equal(selectFaqSources('Quels sont les prix ?',documents)[0].id,'pricing-0');
  assert.equal(selectFaqSources('Help center translation',documents)[0].id,'help-0');
 });
 test('FAQ sends only the submitted question and selected public excerpts, with the key server-side',async()=>{
  let sent;
- const response=await answerFaq(request('What does Pod cost?',{body:{account:{secret:'do not send'},chat_history:['private conversation']}}),env,async(url,options)=>{sent={url,...options};return result();});
+ const response=await answerFaq(request('What does Pro cost?',{body:{account:{secret:'do not send'},chat_history:['private conversation']}}),env,async(url,options)=>{sent={url,...options};return result();});
  assert.equal(response.status,200);const data=await response.json();assert.equal(data.sources[0].url,'https://orka.chat/pricing');
  const payload=JSON.parse(sent.body);assert.equal(payload.model,'gpt-5-mini');assert.equal(payload.store,false);
  assert.deepEqual(Object.keys(JSON.parse(payload.input)).sort(),['excerpts','question']);assert.doesNotMatch(sent.body,/private conversation|do not send/);

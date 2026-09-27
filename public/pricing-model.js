@@ -11,7 +11,7 @@ export function aiCost(model, input, output, ownKey=false) {
 }
 export function orkaPlan(seats) {
   if (!Number.isInteger(seats) || seats < 1 || seats > 20) return null;
-  return seats === 1 ? {name:'Solo',price:0,seats:1} : seats <= 3 ? {name:'Pod',price:29,seats:3} : {name:'Fleet',price:99,seats:20};
+  return seats === 1 ? {name:'Free',price:0,seats:1} : seats <= 3 ? {name:'Pro',price:29,seats:3} : {name:'Max',price:99,seats:20};
 }
 export const VENDOR_PLANS = {
   intercom: [{name:'Essential',base:39,perSeat:true},{name:'Advanced',base:99,perSeat:true},{name:'Expert',base:139,perSeat:true}],

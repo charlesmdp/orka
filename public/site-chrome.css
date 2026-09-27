@@ -124,7 +124,7 @@ html[data-letter-read=true] .letter-nav-stamp{display:none!important}
 .new2-mosaic.hero-night .byok-spotlight .byok-receipt :is(p,.project-eyebrow){color:#506744}
 /* The same original pricing frescoes belong to every version of the plan cards. */
 .price-card{overflow:hidden}.price-card>.mosaic-tier-art{display:block;width:calc(100% + 64px);max-width:none;height:174px;margin:-32px -32px 25px;object-fit:cover;border-bottom:5px solid #e8e4d0}
-.c-plan{--plan-padding:32px;overflow:hidden}.c-plan>.c-plan-art{display:block;width:calc(100% + var(--plan-padding)*2);max-width:none;aspect-ratio:1.85;object-fit:cover;margin:calc(-1 * var(--plan-padding)) calc(-1 * var(--plan-padding)) 26px;border-bottom:5px solid #e8e4d0}
+.c-plan{--plan-padding:32px;overflow:hidden}.c-plan>.c-plan-art{display:block;width:calc(100% + var(--plan-padding)*2);max-width:none;height:auto;aspect-ratio:1.85;object-fit:cover;margin:calc(-1 * var(--plan-padding)) calc(-1 * var(--plan-padding)) 26px;border-bottom:5px solid #e8e4d0}
 /* New Orky app identity. The draggable swimming character stays a separate illustration. */
 img[src$="orky-app-icon.svg"]{object-fit:contain}
 .new2-mosaic .orky-avatar-halo>.orky-head[src$="orky-app-icon.svg"]{transform:none;padding:0}
@@ -149,3 +149,5 @@ img[src$="orky-app-icon.svg"]{object-fit:contain}
 
 .pricing-grid>.price-card{padding:28px}.price-card>.mosaic-tier-art{width:calc(100% + 56px);margin:-28px -28px 25px}
 @media(max-width:760px){.c-plan{--plan-padding:30px}}
+
+.features-page .site-header .wordmark,.features-page .site-header .desktop-nav a,.features-page .site-header .login{color:#203c32}.features-page .site-header .desktop-nav a[aria-current="page"]{color:#456b39}

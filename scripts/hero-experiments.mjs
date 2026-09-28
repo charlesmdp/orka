@@ -5,7 +5,7 @@ import {mosaicDashboard,applyMosaicArtwork} from './new2-mosaic.mjs';
 
 const variants = [
   {slug:'new',style:'pixel',name:'Pixel cove',asset:'hero-pixel-cove-front.jpg'},
-  {slug:'new2',style:'mosaic',name:'Ceramic mosaic',asset:'hero-ceramic-mosaic.jpg'},
+  {slug:'new2',style:'mosaic',name:'Ceramic mosaic',asset:'hero-ceramic-mosaic.jpg',nightAsset:'hero-ceramic-mosaic-night-chat.jpg'},
   {slug:'new3',style:'mosaic',name:'Aerial ocean mosaic',asset:'hero-ocean-mosaic.jpg',aerial:true},
   {slug:'new4',style:'mosaic',name:'Orky’s message mosaic',asset:'hero-mosaic-chat-source.jpg',chatSource:true}
 ];
@@ -24,7 +24,7 @@ const sceneTools = `<div class="seascape-scene-tools" role="group" aria-label="S
 function hero(variant, mascot) {
   return `<section class="seascape-hero seascape-${variant.style}${variant.aerial?' seascape-aerial':''}${variant.chatSource?' seascape-chat-source':''}" aria-labelledby="hero-title">
     <img class="seascape-art" src="/assets/${variant.asset}" width="1672" height="941" alt="" fetchpriority="high" decoding="async">
-    <img class="seascape-art seascape-art-night" data-night-art data-src="/assets/${variant.asset.replace('.jpg','-night.jpg')}" width="1672" height="941" alt="" decoding="async">
+    <img class="seascape-art seascape-art-night" data-night-art data-src="/assets/${variant.nightAsset || variant.asset.replace('.jpg','-night.jpg')}" width="1672" height="941" alt="" decoding="async">
     <div class="seascape-wash" aria-hidden="true"></div>
     <div class="seascape-sparkles" aria-hidden="true">${Array.from({length:7},(_,i)=>`<i style="--spark:${i}"></i>`).join('')}</div>
     <div class="seascape-content">

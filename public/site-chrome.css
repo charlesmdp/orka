@@ -241,9 +241,9 @@ img[src$="orky-app-icon.svg"]{object-fit:contain}
  .project-dialog-compact .project-team-grid{grid-template-columns:1fr;gap:8px}
  .project-dialog-compact .project-team-grid>article{grid-template-columns:minmax(115px,39%) minmax(0,1fr);gap:12px;padding:9px}
  .project-dialog-compact .project-team-grid .project-preview{aspect-ratio:4/3;max-height:118px}
- .project-dialog-compact .project-team-screen{padding:8px}
+ .project-dialog-compact .project-team-screen{padding:6px}
  .project-dialog-compact .project-team-screen>small{display:none}
- .project-dialog-compact .project-team-screen>strong{font-size:17px;margin:3px 0 9px}
+ .project-dialog-compact .project-team-screen>strong{font-size:13px;margin:3px 0 4px}
  .project-dialog-compact .project-team-app-stats{margin:7px 0 5px}
  .project-dialog-compact .project-team-app-stats>i{height:12px}
  .project-dialog-compact .project-team-app-bars{height:24px}
@@ -252,7 +252,7 @@ img[src$="orky-app-icon.svg"]{object-fit:contain}
  .project-dialog-compact .project-shop-nav{height:18px}
  .project-dialog-compact .project-shop-nav>span{display:none}
  .project-dialog-compact .project-shop-product{padding:5px;gap:5px}
- .project-dialog-compact .project-shop-photo{height:49px}
+ .project-dialog-compact .project-shop-photo{height:40px}
  .project-dialog-compact .project-shop-product small{display:none}
  .project-dialog-compact .project-shop-product strong{font-size:8px;margin:0 0 5px}
  .project-dialog-compact .project-shop-product b{display:none}

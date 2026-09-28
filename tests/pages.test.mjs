@@ -139,7 +139,7 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   assert.match(spa,/default: Orka/);
   assert.match(spa,/YOUR_PROJECT_ID/);
   const android=await readFile(new URL('android-app.html',output),'utf8');
-  assert.match(android,/https:\/\/play.google.com\/store\/search\?q=orka%20chat%20penida/);
+  assert.match(android,/https:\/\/play.google.com\/store\/apps\/details\?id=com\.orka\.chat/);
   assert.equal([...sitemap.matchAll(/<loc>/g)].length,pageNames.length);
   for(const name of pageNames){
     const document=await readFile(new URL(name,output),'utf8');

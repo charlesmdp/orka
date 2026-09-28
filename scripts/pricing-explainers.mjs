@@ -9,30 +9,24 @@ function browserPreview(address,body,kind){
 function storePreview(){
  return browserPreview('your-store.com',`<div class="project-shop-nav"><strong>COAST &amp; CO.</strong><span>Shop &nbsp; About &nbsp; Bag (1)</span></div><div class="project-shop-product"><div class="project-shop-photo"><img src="/assets/orca-cap.webp" width="130" height="108" alt="" loading="lazy"></div><div><small>THE EVERYDAY COLLECTION</small><strong>Your new<br>favorite cap.</strong><span>$48.00</span><b>Add to bag</b></div></div>`,'store');
 }
-function appPreview(){
- return browserPreview('app.your-saas.com',`<div class="project-app-shell"><div class="project-app-sidebar"><b>daylight.</b><span class="is-selected">Overview</span><span>Projects</span><span>Your team</span></div><div class="project-app-dashboard"><strong>Good morning, Alex</strong><div class="project-app-stats"><span>Projects<b>12</b></span><span>Completed<b>86%</b></span></div><div class="project-app-chart"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="project-app-caption">Your week, looking good.</span></div></div>`,'app');
-}
-function ideaPreview(){
- return browserPreview('your-weekend-idea.com',`<div class="project-idea-nav"><strong>focus club</strong><span>My sessions</span></div><div class="project-focus-timer"><span>TIME FOR YOUR NEXT BIG IDEA</span><strong>25:00</strong><b>Start a focus session</b></div>`,'idea');
-}
 
 function projectTeamCards(){
  const people={Emma:'portrait-founder-2.png',Theo:'portrait-founder-3.jpg',Jules:'portrait-founder-4.jpg'};
  const projects=[
   {title:'Landing page',url:'yourbrand.com',kind:'landing',team:['Emma','Theo'],role:'Marketing & pre-sales',preview:'<small>YOUR NEXT GREAT PRODUCT</small><strong>Make work<br>feel lighter.</strong><b>Meet your product ↗</b>'},
   {title:'Your app',url:'app.yourbrand.com',kind:'workspace',team:['Theo','Jules'],role:'Technical & customer support',preview:'<div class="project-team-app-nav">Your workspace <span>●</span></div><div class="project-team-app-stats"><i></i><i></i><i></i></div><div class="project-team-app-bars"><i></i><i></i><i></i><i></i></div>'},
-  {title:'Demo site',url:'demo.yourbrand.com',kind:'demo',team:['Emma','Jules'],role:'Product demos & onboarding',preview:'<div class="project-demo-window"><span></span><span></span><span></span><span></span></div><b>Try it out ↗</b>'}
+  {title:'Demo site',url:'demo.yourbrand.com',kind:'demo',team:['Emma','Jules'],role:'Product demos & onboarding',preview:'<div class="project-demo-window"><span></span><span></span><span></span><span></span></div><b>Try it out ↗</b>'},
+  {title:'Your ecom website',team:['Emma','Theo'],role:'Orders, sizing & returns',customPreview:storePreview()}
  ];
- return projects.map((p,i)=>`<article>${browserPreview(p.url,`<div class="project-team-screen project-team-screen-${p.kind}">${p.preview}</div>`,'team')}<div class="project-team-copy"><span class="project-eyebrow">PROJECT 0${i+1}</span><h4>${p.title}</h4><p>${p.role}</p><span class="project-team-label">Assigned teammates</span><div class="project-team-members">${p.team.map(name=>`<img src="/assets/${people[name]}" width="32" height="32" alt="" loading="lazy">`).join('')}<span>${p.team.join(' &amp; ')}</span></div></div></article>`).join('');
+ return projects.map((p,i)=>`<article>${p.customPreview || browserPreview(p.url,`<div class="project-team-screen project-team-screen-${p.kind}">${p.preview}</div>`,'team')}<div class="project-team-copy"><span class="project-eyebrow">PROJECT 0${i+1}</span><h4>${p.title}</h4><p>${p.role}</p><span class="project-team-label">Assigned teammates</span><div class="project-team-members">${p.team.map(name=>`<img src="/assets/${people[name]}" width="32" height="32" alt="" loading="lazy">`).join('')}<span>${p.team.join(' &amp; ')}</span></div></div></article>`).join('');
 }
 
 export function projectDialog(){
  return `<dialog class="project-dialog" id="project-explainer" aria-labelledby="project-explainer-title" aria-describedby="project-explainer-intro">
  <div class="project-dialog-top"><span>WHAT IS A PROJECT?</span><button type="button" class="project-dialog-close" data-close-project aria-label="Close project explanation" autofocus>×</button></div>
  <div class="project-dialog-content"><h2 id="project-explainer-title">One project for each thing you run.</h2><p id="project-explainer-intro">A shop, a SaaS, a website… each can have its own space in Orka.</p>
- <div class="project-example-list"><article>${storePreview()}<div class="project-example-copy"><h3>Your online stores</h3><ul><li>A shop for each brand</li><li>Shopify or any ecommerce site</li></ul></div></article><article>${appPreview()}<div class="project-example-copy"><h3>Your SaaS &amp; apps</h3><ul><li>Each product you sell</li><li>Your webapps and mobile apps</li></ul></div></article><article>${ideaPreview()}<div class="project-example-copy"><h3>Your latest ideas</h3><ul><li>A vibe-coded website</li><li>A side project or client site</li></ul></div></article></div>
- <section class="project-split-visual project-team-explainer" aria-labelledby="project-split-title"><span class="project-eyebrow">SAME PRODUCT. DIFFERENT PROJECTS.</span><h3 id="project-split-title">Give each part the right crew.</h3><p class="project-team-intro">Your landing page, webapp and demo can each be a project.</p><div class="project-team-grid">${projectTeamCards()}</div><div class="project-team-note"><strong>Your choice of team, for each project.</strong><ul><li>Assign different teammates, or the same people across projects.</li><li>Each project keeps its own widget, AI sources and settings.</li><li>Every conversation still reaches your shared inbox.</li></ul></div></section>
- <div class="project-inbox-summary"><img src="/assets/orka-logo.svg" width="37" height="34" alt=""><div><strong>Different projects. One shared inbox.</strong><ul><li>A widget for each project</li><li>You choose who works on each one</li></ul></div></div></div>
+ <section class="project-split-visual project-team-explainer" aria-labelledby="project-split-title"><span class="project-eyebrow">ONE BRAND OR MANY. ONE INBOX.</span><h3 id="project-split-title">Give each project the right crew.</h3><p class="project-team-intro">Separate your landing page, app, demo and store. Choose who helps on each one.</p><div class="project-team-grid">${projectTeamCards()}</div><div class="project-team-note"><strong>Your choice of team, for each project.</strong><ul><li>Assign different teammates, or the same people across projects.</li><li>Each project keeps its own widget, AI sources and settings.</li><li>Every conversation still reaches your shared inbox.</li></ul></div></section>
+ <div class="project-inbox-summary"><img src="/assets/orka-logo.svg" width="37" height="34" alt=""><div><strong>Four projects. One shared inbox.</strong><p>Example teams. Your plan sets the number of teammates, not projects.</p></div></div></div>
  <div class="project-dialog-bottom"><p><strong>Unlimited projects. Every plan.</strong><span>No per-project fee.</span></p><button type="button" data-close-project>Got it</button></div>
  </dialog>`;
 }

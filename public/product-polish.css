@@ -575,3 +575,10 @@ html .site-preview-dialog[data-preview-theme=ocean] .preview-sent-message{backgr
 .site-preview-dialog .preview-theme-picker>button[data-preview-theme=ocean][aria-pressed=true]{background:#d8eeea;border-color:#abd4cd;color:#205b5c}
 .preview-widget-dock .preview-theme-picker{max-height:100%;overflow-y:auto}
 @media(max-width:600px){.preview-widget-dock .preview-theme-picker>button{min-height:36px;padding-block:5px}.preview-widget-dock .preview-theme-label{display:none}}
+
+/* Local screenshots keep the widget preview useful when a site blocks frames. */
+.preview-screenshot{position:absolute;inset:0;z-index:0;overflow:auto;overscroll-behavior:contain;background:#eaf1f8}.preview-screenshot[hidden]{display:none}.preview-screenshot>img{display:block;width:100%;height:auto;max-width:none}
+.preview-fallback-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.preview-fallback-actions button{white-space:nowrap}
+.site-preview-dialog .preview-options>#preview-screenshot-status{flex-basis:100%;max-width:none;text-align:left;color:#315b81;font-size:11px}.site-preview-dialog .preview-options>#preview-screenshot-status[hidden]{display:none}
+.site-preview-dialog [data-preview-mode=screenshot][aria-pressed=true]{background:#e4efff;border-color:#c6dafa;color:#315b81}
+@media(max-width:600px){.preview-fallback-actions{gap:6px}.site-preview-dialog .preview-options>#preview-screenshot-status{font-size:9px}.site-preview-dialog .preview-options button{font-size:10px;padding:7px 8px}}

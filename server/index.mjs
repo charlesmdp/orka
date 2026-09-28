@@ -161,7 +161,21 @@ export default {
     }
     if (url.pathname === '/api/faq-answer') return answerFaq(request,env);
     if (url.pathname !== '/api/website-preview') {
-      const response = await env.ASSETS.fetch(request);
+      // Pages serves 404.html for missing assets. The explicit preview route
+      // must also be an actual 404, never an indexable soft-404 success page.
+      const explicitNotFound = ['/404', '/404/', '/404.html'].includes(url.pathname);
+      const assetRequest = explicitNotFound
+        ? new Request(new URL('/404', url), request)
+        : request;
+      const response = await env.ASSETS.fetch(assetRequest);
+      if (explicitNotFound || response.status === 404) {
+        const copy = new Response(request.method === 'HEAD' ? null : response.body, {
+          status:404, statusText:'Not Found', headers:response.headers
+        });
+        copy.headers.set('Cache-Control','no-cache');
+        copy.headers.set('X-Robots-Tag','noindex, follow');
+        return copy;
+      }
       if ((response.headers.get('content-type') || '').includes('text/html')) {
         const copy = new Response(response.body,response);
         copy.headers.set('Cache-Control','no-cache');

@@ -72,3 +72,5 @@ Comparison and audience ceramic mosaics — 27 September 2026
 Files: mosaic-comparison-*.webp and mosaic-audience-*.webp.
 Optimized WebP exports, 1200 x 800. Full prompts: scripts/mosaic-editorial-artwork.md.
 Competitor trademarks remain separate HTML logo assets; generated artwork contains no competitor branding.
+
+Mosaic 404: mosaic-404-orky.webp — generated for Orka with the built-in image generation tool, September 2026. Prompt: scripts/not-found-artwork.md.

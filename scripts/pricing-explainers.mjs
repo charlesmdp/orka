@@ -22,11 +22,11 @@ function projectTeamCards(){
 }
 
 export function projectDialog(){
- return `<dialog class="project-dialog" id="project-explainer" aria-labelledby="project-explainer-title" aria-describedby="project-explainer-intro">
+ return `<dialog class="project-dialog project-dialog-compact" id="project-explainer" aria-labelledby="project-explainer-title" aria-describedby="project-explainer-intro">
  <div class="project-dialog-top"><span>WHAT IS A PROJECT?</span><button type="button" class="project-dialog-close" data-close-project aria-label="Close project explanation" autofocus>×</button></div>
- <div class="project-dialog-content"><h2 id="project-explainer-title">One project for each thing you run.</h2><p id="project-explainer-intro">A shop, a SaaS, a website… each can have its own space in Orka.</p>
- <section class="project-split-visual project-team-explainer" aria-labelledby="project-split-title"><span class="project-eyebrow">ONE BRAND OR MANY. ONE INBOX.</span><h3 id="project-split-title">Give each project the right crew.</h3><p class="project-team-intro">Separate your landing page, app, demo and store. Choose who helps on each one.</p><div class="project-team-grid">${projectTeamCards()}</div><div class="project-team-note"><strong>Your choice of team, for each project.</strong><ul><li>Assign different teammates, or the same people across projects.</li><li>Each project keeps its own widget, AI sources and settings.</li><li>Every conversation still reaches your shared inbox.</li></ul></div></section>
- <div class="project-inbox-summary"><img src="/assets/orka-logo.svg" width="37" height="34" alt=""><div><strong>Four projects. One shared inbox.</strong><p>Example teams. Your plan sets the number of teammates, not projects.</p></div></div></div>
+ <div class="project-dialog-content"><h2 id="project-explainer-title">Each website or app is a project.</h2><p id="project-explainer-intro">Give each one its own widget and team. Keep every conversation in one inbox.</p>
+ <section class="project-split-visual project-team-explainer" aria-label="Four example projects"><div class="project-team-grid">${projectTeamCards()}</div></section>
+ <div class="project-team-note"><strong>Your projects. Your choice of team.</strong><ul><li>Different teammates, or the same crew across projects.</li><li>Separate widgets, AI sources and settings. One shared inbox.</li></ul></div></div>
  <div class="project-dialog-bottom"><p><strong>Unlimited projects. Every plan.</strong><span>No per-project fee.</span></p><button type="button" data-close-project>Got it</button></div>
  </dialog>`;
 }

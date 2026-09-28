@@ -62,9 +62,12 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   assert.ok(!knowledge.documents.some(doc=>doc.url==='https://orka.chat/old'));
   assert.ok(!knowledge.documents.some(doc=>doc.url==='https://orka.chat/404'));
   const notFound = await readFile(new URL('404.html',output),'utf8');
-  assert.match(notFound,/<base href="\/">/);
+  assert.doesNotMatch(notFound,/<base\b/);
+  assert.match(notFound,/<a class="skip-link" href="#main">/);
+  assert.match(notFound,/href="\/not-found\.[a-f0-9]{12}\.css"/);
+  assert.match(notFound,/src="\/not-found\.[a-f0-9]{12}\.js"/);
   assert.match(notFound,/<meta name="robots" content="noindex, follow">/);
-  for (const [,asset] of notFound.matchAll(/(?:src|href)="(not-found\.[a-f0-9]{12}\.(?:js|css))"/g)) await access(new URL(asset,output));
+  for (const [,asset] of notFound.matchAll(/(?:src|href)="\/(not-found\.[a-f0-9]{12}\.(?:js|css))"/g)) await access(new URL(asset,output));
   const homepageFooter=html.match(/<footer class="o-footer"[\s\S]*?<\/footer>/)[0];
   const sitemap=await readFile(new URL('sitemap.xml',output),'utf8');
   assert.ok(!sitemap.includes('<loc>https://orka.chat/old</loc>'));

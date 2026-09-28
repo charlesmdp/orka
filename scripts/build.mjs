@@ -57,6 +57,9 @@ for (const filename of (await readdir(path.join(output, 'client'))).filter(name 
   html = html.replace('<!-- PRICING_CARDS -->',homePlanCards());
   html = html.replaceAll('<!-- PROJECT_HELP -->',projectHelp()).replace('<!-- PROJECT_DIALOG -->',projectDialog()).replace('<!-- BYOK_SPOTLIGHT -->',byokSpotlight());
   for (const [original, versioned] of assetNames) html = html.replaceAll('"' + original + '"', '"' + versioned + '"');
+  // A missing URL may be nested arbitrarily. Root the 404 assets explicitly
+  // without <base>, which would send its skip-to-content link to the homepage.
+  if (filename === '404.html') html = html.replace(/\b(src|href)="((?![\/#]|[a-z][a-z\d+.-]*:)[^"]+)"/gi, '$1="/$2"');
   html = html.replace('</body>', '<script>window.ORKA_APP_ID="66471b6efff6410a175c00b6";(function(){if(document.querySelector("script[data-orka-widget]"))return;var s=document.createElement("script");s.src="https://widget.orka.chat/app.js";s.async=true;s.dataset.orkaWidget="true";document.head.appendChild(s);})();</script></body>');
   await writeFile(path.join(output, 'client', filename), html);
   // The Worker adds no-cache to every HTML response; avoid exceeding Pages' 100-rule limit.

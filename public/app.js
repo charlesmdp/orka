@@ -650,6 +650,10 @@ function normalizePreviewUrl(value) {
 const sitePreviewDialog = $('#site-preview-dialog');
 const sitePreviewFrame = $('#website-preview-frame');
 const previewSample = $('#preview-sample');
+const previewScreenshot = $('#preview-screenshot');
+const previewScreenshotInput = $('#preview-screenshot-file');
+let previewScreenshotUrl = '';
+let previewScreenshotRequest = 0;
 const previewChat = $('#preview-chat');
 const previewChatLauncher = $('[data-open-preview-chat]');
 const previewThemes = {
@@ -686,12 +690,22 @@ function setPreviewChat(open) {
 }
 function setPreviewMode(mode) {
   const live = mode === 'live' && previewWebsite;
+  const screenshot = mode === 'screenshot' && previewScreenshotUrl;
   sitePreviewFrame.hidden = !live;
   sitePreviewFrame.src = live ? previewWebsite.href : 'about:blank';
-  previewSample.hidden = !!live;
+  previewSample.hidden = !!(live || screenshot);
+  previewScreenshot.hidden = !screenshot;
   $('#preview-embed-notice').hidden = !live;
-  $('#preview-foot-note').textContent = live ? 'Try the chat on your website. Nothing is installed.' : 'A sample website, personalized with your site details.';
-  $$('[data-preview-mode]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.previewMode === (live ? 'live' : 'brand'))));
+  $('#preview-foot-note').textContent = screenshot ? 'Your screenshot + an interactive demo widget. The page image is not clickable.' : live ? 'Try the chat on your website. Nothing is installed.' : 'A sample website, personalized with your site details.';
+  $$('[data-preview-mode]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.previewMode === (live ? 'live' : screenshot ? 'screenshot' : 'brand'))));
+}
+function clearPreviewScreenshot() {
+  ++previewScreenshotRequest;
+  previewScreenshot.hidden = true;
+  $('img', previewScreenshot).removeAttribute('src');
+  if (previewScreenshotUrl) URL.revokeObjectURL(previewScreenshotUrl);
+  previewScreenshotUrl = '';
+  previewScreenshotInput.value = '';
 }
 function setPreviewFavicon(src) {
   $$('[data-preview-favicon]').forEach(img => {
@@ -726,16 +740,51 @@ function applyPreviewIdentity(details, loading = false) {
   $('#preview-details-status').textContent = loading
     ? 'Finding your website’s name, logo and description…'
     : details.canEmbed === false
-      ? 'This site blocks embedding. Try Orka on your personalized sample instead.'
+      ? 'This site blocks embedding. Use a screenshot of your site, or try the sample.'
       : details.status === 'ready'
         ? 'Your name, logo and welcome message are ready. Try the chat.'
-        : 'Try the chat. If the website won’t load, switch to the sample.';
+        : 'Website not loading? Use a screenshot or switch to the sample.';
 }
+previewScreenshotInput.addEventListener('change', async () => {
+  const file = previewScreenshotInput.files?.[0];
+  if (!file) return;
+  previewScreenshotInput.value = '';
+  const status = $('#preview-screenshot-status');
+  status.hidden = false;
+  if (!['image/png','image/jpeg','image/webp'].includes(file.type) || file.size === 0 || file.size > 10 * 1024 * 1024) {
+    status.textContent = 'Choose a PNG, JPG or WebP screenshot under 10 MB.';
+    return;
+  }
+  const requestId = ++previewScreenshotRequest;
+  previewModeIntent = 'screenshot-pending';
+  const objectUrl = URL.createObjectURL(file);
+  const picture = new Image();
+  picture.src = objectUrl;
+  status.textContent = 'Opening your screenshot…';
+  try {
+    await picture.decode();
+    if (requestId !== previewScreenshotRequest || !sitePreviewDialog.open || previewModeIntent !== 'screenshot-pending') {
+      URL.revokeObjectURL(objectUrl);
+      return;
+    }
+    if (previewScreenshotUrl) URL.revokeObjectURL(previewScreenshotUrl);
+    previewScreenshotUrl = objectUrl;
+    $('img', previewScreenshot).src = objectUrl;
+    previewModeIntent = 'screenshot';
+    setPreviewMode('screenshot');
+    status.textContent = 'Screenshot stays in your browser — never uploaded. Choose another image anytime.';
+  } catch {
+    URL.revokeObjectURL(objectUrl);
+    if (requestId === previewScreenshotRequest && sitePreviewDialog.open) status.textContent = 'This image could not be opened. Try another PNG, JPG or WebP screenshot.';
+  }
+});
+$('[data-preview-screenshot]').addEventListener('click', () => previewScreenshotInput.click());
 $('[data-open-site-preview]').addEventListener('click', event => {
   previewReturnFocus = event.currentTarget;
   setPreviewMode('brand');
   $('#preview-url-error').hidden = true;
   $('#site-preview-url').removeAttribute('aria-invalid');
+  $('#preview-screenshot-status').hidden = true;
   setPreviewChat(true);
   sitePreviewDialog.showModal();
   document.body.classList.add('site-preview-open');
@@ -761,6 +810,8 @@ $('#site-preview-form').addEventListener('submit', async event => {
   const requestId = ++previewRequestId;
   const request = previewRequest;
   previewWebsite = url;
+  clearPreviewScreenshot();
+  $('#preview-screenshot-status').hidden = true;
   previewModeIntent = 'auto';
   // Loading the website must not depend on the metadata request succeeding.
   setPreviewMode('live');
@@ -789,7 +840,12 @@ $('#site-preview-url').addEventListener('input', event => {
   event.currentTarget.removeAttribute('aria-invalid');
 });
 $$('[data-preview-mode]').forEach(button => button.addEventListener('click', () => {
+  if (button.dataset.previewMode === 'screenshot') {
+    previewScreenshotInput.click();
+    return;
+  }
   previewModeIntent = button.dataset.previewMode;
+  $('#preview-screenshot-status').hidden = true;
   setPreviewMode(previewModeIntent);
 }));
 $('[data-preview-fallback]').addEventListener('click', () => {
@@ -802,6 +858,7 @@ sitePreviewDialog.addEventListener('close', () => {
   previewRequest?.abort();
   $('#preview-submit').removeAttribute('aria-busy');
   sitePreviewFrame.src = 'about:blank';
+  clearPreviewScreenshot();
   document.body.classList.remove('site-preview-open');
   if (previewReturnFocus instanceof HTMLElement) previewReturnFocus.focus();
 });

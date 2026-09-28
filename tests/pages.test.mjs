@@ -54,12 +54,17 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   await assert.rejects(access(new URL('.openai/hosting.json', output)));
 
   const allPages=(await readdir(output)).filter(n=>n.endsWith('.html'));
-  const pageNames=allPages.filter(n=>!['new.html','new2.html','new3.html','new4.html','old.html'].includes(n));
-  assert.equal(allPages.length,84);
+  const pageNames=allPages.filter(n=>!['new.html','new2.html','new3.html','new4.html','old.html','404.html'].includes(n));
+  assert.equal(allPages.length,85);
   assert.equal(pageNames.length,79);
   const knowledge=JSON.parse(await readFile(new URL('faq-knowledge.json',output),'utf8'));
   assert.equal(selectFaqSources('What does Pro cost?',knowledge.documents)[0].url,'https://orka.chat/pricing');
   assert.ok(!knowledge.documents.some(doc=>doc.url==='https://orka.chat/old'));
+  assert.ok(!knowledge.documents.some(doc=>doc.url==='https://orka.chat/404'));
+  const notFound = await readFile(new URL('404.html',output),'utf8');
+  assert.match(notFound,/<base href="\/">/);
+  assert.match(notFound,/<meta name="robots" content="noindex, follow">/);
+  for (const [,asset] of notFound.matchAll(/(?:src|href)="(not-found\.[a-f0-9]{12}\.(?:js|css))"/g)) await access(new URL(asset,output));
   const homepageFooter=html.match(/<footer class="o-footer"[\s\S]*?<\/footer>/)[0];
   const sitemap=await readFile(new URL('sitemap.xml',output),'utf8');
   assert.ok(!sitemap.includes('<loc>https://orka.chat/old</loc>'));

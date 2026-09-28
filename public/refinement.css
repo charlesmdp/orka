@@ -82,7 +82,7 @@
 .not-sent-chip{font-family:var(--mono);font-size:7px;letter-spacing:.02em;white-space:nowrap;border:1px solid #80C3CB;border-radius:3px;background:#C5F0F5;padding:2px 4px;color:#326A74}
 .workspace-live-preview>p{font-size:12px;line-height:1.8;min-height:42px;color:#234E58;margin-top:7px;overflow-wrap:anywhere}.workspace-live-preview>span{display:block;font-size:9px;color:#4C828C;margin-top:5px}
 .workspace-live-preview .typing-caret{height:12px}.workspace-conversation-body{gap:11px}.workspace-chat{min-height:0}
-.typing-card{background:#CBF4FA!important;border-color:#82C8D4!important}.typing-card .typing-field{border-color:#61B7C8}.typing-card .typing-agent{background:#C5ED82;border-color:#8CAF51}.typing-card .typing-status{color:#4E712B}.typing-card .not-sent-label{color:#287487}.typing-card .typing-connection{color:#3D8C9B}
+.typing-card{background:#CBF4FA;border-color:#82C8D4}.typing-card .typing-field{border-color:#61B7C8}.typing-card .typing-agent{background:#C5ED82;border-color:#8CAF51}.typing-card .typing-status{color:#4E712B}.typing-card .not-sent-label{color:#287487}.typing-card .typing-connection{color:#3D8C9B}
 .urgency-card{background:#FFE5D6;border-color:#EFB49C}.urgency-intro>.eyebrow{color:#A4523A}.urgency-intro>h3{color:#582F23}.urgency-intro>p{color:#795341}.urgency-joke{color:#94604E}
 .project-mark.brand-buffer>img{width:22px;height:22px}.project-mark.brand-calendly>img{width:22px;height:22px}.project-mark.brand-figma>img{width:16px;height:24px}.project-mark.brand-substack>img{width:22px;height:22px}
 /* The supplied portraits already contain round online badges. Keep their full extent. */

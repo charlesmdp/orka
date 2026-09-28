@@ -244,6 +244,49 @@
 .new2-mosaic.hero-night :is(.orca-story-heading>p,.pod-included p){color:#b9cfca}
 .new2-mosaic.hero-night .pod-included strong{color:#edf4da}
 .new2-mosaic.hero-night .mosaic-current-ribbon{background-image:linear-gradient(90deg,#08233155,#082331dc 27%,#082331dc 73%,#08233155),url('/assets/mosaic-tiles.jpg')}
+
+/* Night palettes belong to each surface: product screenshots keep their own
+   light UI, while the surrounding copy and interactive cards turn dark. */
+.new2-mosaic.hero-night .ecosystem p{color:#b9cfca}
+.new2-mosaic.hero-night :is(.ecosystem strong,.platform,.pod-access-copy>strong,.pod-access-copy>span){color:#eaf3df}
+.new2-mosaic.hero-night .platform.any-site{color:#b9cfca}
+.new2-mosaic.hero-night .platform.wordpress>img{filter:brightness(0) invert(1)}
+.new2-mosaic.hero-night .platform>img[src*="framer"]{border:1px solid #9db9b0;border-radius:4px}
+.new2-mosaic.hero-night .pod-access-copy>p{color:#b9cfca}
+.new2-mosaic.hero-night :is(.context-card-heading h3,.context-card-heading .eyebrow){color:#edf4e8}
+.new2-mosaic.hero-night .context-card-heading>.icon{color:#b5d49d}
+.new2-mosaic.hero-night .real-contact-panel{--ui-text:#dcebe4;--ui-accent:#8adabc;--ui-tint:#254e50;--soft:#21464a;--line:#426366}
+.new2-mosaic.hero-night .contact-panel-title>span{background:#2b796b}
+.new2-mosaic.hero-night .contact-weather{background:#21464a}
+.new2-mosaic.hero-night :is(.contact-identity [data-context-email-short],.contact-language>span:last-child,.cart-item-count,.profile-session,.navigation-step.previous,.navigation-step>div>span){color:#b9cfca}
+.new2-mosaic.hero-night .contact-extra :is(.context-deeplink,.admin-example){color:#cdebb3}
+.new2-mosaic.hero-night .contact-extra dl{background:#21464a;border-color:#426366}
+.new2-mosaic.hero-night .contact-extra dl>div{border-color:#426366}
+.new2-mosaic.hero-night .contact-extra dt{color:#b9cfca}
+.new2-mosaic.hero-night .contact-extra dd{color:#edf4e8}
+.new2-mosaic.hero-night :is(.contact-cart-total,.contact-cart-total strong){color:#dcebe4}
+.new2-mosaic.hero-night .context-sdk-link{background:#21464a;border-color:#426366;color:#d7ebb9}
+.new2-mosaic.hero-night .context-sdk-link span{color:#b9cfca}
+.new2-mosaic.hero-night :is(.typing-card,.translation-card){background:#153a40;border-color:#426366}
+.new2-mosaic.hero-night :is(.typing-bottom>span,.translation-note){color:#b9cfca}
+.new2-mosaic.hero-night .typing-bottom{border-color:#426366}
+.new2-mosaic.hero-night .typing-bottom>.text-link{color:#d7ebb9}
+.new2-mosaic.hero-night .translation-selector>button{background:#21464a;border-color:#527473;color:#e2eee7}
+.new2-mosaic.hero-night .translation-selector>button.active{background:#d5f7aa;border-color:#d5f7aa;color:#183e30}
+.new2-mosaic.hero-night .urgency-intro>.eyebrow{color:#ffbf9f}
+.new2-mosaic.hero-night .urgency-intro>h3{color:#fff0de}
+.new2-mosaic.hero-night .urgency-intro>p{color:#c9dad0}
+.new2-mosaic.hero-night .urgency-joke{background:#3d3735;border-color:#856a57;color:#f2c7b3}
+.new2-mosaic.hero-night .urgency-joke strong{color:#ffebdc}
+.new2-mosaic.hero-night .urgency-picker{background:#102d34;border-color:#426366}
+.new2-mosaic.hero-night .urgency-picker :is(.mono,small,p){color:#b9cfca}
+.new2-mosaic.hero-night .urgency-picker button{color:#edf4e8}
+.new2-mosaic.hero-night .urgency-picker button:hover{background:#25454a}
+.new2-mosaic.hero-night .urgency-picker>div>button.active{background:#2f5146;border-color:#aecf83}
+.new2-mosaic.hero-night .urgency-picker .urgency-tick{color:#d5f7aa}
+.new2-mosaic.hero-night .orca-story-copy>a{color:#d7ebb9}
+.new2-mosaic.hero-night .feature-item>p{color:#c3d7ce}
+.new2-mosaic.hero-night :is(.typing-example-read,.typing-unsent-note,.typing-scene-header small,.typing-scene-header>div>span){color:#526853}
 @media(min-width:1700px){
  .new2-mosaic .mosaic-current-ribbon{-webkit-mask-size:100% 2700px;mask-size:100% 2700px;-webkit-mask-position:0 -988px;mask-position:0 -988px}
 }

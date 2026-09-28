@@ -654,6 +654,8 @@ const previewScreenshot = $('#preview-screenshot');
 const previewScreenshotInput = $('#preview-screenshot-file');
 let previewScreenshotUrl = '';
 let previewScreenshotRequest = 0;
+let previewCaptureRequest = null;
+let previewCaptureAvailable = false;
 const previewChat = $('#preview-chat');
 const previewChatLauncher = $('[data-open-preview-chat]');
 const previewThemes = {
@@ -696,11 +698,14 @@ function setPreviewMode(mode) {
   previewSample.hidden = !!(live || screenshot);
   previewScreenshot.hidden = !screenshot;
   $('#preview-embed-notice').hidden = !live;
-  $('#preview-foot-note').textContent = screenshot ? 'Your screenshot + an interactive demo widget. The page image is not clickable.' : live ? 'Try the chat on your website. Nothing is installed.' : 'A sample website, personalized with your site details.';
+  $('#preview-foot-note').textContent = screenshot ? 'Website screenshot + an interactive demo widget. The page image is not clickable.' : live ? 'Try the chat on your website. Nothing is installed.' : 'A sample website, personalized with your site details.';
   $$('[data-preview-mode]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.previewMode === (live ? 'live' : screenshot ? 'screenshot' : 'brand'))));
 }
 function clearPreviewScreenshot() {
   ++previewScreenshotRequest;
+  previewCaptureRequest?.abort();
+  previewCaptureRequest = null;
+  $$('[data-preview-capture]').forEach(button => { button.disabled = false; button.removeAttribute('aria-busy'); });
   previewScreenshot.hidden = true;
   $('img', previewScreenshot).removeAttribute('src');
   if (previewScreenshotUrl) URL.revokeObjectURL(previewScreenshotUrl);
@@ -732,6 +737,9 @@ function applyPreviewIdentity(details, loading = false) {
   $('#preview-welcome-description').hidden = !description;
   $('#preview-welcome-question').hidden = false;
   setPreviewFavicon(details.favicon);
+  previewCaptureAvailable = details.captureAvailable === true;
+  $('[data-preview-capture-info]').hidden = !previewCaptureAvailable;
+  $$('[data-preview-capture]').forEach(button => { button.hidden = !previewCaptureAvailable; button.disabled = false; });
   const liveButton = $('[data-preview-mode="live"]');
   liveButton.disabled = !previewWebsite || details.canEmbed === false;
   liveButton.textContent = details.canEmbed === false ? 'Embedding blocked by this site' : 'Your live website';
@@ -740,11 +748,63 @@ function applyPreviewIdentity(details, loading = false) {
   $('#preview-details-status').textContent = loading
     ? 'Finding your website’s name, logo and description…'
     : details.canEmbed === false
-      ? 'This site blocks embedding. Use a screenshot of your site, or try the sample.'
+      ? (previewCaptureAvailable ? 'This site blocks embedding. We can photograph its public homepage instead.' : 'This site blocks embedding. Upload a screenshot of your site, or try the sample.')
       : details.status === 'ready'
         ? 'Your name, logo and welcome message are ready. Try the chat.'
-        : 'Website not loading? Use a screenshot or switch to the sample.';
+        : 'Website not loading? Try a screenshot or switch to the sample.';
 }
+async function capturePreviewWebsite() {
+  if (!previewWebsite || !previewCaptureAvailable) return;
+  previewCaptureRequest?.abort();
+  const controller = new AbortController();
+  previewCaptureRequest = controller;
+  const requestId = ++previewScreenshotRequest;
+  const pageId = previewRequestId;
+  previewModeIntent = 'capture-pending';
+  setPreviewMode('brand');
+  const status = $('#preview-screenshot-status');
+  status.hidden = false;
+  status.textContent = 'Photographing your public homepage… usually a few seconds.';
+  $$('[data-preview-capture]').forEach(button => { button.disabled = true; button.setAttribute('aria-busy','true'); });
+  const timeout = setTimeout(() => controller.abort(),30000);
+  let objectUrl = '';
+  try {
+    const response = await fetch('/api/website-screenshot', {
+      method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:previewWebsite.origin}),signal:controller.signal
+    });
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      throw new Error(data.error || 'The capture could not be completed. Try an uploaded screenshot.');
+    }
+    const blob = await response.blob();
+    if (blob.type !== 'image/jpeg' || blob.size > 3 * 1024 * 1024) throw new Error('The capture could not be opened. Try an uploaded screenshot.');
+    objectUrl = URL.createObjectURL(blob);
+    const picture = new Image();
+    picture.src = objectUrl;
+    await picture.decode();
+    if (requestId !== previewScreenshotRequest || pageId !== previewRequestId || !sitePreviewDialog.open || previewModeIntent !== 'capture-pending') return;
+    if (previewScreenshotUrl) URL.revokeObjectURL(previewScreenshotUrl);
+    previewScreenshotUrl = objectUrl;
+    objectUrl = '';
+    $('img',previewScreenshot).src = previewScreenshotUrl;
+    previewModeIntent = 'screenshot';
+    setPreviewMode('screenshot');
+    status.textContent = 'Public homepage captured by Cloudflare. Try the live demo widget on top. The background is a static image.';
+  } catch (problem) {
+    if (requestId === previewScreenshotRequest && pageId === previewRequestId && sitePreviewDialog.open && previewModeIntent === 'capture-pending') {
+      previewModeIntent = 'brand';
+      status.textContent = problem.name === 'AbortError' ? 'This capture took too long. Try again, upload a screenshot, or use the sample.' : problem.message;
+    }
+  } finally {
+    clearTimeout(timeout);
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
+    if (requestId === previewScreenshotRequest) {
+      previewCaptureRequest = null;
+      $$('[data-preview-capture]').forEach(button => { button.disabled = false; button.removeAttribute('aria-busy'); });
+    }
+  }
+}
+$$('[data-preview-capture]').forEach(button => button.addEventListener('click',capturePreviewWebsite));
 previewScreenshotInput.addEventListener('change', async () => {
   const file = previewScreenshotInput.files?.[0];
   if (!file) return;
@@ -755,7 +815,9 @@ previewScreenshotInput.addEventListener('change', async () => {
     status.textContent = 'Choose a PNG, JPG or WebP screenshot under 10 MB.';
     return;
   }
+  previewCaptureRequest?.abort();
   const requestId = ++previewScreenshotRequest;
+  $$('[data-preview-capture]').forEach(button => { button.disabled = false; button.removeAttribute('aria-busy'); });
   previewModeIntent = 'screenshot-pending';
   const objectUrl = URL.createObjectURL(file);
   const picture = new Image();
@@ -828,6 +890,7 @@ $('#site-preview-form').addEventListener('submit', async event => {
     const details = await response.json();
     if (requestId !== previewRequestId || !sitePreviewDialog.open) return;
     applyPreviewIdentity({...fallback, ...details});
+    if (details.canEmbed === false && previewCaptureAvailable && previewModeIntent === 'auto') capturePreviewWebsite();
   } catch {
     if (requestId === previewRequestId && sitePreviewDialog.open) applyPreviewIdentity(fallback);
   } finally {
@@ -844,11 +907,13 @@ $$('[data-preview-mode]').forEach(button => button.addEventListener('click', () 
     previewScreenshotInput.click();
     return;
   }
+  previewCaptureRequest?.abort();
   previewModeIntent = button.dataset.previewMode;
   $('#preview-screenshot-status').hidden = true;
   setPreviewMode(previewModeIntent);
 }));
 $('[data-preview-fallback]').addEventListener('click', () => {
+  previewCaptureRequest?.abort();
   previewModeIntent = 'brand';
   setPreviewMode('brand');
 });

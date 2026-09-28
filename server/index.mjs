@@ -146,6 +146,57 @@ async function requestJson(request) {
     return JSON.parse(text + decoder.decode());
   } finally { await reader.cancel().catch(() => {}); }
 }
+// Best-effort abuse protection per isolate, in addition to Browser Run's account quota.
+const screenshotRequests = new Map();
+let screenshotWindow = {start:0,count:0};
+export async function screenshotPreview(request, env, fetcher=fetch, cache=globalThis.caches?.default) {
+  const pageUrl = new URL(request.url);
+  if (request.method !== 'POST') return json({error:'Method not allowed'},405);
+  if (request.headers.get('origin') !== pageUrl.origin) return json({error:'Use the preview on Orka'},403);
+  if (!env.SITE_CAPTURE?.fetch) return json({error:'Automatic screenshots are not available yet. You can upload an image instead.'},503);
+  let target;
+  try {
+    if (Number(request.headers.get('content-length')) > 4096) return json({error:'Request too large'},413);
+    target = publicUrl((await requestJson(request)).url);
+    target = new URL(target.origin + '/');
+  } catch { return json({error:'Enter a public HTTPS website'},400); }
+  const cacheKey = new Request('https://orka.chat/_capture-cache/v1/' + encodeURIComponent(target.origin));
+  const sendImage = response => new Response(response.body,{headers:{'Content-Type':'image/jpeg','Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'}});
+  const cached = await cache?.match(cacheKey).catch(() => null);
+  if (cached) return sendImage(cached);
+  const now = Date.now();
+  const ip = request.headers.get('cf-connecting-ip') || 'unknown';
+  for (const [key,value] of screenshotRequests) if (value.until <= now) screenshotRequests.delete(key);
+  const attempts = screenshotRequests.get(ip) || {count:0,until:now + 600000};
+  if (now - screenshotWindow.start >= 60000) screenshotWindow = {start:now,count:0};
+  if (attempts.count >= 3 || screenshotWindow.count >= 20) return json({error:'A few too many previews. Try again later, or upload a screenshot.'},429);
+  attempts.count++; screenshotWindow.count++;
+  if (screenshotRequests.size >= 1000) screenshotRequests.delete(screenshotRequests.keys().next().value);
+  screenshotRequests.set(ip,attempts);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(),25000);
+  try {
+    await publicDNS(target.hostname,fetcher,controller.signal);
+    // The service receives a fresh request, never the visitor's cookies or headers.
+    const response = await env.SITE_CAPTURE.fetch(new Request('https://capture.internal/', {
+      method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:target.href}),signal:controller.signal
+    }));
+    if (!response.ok || !/^image\/jpeg\b/i.test(response.headers.get('content-type') || '')) {
+      await response.body?.cancel();
+      throw new Error('Capture failed');
+    }
+    const image = await response.arrayBuffer();
+    if (image.byteLength < 4 || image.byteLength > 3 * 1024 * 1024) throw new Error('Invalid image');
+    const bytes = new Uint8Array(image);
+    if (bytes[0] !== 0xff || bytes[1] !== 0xd8) throw new Error('Invalid JPEG');
+    const picture = new Response(image,{headers:{'Content-Type':'image/jpeg','Cache-Control':'public, max-age=86400'}});
+    // Only anonymous public homepage captures are cached, for at most one day.
+    await cache?.put(cacheKey,picture.clone()).catch(() => {});
+    return sendImage(picture);
+  } catch {
+    return json({error:'This website could not be photographed. It may block automated browsers. Try an uploaded screenshot or the sample.'},502);
+  } finally { clearTimeout(timeout); }
+}
 export default {
   async fetch(request,env) {
     const url = new URL(request.url);
@@ -159,6 +210,7 @@ export default {
       url.hostname = 'orka.chat';
       return Response.redirect(url.href, 301);
     }
+    if (url.pathname === '/api/website-screenshot') return screenshotPreview(request,env);
     if (url.pathname === '/api/faq-answer') return answerFaq(request,env);
     if (url.pathname !== '/api/website-preview') {
       // Pages serves 404.html for missing assets. The explicit preview route
@@ -194,14 +246,14 @@ export default {
     } catch { return json({error:'Enter a public HTTPS website'},400); }
     const key = target.origin;
     const cached = metadataCache.get(key);
-    if (cached && cached.until > Date.now()) return json(cached.value);
+    if (cached && cached.until > Date.now()) return json({...cached.value,captureAvailable:!!env.SITE_CAPTURE?.fetch});
     try {
       const value = await websiteMetadata(target.href);
       if (metadataCache.size >= 200) metadataCache.delete(metadataCache.keys().next().value);
       metadataCache.set(key,{value,until:Date.now() + (value.status === 'ready' ? 3600000 : 60000)});
-      return json(value);
+      return json({...value,captureAvailable:!!env.SITE_CAPTURE?.fetch});
     } catch {
-      return json({siteName:target.hostname.replace(/^www\./,''),description:'',hostname:target.hostname,favicon:'',url:target.origin,status:'unavailable',canEmbed:null});
+      return json({siteName:target.hostname.replace(/^www\./,''),description:'',hostname:target.hostname,favicon:'',url:target.origin,status:'unavailable',canEmbed:null,captureAvailable:!!env.SITE_CAPTURE?.fetch});
     }
   }
 };

@@ -190,7 +190,7 @@ img[src$="orky-app-icon.svg"]{object-fit:contain}
 .project-dialog-compact .project-team-explainer{margin-top:18px;padding:0}
 .project-dialog-compact .project-team-grid{gap:12px}
 .project-dialog-compact .project-team-grid>article{display:grid;grid-template-columns:46% minmax(0,1fr);align-items:center;padding:11px;gap:13px;border-color:#d5e1f1;border-radius:14px}
-.project-dialog-compact .project-team-grid .project-preview{width:100%;height:auto;aspect-ratio:4/3;border:1px solid #d8e3f2;border-radius:8px;align-self:center}
+.project-dialog-compact .project-team-grid .project-preview{width:100%;height:auto;min-height:0;aspect-ratio:4/3;border:1px solid #d8e3f2;border-radius:8px;align-self:center}
 .project-dialog-compact .project-browser-bar{height:21px;padding-inline:7px;gap:3px}
 .project-dialog-compact .project-browser-bar>span{font-size:7px;margin-left:4px}
 .project-dialog-compact .project-team-screen{height:calc(100% - 21px);padding:11px 10px}

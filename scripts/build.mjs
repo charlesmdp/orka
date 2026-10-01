@@ -9,6 +9,7 @@ import {sharedFooter,faqSection,faqSchema,homeFaqs} from './site-chrome.mjs';
 import {homePlanCards} from './plan-copy.mjs';
 import {projectHelp,projectDialog,byokSpotlight} from './pricing-explainers.mjs';
 import {generateHeroExperiments} from './hero-experiments.mjs';
+import {clicks} from '../config/integrations.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const output = path.join(root, 'dist');
@@ -66,6 +67,21 @@ for (const filename of (await readdir(path.join(output, 'client'))).filter(name 
 }
 await generateHeroExperiments(path.join(output, 'client'), assetNames.get('hero-experiments.css'), assetNames.get('hero-experiments.js'), assetNames.get('new2-mosaic.css'));
 for (const route of ['new','new2','new3','new4','old','404']) headers += '/' + route + '\n  Cache-Control: no-cache\n  X-Robots-Tag: noindex, follow\n/' + route + '.html\n  Cache-Control: no-cache\n  X-Robots-Tag: noindex, follow\n';
+// Apply optional integrations after all pages and hero variants are generated.
+// One switch in config/integrations.mjs removes the script and its notices.
+const clicksHead = clicks.enabled
+  ? `<!-- Clicks analytics: disable in config/integrations.mjs -->\n<script defer src="${clicks.scriptUrl}" data-site="${clicks.siteId}"></script>\n`
+  : '';
+const clicksNotice = clicks.enabled
+  ? '<p>We use <a href="https://clicks.page/" target="_blank" rel="noopener noreferrer">Clicks.page</a> for marketing website analytics, including page views and outgoing link clicks. Its script receives the current page URL and referring page. It respects the browser’s Global Privacy Control and Do Not Track signals.</p>'
+  : '';
+for (const filename of (await readdir(path.join(output, 'client'))).filter(name => name.endsWith('.html'))) {
+  const pagePath = path.join(output, 'client', filename);
+  const html = (await readFile(pagePath, 'utf8'))
+    .replace('</head>', clicksHead + '</head>')
+    .replace('<!-- CLICKS_PRIVACY_NOTICE -->', clicksNotice);
+  await writeFile(pagePath, html);
+}
 await buildFaqKnowledge(path.join(output, 'client'));
 headers += '/llm\n  Content-Type: text/markdown; charset=utf-8\n  Cache-Control: no-cache\n/*.md\n  Content-Type: text/markdown; charset=utf-8\n  Cache-Control: no-cache\n/llms.txt\n  Content-Type: text/plain; charset=utf-8\n  Cache-Control: no-cache\n/llms-full.txt\n  Content-Type: text/markdown; charset=utf-8\n  Cache-Control: no-cache\n/sitemap.xml\n  Cache-Control: no-cache\n/robots.txt\n  Cache-Control: no-cache\n';
 await writeFile(path.join(output, 'client/_headers'), headers);

@@ -11,6 +11,23 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   execFileSync(process.execPath, ['scripts/build.mjs', '--pages'], {cwd:root});
   const output = new URL('../dist/client/', import.meta.url);
   const html = await readFile(new URL('index.html', output), 'utf8');
+  const imageManifest = JSON.parse(await readFile(new URL('image-manifest.json',output),'utf8'));
+  for(const name of ['hero-ceramic-mosaic.jpg','hero-ceramic-mosaic-night-chat.jpg']) {
+    const image=imageManifest[name];
+    assert.deepEqual(image.avif.map(i=>i.width),[768,1200,1672]);
+    assert.ok(image.avif.at(-1).bytes<image.originalBytes*.4,'Hero keeps a substantial transfer-size saving');
+    assert.ok(image.avif[0].bytes<65000,'Small hero stays under 65 kB');
+    for(const rendition of [...image.avif,...image.webp]) {
+      const bytes=await readFile(new URL(rendition.url.slice(1),output));
+      assert.equal(bytes.length,rendition.bytes);
+      assert.ok(html.includes(rendition.url),'Hero and preload use the same generated files');
+    }
+  }
+  assert.match(html,/<source type="image\/avif" data-srcset=/);
+  assert.match(html,/<noscript><img class="seascape-art"/);
+  assert.doesNotMatch(html,/<img[^>]*data-hero-art[^>]*(?<![\w-])src="/,'Inactive scenes must not download eagerly');
+  assert.match(html,/document\.documentElement\.dataset\.heroNight/);
+  for(const asset of new Set([...html.matchAll(/\/assets\/optimized\/[\w.-]+/g)].map(m=>m[0]))) await access(new URL(asset.slice(1),output));
   const old = await readFile(new URL('old.html', output), 'utf8');
   assert.match(html,/<body class="hero-experiment experiment-mosaic new2-mosaic"/);
   assert.doesNotMatch(html,/<meta name="robots" content="noindex/);
@@ -18,7 +35,7 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   assert.doesNotMatch(old,/mosaic-dashboard-fresco/);
   assert.match(old,/<meta name="robots" content="noindex, follow">/);
   assert.match(old,/rel="canonical" href="https:\/\/orka.chat\/old"/);
-  for(const tier of ['solo','pod','fleet']) assert.ok(html.includes('mosaic-pricing-'+tier+'.jpg'));
+  for(const tier of ['solo','pod','fleet']) assert.ok(html.includes(imageManifest['mosaic-pricing-'+tier+'.jpg'].webp.at(-1).url));
   assert.match(html,/data-map-search/);
   assert.match(html,/data-map-location/);
   const headers = await readFile(new URL('_headers', output), 'utf8');
@@ -84,7 +101,7 @@ test('Pages output includes the API, linked assets and cache headers', async () 
       assert.equal((preview.match(/id="product"/g)||[]).length,1);
       assert.match(preview,/mosaic-dashboard-fresco/);
       for(const art of ['pod','night-shift','dialogue','context','learning','wide-net']) {
-        assert.ok(preview.includes('new2-mosaic-'+art+'.jpg'));
+        assert.ok(preview.includes(imageManifest['new2-mosaic-'+art+'.jpg'].webp.at(-1).url));
         await access(new URL('assets/new2-mosaic-'+art+'.jpg',output));
       }
       assert.doesNotMatch(preview,/orky-head-v2|orca-swimming.svg|orca-dialogue-v11|trawler-dorsal-v14/);

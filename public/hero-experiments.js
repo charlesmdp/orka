@@ -82,6 +82,7 @@ function initializeHero(hero) {
 
  const nightButton=document.querySelector('[data-night-toggle]');
  const nightArt=hero.querySelector('[data-night-art]');
+ const dayArt=hero.querySelector('[data-day-art]');
  let night=false,request=0;
  async function setNight(value) {
   night=value;const revision=++request;
@@ -89,10 +90,15 @@ function initializeHero(hero) {
   nightButton.setAttribute('aria-checked',String(night));
   nightButton.querySelector('[data-night-label]').textContent=night?'Night shift':'Night mode';
   try{sessionStorage.setItem('orka-hero-night',night?'1':'0');}catch{}
-  if(night&&!nightArt.src){
-   nightArt.src=nightArt.dataset.src;
-   try{await nightArt.decode();}catch{return;}
+  const art=night?nightArt:dayArt;
+  if(!art.getAttribute('src')){
+   // Set the picture source before the fallback, avoiding a second download.
+   const source=art.previousElementSibling;
+   source.srcset=source.dataset.srcset;
+   art.srcset=art.dataset.srcset;
+   art.src=art.dataset.src;
   }
+  try{await art.decode();}catch{return;}
   if(revision===request&&nightArt.complete&&nightArt.naturalWidth)hero.classList.add('night-art-ready');
  }
  nightButton.addEventListener('click',()=>setNight(!night));

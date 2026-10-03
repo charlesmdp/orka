@@ -4,14 +4,23 @@ Orka’s marketing website, written in HTML, CSS and vanilla JavaScript. There i
 
 ## Local checks and build
 
-Use Node.js 22 or newer. The build and tests have no external dependencies.
+Use Node.js 22 or newer. Install the locked build dependency (Sharp) first.
 
 ```sh
+npm ci
 npm test
 npm run build:pages
 ```
 
 The Pages build is written to `dist/client`. It includes the page, images, local fonts, content-hashed CSS/JavaScript, cache headers, and `_worker.js` for `/api/*` requests. Static assets are served directly by Pages.
+
+### Image delivery
+
+Keep original artwork in `public/assets`. `scripts/image-assets.mjs` produces lighter WebP images at build time, plus AVIF and responsive sizes for the day/night heroes. It preserves aspect ratios, transparency, original artwork and animated files. Existing efficient WebP images retain their full-size encoding. Large illustrations get smaller renditions for mobile and cards; app logos are capped at 320px.
+
+Generated HTML, CSS backgrounds and JavaScript image references use content-hashed files under `/assets/optimized/`, cached for one year. Original social-sharing images remain available. `dist/client/image-manifest.json` records the filenames, widths and byte counts. Nothing is compressed in the visitor’s browser or through a paid image service.
+
+The hero preloads only the selected day/night scene, matching the picture’s responsive AVIF source. WebP is the fallback. The other scene loads on demand when switched; a saved night preference no longer downloads the unused day image. A no-JavaScript visitor still gets the day illustration.
 
 To preview the full site with its backend, use Cloudflare’s Wrangler CLI:
 

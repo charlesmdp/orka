@@ -2,6 +2,7 @@ import {readFile,writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {projectHelp} from './pricing-explainers.mjs';
 import {mosaicDashboard,applyMosaicArtwork} from './new2-mosaic.mjs';
+import {imageSrcset} from './image-assets.mjs';
 
 const variants = [
   {slug:'new',style:'pixel',name:'Pixel cove',asset:'hero-pixel-cove-front.jpg'},
@@ -21,10 +22,19 @@ function notifications() {
 
 const sceneTools = `<div class="seascape-scene-tools" role="group" aria-label="Scene settings"><button class="seascape-night-toggle" type="button" role="switch" aria-checked="false" aria-label="Night mode" data-night-toggle><span class="seascape-toggle-track" aria-hidden="true"><span>☀</span><span>☾</span><i></i></span><span data-night-label>Night mode</span></button></div>`;
 
-function hero(variant, mascot) {
+function heroImages(variant, images) {
+  // Match the cover image's rendered width, including the 295px mobile scene.
+  const sizes=variant.slug==='new2' ? '(max-width: 700px) max(100vw, 524px), max(100vw, 1404px)' : 'max(100vw, 1404px)';
+  const day=images.get(variant.asset), night=images.get(variant.nightAsset || variant.asset.replace('.jpg','-night.jpg'));
+  const picture=(item,isNight)=>`<picture><source type="image/avif" data-srcset="${imageSrcset(item.avif)}" sizes="${sizes}"><img class="seascape-art${isNight?' seascape-art-night':''}" data-hero-art ${isNight?'data-night-art':'data-day-art'} data-src="${item.webp.at(-1).url}" data-srcset="${imageSrcset(item.webp)}" sizes="${sizes}" width="1672" height="941" alt="" fetchpriority="high" decoding="async"></picture>`;
+  const initial=`<script>(function(){var n=document.documentElement.dataset.heroNight==='true',h=document.currentScript.parentElement,i=h.querySelector(n?'[data-night-art]':'[data-day-art]'),s=i.previousElementSibling;s.srcset=s.dataset.srcset;i.srcset=i.dataset.srcset;i.src=i.dataset.src;document.body.classList.toggle('hero-night',n);if(n)h.classList.add('night-art-ready');})();</script>`;
+  const preload=`<script>(function(){var n=false;try{n=sessionStorage.getItem('orka-hero-night')==='1';}catch{}document.documentElement.dataset.heroNight=String(n);var a=${JSON.stringify({day:day.avif,night:night.avif})},s=n?a.night:a.day,l=document.createElement('link');l.rel='preload';l.as='image';l.type='image/avif';l.href=s[s.length-1].url;l.imageSrcset=s.map(function(i){return i.url+' '+i.width+'w';}).join(', ');l.imageSizes=${JSON.stringify(sizes)};l.fetchPriority='high';document.head.appendChild(l);})();</script>`;
+  return {markup:picture(day,false)+picture(night,true)+initial+`<noscript><img class="seascape-art" src="${day.webp.at(-1).url}" srcset="${imageSrcset(day.webp)}" sizes="${sizes}" width="1672" height="941" alt="" fetchpriority="high"></noscript>`,preload};
+}
+
+function hero(variant, mascot, artwork) {
   return `<section class="seascape-hero seascape-${variant.style}${variant.aerial?' seascape-aerial':''}${variant.chatSource?' seascape-chat-source':''}" aria-labelledby="hero-title">
-    <img class="seascape-art" src="/assets/${variant.asset}" width="1672" height="941" alt="" fetchpriority="high" decoding="async">
-    <img class="seascape-art seascape-art-night" data-night-art data-src="/assets/${variant.nightAsset || variant.asset.replace('.jpg','-night.jpg')}" width="1672" height="941" alt="" decoding="async">
+    ${artwork}
     <div class="seascape-wash" aria-hidden="true"></div>
     <div class="seascape-sparkles" aria-hidden="true">${Array.from({length:7},(_,i)=>`<i style="--spark:${i}"></i>`).join('')}</div>
     <div class="seascape-content">
@@ -40,7 +50,7 @@ function hero(variant, mascot) {
 }
 
 // Share the homepage content, with an explicitly scoped mosaic treatment for /new2.
-export async function generateHeroExperiments(directory, stylesheet, script, mosaicStylesheet) {
+export async function generateHeroExperiments(directory, stylesheet, script, mosaicStylesheet, images) {
   const mascot = (await readFile(path.join(directory,'assets/orky-swim-mascot.svg'),'utf8')).replace('<svg ', '<svg class="seascape-mascot-drawing" aria-hidden="true" ');
   const home = await readFile(path.join(directory,'index.html'),'utf8');
   const originalHero = home.match(/<section class="hero\b[^>]*>[\s\S]*?<\/section>/)?.[0];
@@ -49,11 +59,12 @@ export async function generateHeroExperiments(directory, stylesheet, script, mos
   await writeFile(path.join(directory,'old.html'),old);
   for (const variant of variants) {
     const isMosaicPage = variant.slug === 'new2';
-    let page = home.replace(originalHero,hero(variant,mascot)+(isMosaicPage?mosaicDashboard(originalHero):''))
+    const artwork=heroImages(variant,images);
+    let page = home.replace(originalHero,hero(variant,mascot,artwork.markup)+(isMosaicPage?mosaicDashboard(originalHero):''))
       .replace('<div class="nav-actions">','<div class="nav-actions">'+sceneTools)
       .replace('<body>',`<body class="hero-experiment experiment-${variant.style}${isMosaicPage?' new2-mosaic':''}"${isMosaicPage?' data-mosaic-hero-visible="true"':''}>`)
       .replace(/<title>[^<]*<\/title>/,`<title>Orka · ${variant.name} hero preview</title>`)
-      .replace('</head>',`<meta name="robots" content="noindex, follow"><link rel="stylesheet" href="${stylesheet}"><script type="module" src="${script}"></script><link rel="preload" as="image" href="/assets/${variant.asset}"></head>`);
+      .replace('</head>',`<meta name="robots" content="noindex, follow">${artwork.preload}<link rel="stylesheet" href="${stylesheet}"><script type="module" src="${script}"></script></head>`);
     if (isMosaicPage) page = applyMosaicArtwork(page).replace('</head>',`<link rel="stylesheet" href="${mosaicStylesheet}"></head>`);
     await writeFile(path.join(directory,variant.slug+'.html'),page);
     if (isMosaicPage) {

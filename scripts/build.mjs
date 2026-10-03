@@ -10,6 +10,7 @@ import {homePlanCards} from './plan-copy.mjs';
 import {projectHelp,projectDialog,byokSpotlight} from './pricing-explainers.mjs';
 import {generateHeroExperiments} from './hero-experiments.mjs';
 import {clicks} from '../config/integrations.mjs';
+import {buildImageAssets, rewriteImageUrls, optimizePageImages} from './image-assets.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const output = path.join(root, 'dist');
@@ -17,6 +18,7 @@ const pages = process.argv.includes('--pages');
 await rm(output, {recursive:true, force:true});
 await cp(path.join(root, 'public'), path.join(output, 'client'), {recursive:true});
 await generateEditorial(path.join(output, 'client'));
+const images = await buildImageAssets(path.join(output, 'client'));
 const faqWorker = (await readFile(path.join(root, 'server/faq.mjs'), 'utf8')).replace(/^export (?=(?:async )?function)/gm, '');
 const worker = faqWorker + '\n' + (await readFile(path.join(root, 'server/index.mjs'), 'utf8')).replace(/^import .*faq.mjs';\n/m, '').replace(/^export (?=(?:async )?function)/gm, '');
 if (pages) {
@@ -35,10 +37,11 @@ if (pages) {
 const homepage = await readFile(path.join(root, 'public/index.html'),'utf8');
 const credits = homepage.match(/<details class="artwork-credits">[\s\S]*?<\/details>/)?.[0] || '';
 const footer = sharedFooter(comparisons,credits);
-let headers = '/\n  Cache-Control: no-cache\n';
+let headers = '/\n  Cache-Control: no-cache\n/assets/optimized/*\n  Cache-Control: public, max-age=31536000, immutable\n';
 const assetNames = new Map();
 for (const filename of ['map-model.js', 'live-map.js', 'style.css', 'refinement.css', 'refresh.css', 'product-polish.css', 'app.js', 'pages.css', 'pages.js', 'features.js', 'pricing-model.js', 'help-demo-data.js', 'editorial.css', 'about.css', 'comparison.css', 'site-chrome.css', 'guides.css', 'site-interactions.js', 'editorial.js', 'hero-experiments.css', 'hero-experiments.js', 'new2-mosaic.css', 'not-found.css', 'not-found.js']) {
   let content = await readFile(path.join(root, 'public', filename), 'utf8');
+  content = rewriteImageUrls(content, images);
   for (const [original, versioned] of assetNames) content = content.replaceAll('./' + original, './' + versioned);
   const hash = createHash('sha256').update(content).digest('hex').slice(0, 12);
   const ext = path.extname(filename);
@@ -65,7 +68,7 @@ for (const filename of (await readdir(path.join(output, 'client'))).filter(name 
   await writeFile(path.join(output, 'client', filename), html);
   // The Worker adds no-cache to every HTML response; avoid exceeding Pages' 100-rule limit.
 }
-await generateHeroExperiments(path.join(output, 'client'), assetNames.get('hero-experiments.css'), assetNames.get('hero-experiments.js'), assetNames.get('new2-mosaic.css'));
+await generateHeroExperiments(path.join(output, 'client'), assetNames.get('hero-experiments.css'), assetNames.get('hero-experiments.js'), assetNames.get('new2-mosaic.css'), images);
 for (const route of ['new','new2','new3','new4','old','404']) headers += '/' + route + '\n  Cache-Control: no-cache\n  X-Robots-Tag: noindex, follow\n/' + route + '.html\n  Cache-Control: no-cache\n  X-Robots-Tag: noindex, follow\n';
 // Apply optional integrations after all pages and hero variants are generated.
 // One switch in config/integrations.mjs removes the script and its notices.
@@ -80,7 +83,7 @@ for (const filename of (await readdir(path.join(output, 'client'))).filter(name 
   const html = (await readFile(pagePath, 'utf8'))
     .replace('</head>', clicksHead + '</head>')
     .replace('<!-- CLICKS_PRIVACY_NOTICE -->', clicksNotice);
-  await writeFile(pagePath, html);
+  await writeFile(pagePath, optimizePageImages(html, images));
 }
 await buildFaqKnowledge(path.join(output, 'client'));
 headers += '/llm\n  Content-Type: text/markdown; charset=utf-8\n  Cache-Control: no-cache\n/*.md\n  Content-Type: text/markdown; charset=utf-8\n  Cache-Control: no-cache\n/llms.txt\n  Content-Type: text/plain; charset=utf-8\n  Cache-Control: no-cache\n/llms-full.txt\n  Content-Type: text/markdown; charset=utf-8\n  Cache-Control: no-cache\n/sitemap.xml\n  Cache-Control: no-cache\n/robots.txt\n  Cache-Control: no-cache\n';

@@ -4,7 +4,7 @@ export const plans = [
     title:'A home for every project.',copy:'A proper support home for a solo founder. Free to keep.',
     items:[['chat','Live chat & email follow-up'],['typing','Live typing preview'],['book','Help center & imports'],['code','SDK & custom visitor data'],['palette','Dozens of widget designs'],['phone','iOS & Android apps']],
     button:'Start free · No card required',footnote:'1 team member included. No credit card required.'},
-  {name:'Light',style:'light',price:9.99,icon:'shell',tag:'SMALL CREW. SMOOTHER DAYS.',people:'2 team members',includes:'Everything in Free, plus',ai:false,
+  {name:'Light',style:'light',price:9,icon:'shell',tag:'SMALL CREW. SMOOTHER DAYS.',people:'2 team members',includes:'Everything in Free, plus',ai:false,
     title:'Two people. A lighter support day.',copy:'Stay organized, share the work and make time to switch off.',
     items:[['team','Project access & permissions'],['clock','Banners, hours & offline forms'],['search','Saved replies & conversation search'],['file','Image & file sharing'],['tag','Tags, filters & follow-up reminders'],['chart','Live visitor map & analytics']],
     button:'Choose Light',footnote:'2 team members included. AI features start on Pro.'},

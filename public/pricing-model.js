@@ -12,7 +12,7 @@ export function aiCost(model, input, output, ownKey=false) {
 export function orkaPlan(seats) {
   if (!Number.isSafeInteger(seats) || seats < 1) return null;
   if (seats === 1) return {name:'Free',price:0,seats:1};
-  if (seats === 2) return {name:'Light',price:9.99,seats:2};
+  if (seats === 2) return {name:'Light',price:9,seats:2};
   if (seats === 3) return {name:'Pro',price:29,seats:3};
   return {name:'Max',price:99 + Math.max(0,seats-12)*8,seats:Math.max(12,seats)};
 }

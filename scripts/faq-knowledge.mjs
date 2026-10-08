@@ -7,7 +7,8 @@ export async function buildFaqKnowledge(directory){
   const html=await readFile(path.join(directory,file),'utf8');
   if (/<meta\s+name="robots"\s+content="[^"]*noindex/i.test(html)) continue;
   const title=decode(html.match(/<title>(.*?)<\/title>/s)?.[1]||'Orka');
-  const main=html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[1]||'';
+  // Demo conversations illustrate the UI; they are not product policies or facts.
+  const main=(html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[1]||'').replace(/<!-- FEATURE_PREVIEW_START -->[\s\S]*?<!-- FEATURE_PREVIEW_END -->/g,'');
   const text=decode(main.replace(/<(script|style|svg|form)\b[^>]*>[\s\S]*?<\/\1>/gi,' ').replace(/<\/(?:p|h[1-6]|li|tr|article|section|div)>/g,'\n').replace(/<[^>]+>/g,' ').replace(/[ \t]+/g,' ').replace(/\n\s*\n/g,'\n').trim());
   if(!text)continue;
   const slug=file==='index.html'?'':file.replace(/\.html$/,'');

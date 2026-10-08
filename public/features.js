@@ -49,4 +49,16 @@ if (typeof document !== 'undefined') {
   chooseProfile(new URL(location.href).searchParams.get('for'), false);
   window.addEventListener('popstate', () => chooseProfile(new URL(location.href).searchParams.get('for'), false));
   filterFeatures();
+  // Animate only as an illustration first enters the viewport. Static previews
+  // remain complete with JavaScript disabled or reduced motion enabled.
+  const visuals = document.querySelectorAll('[data-feature-visual]');
+  if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) if (entry.isIntersecting) {
+        entry.target.classList.add('is-seen');
+        observer.unobserve(entry.target);
+      }
+    }, {threshold: .3});
+    visuals.forEach(visual => observer.observe(visual));
+  }
 }

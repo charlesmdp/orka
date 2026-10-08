@@ -266,7 +266,7 @@ img[src$="orky-app-icon.svg"]{object-fit:contain}
 }
 
 /* Four plans. Shared by the homepage and the dedicated pricing page. */
-.plan-icon{width:20px;height:20px;flex:0 0 20px;display:inline-block;vertical-align:middle}
+.pricing-symbol{width:20px;height:20px;flex:0 0 20px;display:inline-block;vertical-align:middle}
 .pricing-grid,.c-plan-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;max-width:none}
 .c-plan-grid{align-items:stretch}
 .c-plan-grid>.c-plan{--plan-padding:24px;padding:24px;display:flex;flex-direction:column;min-width:0}
@@ -280,11 +280,11 @@ img[src$="orky-app-icon.svg"]{object-fit:contain}
 .c-plan-grid .c-plan>.ed-kicker{font-size:9px;min-height:24px;line-height:1.6;letter-spacing:.08em}
 .c-plan-grid .plan-projects{display:flex;align-items:center;flex-wrap:wrap;gap:7px;font-size:13px;margin:24px 0 0}
 .c-plan-grid .plan-projects .project-help{margin-left:27px}
-.c-plan-grid .plan-inherits,.pricing-grid .plan-inherits{font-size:11px;line-height:1.6;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin:22px 0 16px;min-height:0;padding-top:18px;border-top:1px solid #dce4d1}
+
 .c-plan-grid .plan-features,.pricing-grid .plan-features{margin:0 0 24px;padding:0;border:0;display:grid;gap:15px;list-style:none;font-size:13px;line-height:1.55}
 .c-plan-grid .plan-features li,.pricing-grid .plan-features li{display:flex;align-items:flex-start;gap:10px}
-.c-plan-grid .plan-features .plan-icon,.pricing-grid .plan-features .plan-icon{color:#367562;margin-top:1px}
-.c-plan-grid .c-plan-featured .plan-features .plan-icon,.pricing-grid .featured-plan .plan-icon{color:#d5fa81}
+.c-plan-grid .plan-features .pricing-symbol,.pricing-grid .plan-features .pricing-symbol{color:#367562;margin-top:1px}
+.c-plan-grid .c-plan-featured .plan-features .pricing-symbol,.pricing-grid .featured-plan .pricing-symbol{color:#d5fa81}
 .c-plan-grid .plan-features li>span{color:inherit}
 .c-plan-grid .plan-byok-link{margin-top:auto;font-size:13px}
 .c-plan-grid .c-plan>small{font-size:11px;line-height:1.7;margin-top:auto;padding-top:20px}
@@ -301,39 +301,79 @@ img[src$="orky-app-icon.svg"]{object-fit:contain}
 .pricing-grid .price-card .plan-ai-choice{margin-top:auto}
 .pricing-grid .price-card .plan-ai-choice+.plan-footnote{margin-top:12px}
 .pricing-compare-link{display:flex;justify-content:center;gap:12px;align-items:center;margin:30px auto 0;font-weight:600;text-decoration:underline;text-underline-offset:5px}
-.c-plan-table{scroll-margin-top:100px}
-.c-plan-table .plan-comparison{table-layout:fixed;min-width:760px}
-.plan-comparison caption{text-align:left;padding:20px 24px;color:#506b60;background:#f1f6ee;font-size:12px}
-.c-plan-table .plan-comparison thead th:first-child,.c-plan-table .plan-comparison tbody th:not([colspan]){width:42%}
-.c-plan-table .plan-comparison td,.c-plan-table .plan-comparison thead th:not(:first-child){width:14.5%;text-align:center}
-.c-plan-table .plan-comparison td{vertical-align:middle;color:#274b40;font-size:13px;background:#fff}
-.c-plan-table .plan-comparison th,.c-plan-table .plan-comparison td{padding:18px 16px}
-.c-plan-table .plan-comparison thead th{background:#143c31;color:#f4f5e9;font-size:16px}
-.c-plan-table .plan-comparison thead th:nth-child(4){background:#d8fa89;color:#163c30}
-.plan-comparison thead strong{display:block;font-size:22px;letter-spacing:-.035em;margin-top:5px}
-.plan-comparison thead strong small{display:inline;color:inherit;font-size:10px;margin-left:3px;font-weight:400}
-.c-plan-table .plan-comparison tbody tr:not(.feature-group):hover>*{background:#f4f8f0}
-.c-plan-table .plan-comparison tbody th:not([colspan]){color:#274b40;font-size:13px;font-weight:600;background:#fff}
-.c-plan-table .plan-comparison tbody th small{font-size:11px;font-weight:400;color:#61736c;line-height:1.65;margin-top:5px}
-.c-plan-table .plan-comparison .feature-group th{background:#e9f0e6;color:#274b40;padding:16px;font-size:13px;letter-spacing:.01em}
-.plan-comparison .feature-group .plan-icon{margin-right:10px;color:#427763}
-.plan-comparison .feature-group small{display:inline;margin-left:14px;font-weight:400;font-size:11px;color:#5f7166}
-.plan-comparison .feature-yes{display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center;border-radius:50%;background:#edf5e6;color:#3d7958}
-.plan-comparison .feature-no{color:#a5b2ac;font-size:20px}
-.plan-comparison-scroll{max-height:800px;max-height:min(800px,80vh);overscroll-behavior:contain}
-.plan-comparison thead th{position:sticky;top:0;z-index:2}
-.plan-comparison thead th:first-child{left:0;z-index:3}
-.plan-comparison tbody th:not([colspan]){position:sticky;left:0;z-index:1}
 .new2-mosaic.hero-night .pricing-compare-link{color:#d9f5c1}
 @media(max-width:1200px){.pricing-grid,.c-plan-grid{grid-template-columns:repeat(2,minmax(0,1fr));max-width:920px;margin-left:auto;margin-right:auto;gap:22px}.pricing-grid .price-card h3{min-height:58px}.pricing-grid .plan-description{min-height:46px}.c-plan-grid .c-plan>p:not(.plan-inherits){min-height:46px}}
-@media(max-width:600px){.pricing-grid,.c-plan-grid{grid-template-columns:1fr;max-width:440px;gap:24px}.pricing-grid .price-card h3,.pricing-grid .plan-description{min-height:0}.pricing-grid .price-card h3{font-size:26px}.pricing-grid .price-card .button{font-size:14px}.pricing-grid .plan-features,.c-plan-grid .plan-features{font-size:14px}.c-plan-grid .c-plan>p:not(.plan-inherits){min-height:0}.c-plan-table .plan-comparison{min-width:700px}.c-plan-table .plan-comparison tbody th:not([colspan]),.c-plan-table .plan-comparison thead th:first-child{width:34%}.c-plan-table .plan-comparison td,.c-plan-table .plan-comparison thead th:not(:first-child){width:16.5%}.c-plan-table .plan-comparison th,.c-plan-table .plan-comparison td{padding:14px 12px}.plan-comparison caption{padding:16px}.plan-comparison .feature-group small{display:block;margin:4px 0 0 30px}}
+@media(max-width:600px){.pricing-grid,.c-plan-grid{grid-template-columns:1fr;max-width:440px;gap:24px}.pricing-grid .price-card h3,.pricing-grid .plan-description{min-height:0}.pricing-grid .price-card h3{font-size:26px}.pricing-grid .price-card .button{font-size:14px}.pricing-grid .plan-features,.c-plan-grid .plan-features{font-size:14px}.c-plan-grid .c-plan>p:not(.plan-inherits){min-height:0}}
 .editorial-page .app-plan-strip{grid-template-columns:repeat(4,minmax(0,1fr))}
 @media(max-width:740px){.editorial-page .app-plan-strip{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 .editorial-page .app-plan-strip>div:nth-child(3){border-right:1px solid #cfdcbc}.editorial-page .app-plan-strip>div:nth-child(4){border:0}
 @media(max-width:740px){.editorial-page .app-plan-strip>div:nth-child(3){border:0}}
-.new2-mosaic:not(.hero-night) .pricing-grid .featured-plan .plan-icon{color:#4a6f34}
-.new2-mosaic.hero-night .pricing-grid .plan-features .plan-icon{color:#b8d5bf}
+.new2-mosaic:not(.hero-night) .pricing-grid .featured-plan .pricing-symbol{color:#4a6f34}
+.new2-mosaic.hero-night .pricing-grid .plan-features .pricing-symbol{color:#b8d5bf}
 .new2-mosaic.hero-night .pricing-grid .plan-inherits{color:#cce2d1;border-color:#54716a}
 .plan-comparison .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-.plan-comparison .feature-group-label{display:inline-block;position:sticky;left:16px}
+
+
+/* Calm, consistent plan marks and clearly inherited benefits. */
+.plan-emblem{display:inline-flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;height:44px;border-radius:14px;box-shadow:inset 0 0 0 1px #163c3012;isolation:isolate}
+.plan-emblem svg{width:29px;height:29px;display:block}.plan-emblem img{width:44px;height:44px;display:block}
+.plan-emblem-free{background:#e1eee8;color:#26725e}.plan-emblem-light{background:#fff1ca;color:#b47815}.plan-emblem-pro{background:transparent;box-shadow:none}.plan-emblem-max{background:#e7e8f5;color:#606599}
+.plan-name-with-emblem{display:flex;align-items:center;gap:12px}.pricing-grid .plan-name-with-emblem .mono{font-family:inherit;font-weight:700;font-size:22px;line-height:1.2;letter-spacing:-.035em;text-transform:none}
+.c-plan-grid .c-plan-name{gap:12px}.pricing-grid .price-card-heading{min-height:44px;gap:8px}.pricing-grid .plan-popular{font-size:9px;padding:6px 8px}
+.c-plan-grid .plan-inherits,.pricing-grid .plan-inherits{display:flex;align-items:center;gap:10px;margin:24px 0 20px;padding:14px 12px;min-height:68px;background:#eaf1e6;color:#294c39;border:1px solid #d6e2cf;border-radius:12px;font-size:15px;line-height:1.35;text-transform:none;letter-spacing:-.02em}
+.plan-inherits strong{font-weight:750}.plan-inherits-check{flex:0 0 23px;display:grid;place-items:center;width:23px;height:23px;border-radius:50%;background:#d0e4c6;color:#27643c}
+.c-plan-grid .plan-feature-check,.pricing-grid .plan-feature-check{display:grid;place-items:center;flex:0 0 18px;width:18px;height:18px;margin-top:1px}
+.c-plan-grid .plan-feature-check .pricing-symbol,.pricing-grid .plan-feature-check .pricing-symbol{width:17px;height:17px;stroke-width:2.2;margin:0;color:#3f795d;background:none;border:0}
+.c-plan-grid .c-plan-featured .plan-inherits{background:#d5efad;color:#193d2d;border-color:#d5efad}
+.c-plan-grid .c-plan-featured .plan-feature-check .pricing-symbol{color:#cce9b2}
+.new2-mosaic.hero-night .pricing-grid .plan-inherits{background:#224b45;color:#ecf6e4;border-color:#40665d}.new2-mosaic.hero-night .pricing-grid .featured-plan .plan-inherits{background:#d5efad;color:#193d2d;border-color:#d5efad}
+.new2-mosaic.hero-night .pricing-grid .plan-feature-check .pricing-symbol{color:#cce9b2}
+
+/* The comparison belongs to the page: no clipped height or nested scroll area. */
+.c-plan-table{scroll-margin-top:32px;padding-top:80px;padding-bottom:40px}
+.plan-comparison-intro{text-align:center;max-width:720px;margin:0 auto 45px}
+.plan-comparison-intro .ed-kicker{color:#4c7a65;letter-spacing:.12em}
+.plan-comparison-intro h2{font-size:clamp(36px,4.5vw,58px);letter-spacing:-.055em;line-height:1.08;margin:18px 0 22px;color:#193c30}
+.plan-comparison-intro h2 em{font-family:var(--serif,Georgia,serif);font-weight:400;color:#58816b;letter-spacing:-.04em}
+.plan-comparison-intro>p{font-size:16px;line-height:1.7;color:#63766b}
+.comparison-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 22px;margin-top:26px;font-size:11px;color:#63766b}
+.comparison-legend>span{display:inline-flex;align-items:center;gap:6px}.comparison-legend i{font-style:normal;color:#38734e;font-weight:700}
+.plan-comparison-shell{border:1px solid #dce5dc;border-radius:22px;background:#fff;box-shadow:0 12px 60px #183c2906;padding:8px 20px 20px;overflow:visible}
+.plan-comparison{width:100%;min-width:0;border-collapse:separate;border-spacing:0;table-layout:fixed;color:#243c32;text-align:left;font-size:14px;line-height:1.45}
+.plan-comparison .comparison-label-col{width:38%}
+.plan-comparison th,.plan-comparison td{padding:17px 14px;border:0;border-bottom:1px solid #e6ebe5;vertical-align:middle}
+.plan-comparison thead th{position:sticky;top:0;z-index:2;padding-top:23px;padding-bottom:23px;background:#fff;text-align:center;font-size:18px;box-shadow:0 1px 0 #ccd9ce}
+.plan-comparison thead th:first-child{text-align:left;font-size:15px}.plan-comparison thead th:first-child small{display:block;margin-top:6px;font-weight:400;font-size:12px;color:#748278}
+.plan-comparison thead strong{display:block;font-size:24px;letter-spacing:-.045em;line-height:1.3;margin-top:7px}
+.plan-comparison thead strong small{font-weight:400;font-size:11px;letter-spacing:0;margin-left:3px}
+.plan-comparison .comparison-members{display:block;font-size:11px;font-weight:400;color:#738074;margin-top:7px}
+.plan-comparison tbody th:not([colspan]){font-weight:500;font-size:14px}
+.plan-comparison tbody th small{display:block;max-width:390px;margin-top:5px;color:#7b887f;font-size:12px;line-height:1.55;font-weight:400}
+.plan-comparison td{text-align:center;font-weight:600;font-size:14px;overflow-wrap:anywhere}
+.plan-comparison td.comparison-pro,.plan-comparison thead th.comparison-pro{background:#f1f7ec}
+.plan-comparison tbody tr:not(.feature-group):hover th,.plan-comparison tbody tr:not(.feature-group):hover td{background:#f8faf7}
+.plan-comparison tbody tr:not(.feature-group):hover td.comparison-pro{background:#eaf3e2}
+.plan-comparison .feature-group th{padding:20px 14px 15px;background:#edf1ed;border-top:12px solid #fff;border-bottom:1px solid #dce4dc;border-radius:0;font-weight:650;font-size:14px}
+.feature-group-label{display:inline-flex;align-items:center;gap:11px}.feature-group-number{font:11px/1 var(--mono,monospace);color:#63816c;border-right:1px solid #c5d5c5;padding-right:11px}
+.plan-comparison .feature-group small{display:inline-block;max-width:none;font-size:11px;margin:0 0 0 18px;color:#718070}
+.plan-comparison .feature-yes{display:inline-flex;align-items:center;justify-content:center;color:#4c9868;vertical-align:middle}.plan-comparison .feature-yes .pricing-symbol{width:21px;height:21px;stroke-width:2.3}
+.plan-comparison .feature-no{display:inline-block;color:#b2bcb6;font-weight:400;font-size:19px}
+.comparison-feature-link{text-decoration:none;text-underline-offset:4px}.comparison-feature-link:hover{text-decoration:underline;color:#377552}
+.plan-comparison .project-help{display:inline-block;font-size:10px;margin-left:0;margin-top:4px}
+.c-plan-table>.c-source{display:block;text-align:center;margin:26px auto 0;font-size:13px}
+@media(max-width:700px){
+ .c-plan-table{padding-top:45px;width:calc(100% - 32px)}.plan-comparison-intro{margin-bottom:28px}.plan-comparison-intro>p{font-size:14px}.comparison-legend{gap:8px 15px}.comparison-legend>span:last-child{flex-basis:100%;justify-content:center}
+ .plan-comparison-shell{padding:0 10px 12px;border-radius:16px}
+ .plan-comparison,.plan-comparison thead,.plan-comparison tbody{display:block;width:100%}.plan-comparison colgroup{display:none}
+ .plan-comparison tr{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:100%}
+ .plan-comparison thead{position:sticky;top:0;z-index:2;background:#fff;border-radius:15px 15px 0 0;box-shadow:0 1px 0 #d6e1d6}
+ .plan-comparison thead th{position:static;width:auto;min-width:0;padding:16px 3px 13px;font-size:14px}.plan-comparison thead th:first-child{display:none}
+ .plan-comparison thead strong{font-size:18px;margin-top:3px}.plan-comparison thead strong small{font-size:9px;margin-left:1px}.plan-comparison .comparison-members{display:none}
+ .plan-comparison tbody th:not([colspan]){grid-column:1/-1;border-bottom:0;padding:17px 8px 5px;font-size:13px;background:#fff}.plan-comparison tbody th small{font-size:11px;max-width:none;line-height:1.5;margin-top:4px}
+ .plan-comparison td{width:auto;min-width:0;padding:10px 3px 14px;font-size:12px}.plan-comparison .feature-group th{grid-column:1/-1;padding:15px 9px;font-size:13px;border-top-width:9px}.feature-group-label{gap:8px}.feature-group-number{padding-right:8px}
+ .plan-comparison .feature-group small{display:block;margin:5px 0 0 29px;font-size:10px}.plan-comparison .feature-yes .pricing-symbol{width:19px;height:19px}
+ .plan-comparison .project-help{margin-left:8px;margin-top:0}.plan-comparison tbody tr:not(.feature-group):hover th{background:#fff}
+}
+.ai-handoff-controls{padding-block:70px;scroll-margin-top:30px}.ai-handoff-heading{max-width:780px;margin-bottom:32px}.ai-handoff-heading h2{font-size:clamp(30px,4vw,48px);line-height:1.15;letter-spacing:-.045em;margin:16px 0 20px}.ai-handoff-heading h2 em{font-family:Georgia,serif;font-weight:400;color:#597b66}.ai-handoff-heading>p{color:#617466;line-height:1.8;max-width:690px}.ai-handoff-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-bottom:28px}.ai-handoff-grid article{padding:28px;border:1px solid #dce5d5;border-radius:18px;background:#f1f5eb}.ai-handoff-grid article>span{font:10px/1.5 monospace;letter-spacing:.07em;color:#668065}.ai-handoff-grid h3{font-size:23px;letter-spacing:-.03em;margin:16px 0 12px}.ai-handoff-grid p{font-size:14px;line-height:1.8;color:#617466;margin:0}@media(max-width:650px){.ai-handoff-grid{grid-template-columns:1fr}.ai-handoff-grid article{padding:23px}.ai-handoff-controls{padding-block:40px}}
+.pricing-grid .plan-inherits-check .pricing-symbol,.c-plan-grid .plan-inherits-check .pricing-symbol{color:#27643c;stroke-width:2.2;width:16px;height:16px}

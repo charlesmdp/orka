@@ -324,8 +324,11 @@ img[src$="orky-app-icon.svg"]{object-fit:contain}
 .plan-comparison thead th{position:sticky;top:0;z-index:2}
 .plan-comparison thead th:first-child{left:0;z-index:3}
 .plan-comparison tbody th:not([colspan]){position:sticky;left:0;z-index:1}
-[data-time="night"] .pricing-compare-link{color:#d9f5c1}
+.new2-mosaic.hero-night .pricing-compare-link{color:#d9f5c1}
 @media(max-width:1200px){.pricing-grid,.c-plan-grid{grid-template-columns:repeat(2,minmax(0,1fr));max-width:920px;margin-left:auto;margin-right:auto;gap:22px}.pricing-grid .price-card h3{min-height:58px}.pricing-grid .plan-description{min-height:46px}.c-plan-grid .c-plan>p:not(.plan-inherits){min-height:46px}}
 @media(max-width:600px){.pricing-grid,.c-plan-grid{grid-template-columns:1fr;max-width:440px;gap:24px}.pricing-grid .price-card h3,.pricing-grid .plan-description{min-height:0}.pricing-grid .price-card h3{font-size:26px}.pricing-grid .price-card .button{font-size:14px}.pricing-grid .plan-features,.c-plan-grid .plan-features{font-size:14px}.c-plan-grid .c-plan>p:not(.plan-inherits){min-height:0}.c-plan-table .plan-comparison{min-width:700px}.c-plan-table .plan-comparison tbody th:not([colspan]),.c-plan-table .plan-comparison thead th:first-child{width:34%}.c-plan-table .plan-comparison td,.c-plan-table .plan-comparison thead th:not(:first-child){width:16.5%}.c-plan-table .plan-comparison th,.c-plan-table .plan-comparison td{padding:14px 12px}.plan-comparison caption{padding:16px}.plan-comparison .feature-group small{display:block;margin:4px 0 0 30px}}
-.app-plan-strip{grid-template-columns:repeat(4,minmax(0,1fr))}
-@media(max-width:740px){.app-plan-strip{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.editorial-page .app-plan-strip{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:740px){.editorial-page .app-plan-strip{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.editorial-page .app-plan-strip>div:nth-child(3){border-right:1px solid #cfdcbc}.editorial-page .app-plan-strip>div:nth-child(4){border:0}
+@media(max-width:740px){.editorial-page .app-plan-strip>div:nth-child(3){border:0}}

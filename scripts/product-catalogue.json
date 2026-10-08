@@ -153,7 +153,7 @@
       "tags",
       "team",
       "Conversation tags",
-      "Organize requests by topic, product or whatever makes sense for your team.",
+      "Tag conversations by topic or product, then filter the inbox to find the requests that need your attention.",
       "team legal shop saas agency",
       "12",
       "Light, Pro & Max"
@@ -198,7 +198,7 @@
       "team-size",
       "team",
       "Room for your whole crew",
-      "Start with one person, work as a small pod, or bring a larger team into the same inbox.",
+      "Free includes one person, Light two, Pro three and Max twelve. Every plan includes unlimited projects.",
       "team legal agency",
       "",
       "Free: 1 · Light: 2 · Pro: 3 · Max: 12 (+€8/extra member/mo)"
@@ -207,7 +207,7 @@
       "knowledge",
       "ai",
       "Answers from your own knowledge",
-      "Give Orky your website, help articles, documentation and FAQs to ground replies in your business.",
+      "Ground AI drafts and replies in your help center, website, uploaded files and business instructions.",
       "solo team shop saas agency",
       "23",
       "Pro & Max · AI usage separate"
@@ -225,7 +225,7 @@
       "ai-drafts",
       "ai",
       "AI drafts you approve",
-      "Ask for a suggested reply, edit the wording and decide when to send it. A draft is not sent on its own.",
+      "Get a suggested answer based on your help center, website, uploaded files and business instructions. Review, edit and send it yourself.",
       "solo team legal shop saas agency",
       "25",
       "Pro & Max · AI usage separate"
@@ -234,7 +234,7 @@
       "human-takeover",
       "ai",
       "Live human takeover",
-      "Step into an AI conversation with its context whenever a human answer is the right next step.",
+      "Orky steps aside when someone asks for a human, gets frustrated, or needs help beyond its knowledge or capabilities. Your team keeps the conversation context.",
       "team legal shop saas",
       "26",
       "Pro & Max · AI usage separate"
@@ -369,7 +369,7 @@
       "analytics",
       "context",
       "Conversation analytics",
-      "Review your support activity and how your conversations are handled.",
+      "Review support activity across your conversations. Max adds satisfaction scores and performance reports by teammate and time of day.",
       "solo team shop saas agency",
       "30",
       "Light, Pro & Max"
@@ -450,10 +450,10 @@
       "widget-layouts",
       "widget",
       "Widget layouts & team profiles",
-      "Choose a welcome that puts your team front and center, from a simple messenger to a support crew.",
+      "Choose from dozens of widget designs, from a simple messenger to a welcome that puts your team front and center.",
       "solo team legal shop agency",
       "",
-      ""
+      "Included on every plan"
     ],
     [
       "seasonal-themes",
@@ -634,6 +634,114 @@
       "solo team legal shop saas agency",
       "",
       "Help center included on every plan"
+    ],
+    [
+      "extra-members",
+      "team",
+      "Add people as your team grows",
+      "Max includes 12 team members. Add more for €8 per member per month. Free, Light and Pro have fixed limits of 1, 2 and 3 members.",
+      "team agency saas",
+      "",
+      "Max · €8 per additional member/month"
+    ],
+    [
+      "project-permissions",
+      "team",
+      "Project access & feature permissions",
+      "Assign teammates to specific projects and choose which features they can access in each one. Give marketing the landing page and technical support the app.",
+      "team agency saas shop legal",
+      "",
+      "Light, Pro & Max"
+    ],
+    [
+      "handoff-triggers",
+      "ai",
+      "Custom handoff triggers",
+      "Choose keywords that should bring in a person. When one appears, Orky escalates the conversation to your team.",
+      "team saas shop legal agency",
+      "",
+      "Pro & Max · AI usage separate"
+    ],
+    [
+      "ai-confidence",
+      "ai",
+      "AI confidence threshold",
+      "Set a confidence threshold and flag low-confidence answers for human review. Keep uncertain replies visible to the people who can help.",
+      "solo team saas shop legal agency",
+      "",
+      "Pro & Max · AI usage separate"
+    ],
+    [
+      "handoff-assignment",
+      "ai",
+      "Handoff notifications & assignment",
+      "Notify the whole team, online teammates or selected people when AI hands over, and assign the conversation to someone.",
+      "team saas shop legal agency",
+      "",
+      "Pro & Max · AI usage separate"
+    ],
+    [
+      "seamless-handoff",
+      "ai",
+      "A handoff with the full story",
+      "Keep the complete conversation history when a human takes over. Customize the handoff message your visitor sees.",
+      "solo team saas shop legal agency",
+      "",
+      "Pro & Max · AI usage separate"
+    ],
+    [
+      "offline-form",
+      "boundaries",
+      "Automatic offline contact form",
+      "When your team is offline, collect the visitor’s contact details and question so you can follow up when you return.",
+      "solo team saas shop legal agency",
+      "",
+      "Light, Pro & Max"
+    ],
+    [
+      "business-hours",
+      "boundaries",
+      "Business hours & availability scheduling",
+      "Set your working hours and schedule availability so visitors know when to expect a human reply.",
+      "solo team saas shop legal agency",
+      "",
+      "Light, Pro & Max"
+    ],
+    [
+      "announcement-banner",
+      "boundaries",
+      "Custom banners & announcements",
+      "Show a night banner, an emergency notice or an announcement in your widget. Keep visitors informed before they start a chat.",
+      "solo team saas shop legal agency",
+      "",
+      "Light, Pro & Max"
+    ],
+    [
+      "satisfaction",
+      "context",
+      "Conversation satisfaction scores",
+      "See how customers rate their support conversations. Use their feedback to spot what works and what needs more care.",
+      "team saas shop agency",
+      "",
+      "Max"
+    ],
+    [
+      "team-reports",
+      "context",
+      "Team performance reports",
+      "Track response times by teammate and time of day. Understand when your team needs more coverage and where support can improve.",
+      "team saas shop agency",
+      "",
+      "Max"
+    ],
+    [
+      "api-limits",
+      "setup",
+      "Higher API rate limits",
+      "Max gives integrations higher API rate limits as your support activity grows. Contact the team for the limits that apply to your use case.",
+      "team saas agency",
+      "",
+      "Max"
     ]
   ],
   "profiles": [

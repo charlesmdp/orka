@@ -51,7 +51,7 @@ test('all eleven guides have over 1,000 editorial words, documented comparisons,
  assert.equal(new Set(comparisons.map(c=>c.id)).size,11);
  const catalogue=JSON.parse(await readFile(new URL('../scripts/product-catalogue.json',import.meta.url),'utf8'));
  const featureIds=new Set(catalogue.features.map(f=>f[0]));
- assert.equal(featureIds.size,65);
+ assert.equal(featureIds.size,catalogue.features.length,'Catalogue feature IDs must be unique');
  const temp=await mkdtemp(path.join(os.tmpdir(),'orka-editorial-'));
  try{
   const built=await generateEditorial(temp);

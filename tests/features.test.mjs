@@ -2,8 +2,31 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {matchesFeature} from '../public/features.js';
+import {featureVisual,illustratedFeatureIds} from '../scripts/feature-visuals.mjs';
+import {buildFaqKnowledge} from '../scripts/faq-knowledge.mjs';
+import {mkdtemp,writeFile,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import path from 'node:path';
 
 const html = await readFile(new URL('../public/features.html', import.meta.url), 'utf8');
+
+test('feature illustrations stay decorative and their example conversations never become FAQ facts',async()=>{
+  const catalogue=JSON.parse(await readFile(new URL('../scripts/product-catalogue.json',import.meta.url),'utf8'));
+  assert.ok(illustratedFeatureIds.length>=catalogue.features.length*.8,'Illustrate most of the catalogue');
+  for(const id of illustratedFeatureIds){
+    assert.ok(catalogue.features.some(f=>f[0]===id),id+' must belong to the catalogue');
+    const preview=featureVisual(id,'conversations');
+    assert.match(preview,/aria-hidden="true"/);
+    assert.doesNotMatch(preview,/<(?:button|input|a\s|script)/,'Previews must not add fake controls or tab stops');
+  }
+  const dir=await mkdtemp(path.join(tmpdir(),'orka-feature-preview-'));
+  try{
+    await writeFile(path.join(dir,'features.html'),`<title>Features</title><main>${featureVisual('live-chat','conversations')}<h4>Real-time live chat</h4><p>Talk to visitors while they are on your website.</p></main>`);
+    const docs=await buildFaqKnowledge(dir);
+    assert.ok(docs[0].text.includes('Talk to visitors'));
+    assert.doesNotMatch(docs[0].text,/Forest green|in stock/);
+  }finally{await rm(dir,{recursive:true,force:true});}
+});
 
 test('feature search combines category and all search words, ignoring case and accents', () => {
   assert.equal(matchesFeature('Two-way translation for cafés', 'ai', ' CAFÉ translation ', 'all'), true);

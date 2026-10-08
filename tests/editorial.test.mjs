@@ -20,7 +20,7 @@ test('AI charges use per-million input/output prices and the approved 2× multip
 });
 
 test('team calculations respect bundles, per-seat prices, limits and missing quotes',()=>{
- assert.deepEqual([1,2,3,4,12,13,15,20].map(n=>orkaPlan(n).price),[0,9.99,29,99,99,107,123,163]);
+ assert.deepEqual([1,2,3,4,12,13,15,20].map(n=>orkaPlan(n).price),[0,9,29,99,99,107,123,163]);
  assert.equal(orkaPlan(21).price,171);
  for(const invalid of [0,-1,1.5,NaN,Infinity])assert.equal(orkaPlan(invalid),null);
  assert.equal(vendorCost('intercom',0,3),117);

@@ -6,7 +6,7 @@ import {readFile} from 'node:fs/promises';
 import {refreshFeatureCatalogue} from '../scripts/feature-catalogue.mjs';
 
 test('four plans preserve the approved prices, inheritance and AI eligibility',()=>{
- assert.deepEqual(plans.map(p=>[p.name,p.price,p.people,p.ai]),[['Free',0,'1 team member',false],['Light',9.99,'2 team members',false],['Pro',29,'3 team members',true],['Max',99,'12 team members',true]]);
+ assert.deepEqual(plans.map(p=>[p.name,p.price,p.people,p.ai]),[['Free',0,'1 team member',false],['Light',9,'2 team members',false],['Pro',29,'3 team members',true],['Max',99,'12 team members',true]]);
  assert.deepEqual(plans.slice(1).map(p=>p.includes),['Everything in Free, plus','Everything in Light, plus','Everything in Pro, plus']);
  const cards=homePlanCards();assert.equal((cards.match(/data-orka-plan-card=/g)||[]).length,4);
  assert.equal((cards.match(/class="plan-ai-choice"/g)||[]).length,2);

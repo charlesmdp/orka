@@ -75,7 +75,7 @@
       "Pick up an earlier conversation and find messages by keyword.",
       "team legal shop saas agency",
       "4",
-      "Message search: Pro & Max"
+      "Light, Pro & Max"
     ],
     [
       "saved-replies",
@@ -84,7 +84,7 @@
       "Give repeat answers a shortcut so you can spend more time on the personal part.",
       "solo team legal shop saas agency",
       "5",
-      ""
+      "Light, Pro & Max"
     ],
     [
       "attachments",
@@ -93,7 +93,7 @@
       "Share a document, screenshot or image right inside a conversation.",
       "team legal shop saas agency",
       "6",
-      "Image sharing: Pro & Max"
+      "Light, Pro & Max"
     ],
     [
       "emoji",
@@ -156,7 +156,7 @@
       "Organize requests by topic, product or whatever makes sense for your team.",
       "team legal shop saas agency",
       "12",
-      ""
+      "Light, Pro & Max"
     ],
     [
       "filters",
@@ -165,7 +165,7 @@
       "Focus on a project, agent or conversation status without switching accounts.",
       "team legal agency",
       "13",
-      ""
+      "Light, Pro & Max"
     ],
     [
       "resolved",
@@ -183,7 +183,7 @@
       "Set a reminder to return to a conversation that needs another look.",
       "solo team legal shop agency",
       "35",
-      ""
+      "Light, Pro & Max"
     ],
     [
       "urgency",
@@ -192,7 +192,7 @@
       "From an easy-life fish to three hungry sharks: spot low, normal, high and critical conversations before you open them.",
       "solo team shop saas",
       "38",
-      ""
+      "Pro & Max · AI usage separate"
     ],
     [
       "team-size",
@@ -201,7 +201,7 @@
       "Start with one person, work as a small pod, or bring a larger team into the same inbox.",
       "team legal agency",
       "",
-      "Free: 1 member · Pro: 3 · Max: 20"
+      "Free: 1 · Light: 2 · Pro: 3 · Max: 12 (+€8/extra member/mo)"
     ],
     [
       "knowledge",
@@ -318,7 +318,7 @@
       "See where visitors are, zoom into a group and explore individual visitors across your projects.",
       "solo team shop saas agency",
       "20",
-      "Pro & Max"
+      "Light, Pro & Max"
     ],
     [
       "visitor-list",
@@ -372,7 +372,7 @@
       "Review your support activity and how your conversations are handled.",
       "solo team shop saas agency",
       "30",
-      "Pro & Max"
+      "Light, Pro & Max"
     ],
     [
       "help-center",
@@ -417,7 +417,7 @@
       "Show your team’s local time and let visitors know when your humans are asleep.",
       "solo team legal saas agency",
       "32",
-      ""
+      "Light, Pro & Max"
     ],
     [
       "break-banner",
@@ -426,7 +426,7 @@
       "Let people know you are taking time off and when they can expect you back.",
       "solo legal agency",
       "32",
-      ""
+      "Light, Pro & Max"
     ],
     [
       "panic-banner",
@@ -435,7 +435,7 @@
       "A real-life emergency? Put a clear heads-up in your widget when replies may take longer.",
       "solo team legal shop saas agency",
       "31",
-      ""
+      "Light, Pro & Max"
     ],
     [
       "widget-brand",
@@ -570,7 +570,7 @@
       "Translate articles in the background from your chosen source language.",
       "solo team legal shop saas agency",
       "",
-      "Help center included on every plan"
+      "Pro & Max · AI usage separate"
     ],
     [
       "help-translation-review",
@@ -579,7 +579,7 @@
       "Review translations by hand, translate missing articles and see when source edits make a translation outdated.",
       "solo team legal shop saas agency",
       "",
-      "Help center included on every plan"
+      "AI translation on Pro & Max · AI usage separate"
     ],
     [
       "help-widget",
@@ -597,7 +597,7 @@
       "Published articles feed your AI agent as well as your public help center.",
       "solo team legal shop saas agency",
       "",
-      "Help center included on every plan"
+      "AI answers on Pro & Max · AI usage separate"
     ],
     [
       "help-publishing",
@@ -667,7 +667,7 @@
       "We’re a team of 10",
       "Ten people. One conversation that makes sense.",
       "Know who is replying, share context privately, and keep the next step clear.",
-      "Assign an owner, leave a note and set a reminder. Max has room for up to 20 teammates.",
+      "Assign an owner, leave a note and set a reminder. Max includes 12 teammates; add more for €8/member/month.",
       [
         "assignment",
         "private-notes",

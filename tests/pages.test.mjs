@@ -35,7 +35,7 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   assert.doesNotMatch(old,/mosaic-dashboard-fresco/);
   assert.match(old,/<meta name="robots" content="noindex, follow">/);
   assert.match(old,/rel="canonical" href="https:\/\/orka.chat\/old"/);
-  for(const tier of ['solo','pod','fleet']) assert.ok(html.includes(imageManifest['mosaic-pricing-'+tier+'.jpg'].webp.at(-1).url));
+  for(const tier of ['solo','light','pod','fleet']) assert.ok(html.includes(imageManifest['mosaic-pricing-'+tier+'.jpg'].webp.at(-1).url));
   assert.match(html,/data-map-search/);
   assert.match(html,/data-map-location/);
   const headers = await readFile(new URL('_headers', output), 'utf8');

@@ -10,8 +10,11 @@ export function aiCost(model, input, output, ownKey=false) {
   return (rates.input * input + rates.output * output) / 1e6 * (ownKey ? 1 : AI_MARKUP);
 }
 export function orkaPlan(seats) {
-  if (!Number.isInteger(seats) || seats < 1 || seats > 20) return null;
-  return seats === 1 ? {name:'Free',price:0,seats:1} : seats <= 3 ? {name:'Pro',price:29,seats:3} : {name:'Max',price:99,seats:20};
+  if (!Number.isSafeInteger(seats) || seats < 1) return null;
+  if (seats === 1) return {name:'Free',price:0,seats:1};
+  if (seats === 2) return {name:'Light',price:9.99,seats:2};
+  if (seats === 3) return {name:'Pro',price:29,seats:3};
+  return {name:'Max',price:99 + Math.max(0,seats-12)*8,seats:Math.max(12,seats)};
 }
 export const VENDOR_PLANS = {
   intercom: [{name:'Essential',base:39,perSeat:true},{name:'Advanced',base:99,perSeat:true},{name:'Expert',base:139,perSeat:true}],

@@ -332,3 +332,6 @@ img[src$="orky-app-icon.svg"]{object-fit:contain}
 
 .editorial-page .app-plan-strip>div:nth-child(3){border-right:1px solid #cfdcbc}.editorial-page .app-plan-strip>div:nth-child(4){border:0}
 @media(max-width:740px){.editorial-page .app-plan-strip>div:nth-child(3){border:0}}
+.new2-mosaic:not(.hero-night) .pricing-grid .featured-plan .plan-icon{color:#4a6f34}
+.new2-mosaic.hero-night .pricing-grid .plan-features .plan-icon{color:#b8d5bf}
+.new2-mosaic.hero-night .pricing-grid .plan-inherits{color:#cce2d1;border-color:#54716a}

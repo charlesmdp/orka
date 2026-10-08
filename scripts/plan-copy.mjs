@@ -1,7 +1,7 @@
 // One source of truth for the homepage cards, pricing page and feature comparison.
 export const plans = [
   {name:'Free',style:'solo',price:0,icon:'sail',tag:'A PLACE TO START',people:'1 team member',includes:'The essentials, for every project',ai:false,
-    title:'Your first conversation. And every project after.',copy:'A proper support home for a solo founder. Free to keep.',
+    title:'A home for every project.',copy:'A proper support home for a solo founder. Free to keep.',
     items:[['chat','Live chat & email follow-up'],['typing','Live typing preview'],['book','Help center & imports'],['code','SDK & custom visitor data'],['palette','Dozens of widget designs'],['phone','iOS & Android apps']],
     button:'Start free · No card required',footnote:'1 team member included. No credit card required.'},
   {name:'Light',style:'light',price:9.99,icon:'shell',tag:'SMALL CREW. SMOOTHER DAYS.',people:'2 team members',includes:'Everything in Free, plus',ai:false,

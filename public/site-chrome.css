@@ -335,3 +335,5 @@ img[src$="orky-app-icon.svg"]{object-fit:contain}
 .new2-mosaic:not(.hero-night) .pricing-grid .featured-plan .plan-icon{color:#4a6f34}
 .new2-mosaic.hero-night .pricing-grid .plan-features .plan-icon{color:#b8d5bf}
 .new2-mosaic.hero-night .pricing-grid .plan-inherits{color:#cce2d1;border-color:#54716a}
+.plan-comparison .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.plan-comparison .feature-group-label{display:inline-block;position:sticky;left:16px}

@@ -1,0 +1,180 @@
+<section id="start-small"><h2>Build one reliable conversation first.</h2>
+<p><strong>To code your own live chat, build an embeddable visitor interface, an authenticated agent inbox, a durable message store and a real-time delivery path.</strong> Add offline email and notifications next. Only then add AI, a live map and native operator apps.</p>
+<p>This guide is for a strong vibe coder: someone who can use a coding agent to produce most of an implementation, then inspect the architecture, test its behavior and own its deployment. You do not need to type every line yourself. You do need to know which guarantees the generated code actually provides.</p>
+<p>We will use Cloudflare Workers, Durable Objects, D1, R2 and Queues as one concrete architecture. Resend or Postmark handles email; FCM handles push; a model API handles AI. These are editorial implementation choices, <strong>not a description of Orka’s private stack</strong>. Reuse an existing backend if it already does the job well.</p>
+<aside class="blog-note"><strong>Scope of the code below</strong><p>The schema and pseudocode explain the important contracts. They are not a complete deployable application or audited security implementation. Build in small increments, using current SDK documentation for the exact runtime APIs.</p></aside>
+</section>
+<section id="architecture"><h2>A small architecture with clear responsibilities.</h2>
+<!-- ARCHITECTURE -->
+<ol class="blog-steps"><li><strong>Visitor widget:</strong> loads asynchronously, gets a scoped visitor session and opens its conversation.</li><li><strong>API edge:</strong> authenticates requests, validates origins and payloads, checks permissions and limits expensive work.</li><li><strong>Conversation actor:</strong> a Durable Object keyed by workspace, project and conversation coordinates the real-time stream.</li><li><strong>Durable storage:</strong> the conversation actor stores its message log in its SQLite storage. D1 holds projects, membership and an inbox/search projection. R2 holds authorized attachments and imports.</li><li><strong>Background jobs:</strong> an outbox feeds queues for email, push, indexing, ingestion, summaries, reminders and analytics.</li><li><strong>Agent clients:</strong> the web inbox and eventual mobile apps use the same authorization rules and event contracts.</li></ol>
+<p>Make one store authoritative for each piece of data. In this design the conversation actor owns ordered messages, while the inbox/search projection catches up asynchronously. You could instead make a relational database authoritative and use another socket service, but do not write to two stores and assume both writes always succeed.</p>
+<p>For the actor’s sockets, use <a href="https://developers.cloudflare.com/durable-objects/best-practices/websockets/">Cloudflare’s hibernation API</a>. Reconstruct state after sleep; use socket attachments for small connection metadata and persistent storage for durable facts. Avoid one global object for all customers and avoid timers that keep every idle conversation awake.</p>
+</section>
+<section id="data-model"><h2>Start with tenant boundaries, not the chat bubble.</h2>
+<p>A workspace owns projects. Projects have widget settings, knowledge sources and assigned teammates. Visitors and conversations belong to a project; a teammate’s session alone does not authorize access to every project. This lets a marketing team handle the landing page while a technical team handles the app.</p>
+<pre><code>-- Sketch: metadata in D1. Add indexes and migrations for your queries.
+CREATE TABLE projects (
+  workspace_id TEXT NOT NULL,
+  id TEXT NOT NULL,
+  name TEXT NOT NULL,
+  PRIMARY KEY (workspace_id, id)
+);
+CREATE TABLE project_members (
+  workspace_id TEXT NOT NULL,
+  project_id TEXT NOT NULL,
+  user_id TEXT NOT NULL,
+  role TEXT NOT NULL,
+  PRIMARY KEY (workspace_id, project_id, user_id),
+  FOREIGN KEY (workspace_id, project_id)
+    REFERENCES projects(workspace_id, id)
+);
+
+-- Sketch: inside the per-conversation actor's SQLite database.
+CREATE TABLE messages (
+  seq INTEGER PRIMARY KEY AUTOINCREMENT,
+  id TEXT NOT NULL UNIQUE,
+  sender_id TEXT NOT NULL,
+  client_id TEXT NOT NULL,
+  audience TEXT NOT NULL CHECK (audience IN ('public', 'team')),
+  body TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  UNIQUE (sender_id, client_id)
+);
+CREATE TABLE outbox (
+  event_id TEXT PRIMARY KEY,
+  kind TEXT NOT NULL,
+  payload TEXT NOT NULL,
+  delivered_at TEXT
+);</code></pre>
+<p>Add sessions, visitors, attachments, assignment history, tags, read cursors, knowledge versions, provider usage and audit events as the features arrive. Use explicit permissions for private notes, exports, settings and AI configuration. A private note must never enter a public visitor subscription or an automatic reply prompt.</p>
+<p>Your server must derive the workspace and allowed project scope from authenticated credentials. Never trust a client’s assertion that it belongs to another workspace. The public project ID in an embed script identifies configuration; it is not a secret that grants agent access.</p>
+</section>
+<section id="message-contract"><h2>Make retries safe before you add “typing…”.</h2>
+<p>A client creates a message ID once and reuses it when retrying. The server authenticates the sender, validates the operation, writes the message and outbox event in one local transaction, then acknowledges it. A reconnect asks for messages after the last confirmed cursor.</p>
+<pre><code>// Protocol sketch, not a runtime-specific handler.
+onSend(session, input):
+  authorizeCurrentMembership(session, conversation, 'send')
+  validateTextAndAttachments(input)
+  enforceRateAndSizeLimits(session)
+  audience = authorizeAudience(session, input.audience)
+
+  result = localTransaction(() =&gt; {
+    existing = findBySenderAndClientId(session.actorId, input.clientId)
+    if (existing) return existing
+    message = insertMessage(session.actorId, input, audience)
+    insertOutboxEvent(message.id, 'message.created', message)
+    return message
+  })
+
+  acknowledge(session, result.id, result.seq)
+  // A recoverable outbox relay retries publication after crashes.
+  scheduleOutboxRelay()
+
+onResume(session, lastSeenSeq):
+  authorizeCurrentMembership(session, conversation, 'read')
+  replayAuthorizedMessagesAfter(lastSeenSeq)</code></pre>
+<p>This gives you durable acceptance plus retry-safe effects, not magical exactly-once network delivery. Consumers deduplicate by event ID. If a process dies after publishing but before marking the outbox row delivered, the event may arrive again. If it dies before publishing, the relay must resume without relying on the visitor sending another message.</p>
+<p>Let the UI distinguish <em>sending</em>, <em>accepted</em> and <em>read</em>. Only show accepted after durable commit. A read receipt advances a monotonic cursor when the authorized recipient actually views the conversation; a connected socket does not mean someone read it.</p>
+<p>Keep presence and typing ephemeral. Throttle previews, expire them, avoid persisting unfinished text and clear them on blur, send and disconnect. Do not collect passwords or other unrelated form fields. Use sanitized text rendering, payload limits and per-action authorization. <a href="https://cheatsheetseries.owasp.org/cheatsheets/WebSocket_Security_Cheat_Sheet.html">OWASP’s WebSocket checklist ↗</a></p>
+<p><strong>Test this milestone:</strong> disable the network mid-send, reconnect twice, resend the same client ID, revoke an agent’s access while their socket stays open, and attempt to subscribe to another project. The result should be one visible message and no unauthorized data.</p>
+</section>
+<section id="widget-sdk"><h2>Make the widget behave like a guest on someone else’s website.</h2>
+<p>Use a small asynchronous loader and an iframe hosted on your widget origin. That isolates most interface styles, but it still uses network, memory and CPU. Defer the full UI where appropriate, reserve the launcher’s space and measure the page before and after installation.</p>
+<ul><li><strong>Installation:</strong> one snippet, a public project identifier, configuration caching and a documented content-security-policy setup.</li><li><strong>SPA navigation:</strong> initialize once, update the current page explicitly and destroy listeners on teardown. Test route changes without a reload.</li><li><strong>Identity:</strong> obtain a short-lived signed visitor token from the host application’s backend for logged-in users. Bind it to project, visitor and expiry. A browser-supplied email alone must not reveal previous conversations.</li><li><strong>Custom context:</strong> send allowlisted fields such as app plan, Shopify plan, install date, usage and cart context. Decide which fields are browser hints and which require server verification.</li><li><strong>Host communication:</strong> validate both the origin and sending window for postMessage, validate schemas and use an exact target origin. Do not move privileged tokens through arbitrary page events.</li><li><strong>Identity changes:</strong> logout or account switching clears the previous visitor context. Provide identify, update, open, close and reset APIs.</li></ul>
+<p>Build colors, team profiles, layout choices and seasonal themes on one accessible component system. Test keyboard navigation, focus return, reduced motion, contrast and phone safe areas. Branding removal and a custom assistant avatar are settings on this system, not separate widgets.</p>
+<p><strong>Cost:</strong> shared CDN/API/database usage, with no mandatory UI vendor. The development estimate for this entire widget/SDK package is 32–64 hours; it assumes reusable layouts rather than dozens of independently designed interfaces.</p>
+</section>
+<section id="agent-inbox"><h2>Build the inbox your future self can operate.</h2>
+<p>Start with open/resolved state, assignment, unread markers and a project filter. Then add tags, saved replies, conversation search, private notes and teammate mentions. A shared inbox should let an agent move between products without losing the conversation they are writing in.</p>
+<p>Use optimistic concurrency for assignments and state changes. Two agents clicking “take over” should not both believe they own the same conversation. Keep private notes on a team-only event path. Search must apply the same project authorization as the main list, including snippets, counts and exports.</p>
+<p>Attachments deserve their own path: authorize an upload before issuing a short-lived URL, enforce size and file-type limits, verify what arrived, quarantine unsafe content and authorize every download. Do not trust a guessed object path or allow active uploaded HTML to execute on your application origin. Store metadata in the database and content in object storage.</p>
+<p><strong>Cost:</strong> database queries, storage, file operations and scanning/thumbnail compute. A database-backed search can avoid a second subscription initially. Use the storage meter in the <a href="/should-i-code-my-own-live-chat-in-2026#service-prices">complete cost ledger</a>; a hosted search or scanning service is a separate choice, not automatically free.</p>
+</section>
+<section id="email-push"><h2>Close the loop when the browser closes.</h2>
+<h3>Email is a conversation channel, not just a send() call.</h3>
+<p>Verify your sending domain, configure authentication records and send a follow-up when the recipient is genuinely offline. Give replies an unguessable, signed routing address or token and correlate them with the right project and conversation. Do not attach incoming email to an account merely because its visible From address matches.</p>
+<p>Receive through an inbound webhook, authenticate it using the provider’s documented mechanism, deduplicate its event/message ID, durably enqueue processing and acknowledge promptly. Parse quoted replies carefully, sanitize HTML, scan attachments and prevent autoresponder loops. Delivery, bounce and complaint events update a suppression state; “queued for sending” is not “delivered”. <a href="https://postmarkapp.com/developer/webhooks/inbound-webhook">Postmark inbound behavior ↗</a> · <a href="https://resend.com/docs/dashboard/receiving/introduction">Resend receiving guide ↗</a></p>
+<p><strong>Cost:</strong> choose one provider. Resend offers 3,000/month free with a 100/day cap, or $20/month for 50,000. Postmark Pro at the 10,000-email level is $16.50/month and supports inbound processing. Count sent and received mail, invites and notification fan-out. <a href="https://resend.com/pricing">Resend rates ↗</a> · <a href="https://postmarkapp.com/pricing">Postmark rates ↗</a></p>
+<h3>Push is a hint to fetch the truth.</h3>
+<p>Store subscriptions per device, request permission at a sensible moment, remove expired tokens and respect notification preferences. On tap, authenticate and fetch the authorized conversation; a notification payload should not become a durable source of private content. Handle foreground, background and fully closed app states separately.</p>
+<p>Use a notification job keyed by event and recipient to avoid duplicates. Coalesce a burst of messages, avoid alerting the teammate already reading the thread, and let users choose quiet hours. An accepted push request is not a guarantee that a human saw it.</p>
+<p><strong>Cost:</strong> FCM is listed as no-cost; your queues, backend and native release work remain. <a href="https://firebase.google.com/pricing">Firebase pricing ↗</a></p>
+</section>
+<section id="availability"><h2>Add business hours, reminders and the awkward calendar cases.</h2>
+<p>Store business hours with an IANA time zone, not a fixed UTC offset. Resolve daylight-saving changes, manual online/away overrides and competing banners through one availability policy. A night banner, emergency banner, break banner and announcement should have explicit precedence.</p>
+<p>The offline form creates a conversation and a contact channel, not a disconnected lead record. Follow-up reminders use durable scheduled jobs with cancellation/version checks; an agent resolving the thread should not receive an obsolete reminder tomorrow.</p>
+<p><strong>Cost:</strong> no separate calendar subscription is necessary. These features share compute, database, queue and email costs. With Cloudflare Queues, a successfully processed small job normally involves a write, read and delete; retries add work. <a href="https://developers.cloudflare.com/queues/platform/pricing/">Queue accounting ↗</a></p>
+</section>
+<section id="live-map"><h2>Build presence first. Put it on a map second.</h2>
+<p>A “live map” combines four things: active visitor sessions, approximate location, project-aware filtering and a basemap. Publish a last-seen heartbeat at a restrained cadence, expire abandoned sessions and merge multiple tabs according to a documented rule. A page view from yesterday is not a visitor online now.</p>
+<p>Cloudflare exposes country, city, latitude and longitude on request.cf. You can start there without a separate lookup subscription. Use ipbase if its data or enrichment fits your requirements, and cache appropriately. Neither approach should be presented as a precise physical address. <a href="https://developers.cloudflare.com/workers/examples/geolocation-hello-world/">Cloudflare fields ↗</a></p>
+<p>Cluster pins, show a useful visitor list and load details only after checking project permissions. Keep map access out of the public widget. Avoid redrawing the entire map for each heartbeat.</p>
+<p><strong>Cost:</strong> ipbase Small is $9.99/month for 65,000 lookups; Medium is $39.99 for 650,000. Mapbox GL JS map-load pricing includes 50,000 monthly loads, with the next band at $5/1,000. Loading the agent map and showing 250 visitors is one map initialization, not 250. <a href="https://ipbase.com/pricing/">ipbase rates ↗</a> · <a href="https://www.mapbox.com/pricing">Mapbox rates ↗</a></p>
+</section>
+<section id="knowledge"><h2>Your help center is also your AI’s supply chain.</h2>
+<p>Model collections, articles, drafts, published versions and locales separately. Add Markdown preview, safe rendering, public search, slugs, metadata, reactions and view counts. Validate ownership before attaching a custom domain and manage TLS renewal and domain removal.</p>
+<p>For multilingual content, link each translation to a source version. Mark it stale when the original changes; allow manual corrections after AI translation. A queued translation should not overwrite a human edit made while it was running.</p>
+<p>Imports from Crisp, GitBook, Intercom, Gleap and Help Scout are adapters, not one universal “import” function. Preserve hierarchy, URLs, embedded images, languages and publication status. Make retries idempotent and provide an import report so missing articles are visible.</p>
+<p>For retrieval, fetch approved website pages and uploaded files, extract text, chunk it, attach workspace/project/document/version metadata, embed it and build an index. Delete or replace obsolete chunks on updates. Exclude private notes and unpublished material unless the exact workflow is authorized to use them.</p>
+<p>A crawler needs a controlled network boundary: reject private/local destinations, validate resolved addresses and redirects, cap downloads and parsing work, and isolate fetched content. Hostname string checks alone do not address DNS rebinding. <a href="https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html">OWASP SSRF guidance ↗</a></p>
+<p><strong>Cost:</strong> storage, crawling/parsing jobs, translation tokens and embeddings. text-embedding-3-small costs $0.02 per million tokens; Vectorize has separate dimension-based allowances and metering. Hosted file search is an alternative with its own storage and tool-call bill. <a href="https://developers.openai.com/api/docs/models/text-embedding-3-small">Embedding rate ↗</a> · <a href="https://developers.cloudflare.com/vectorize/platform/pricing/">Vectorize meter ↗</a></p>
+</section>
+<section id="ai-handoff"><h2>Add AI as a participant with limited authority.</h2>
+<p>Begin with suggested drafts. Retrieve relevant, authorized knowledge, pass concise instructions and record the source versions used. Evaluate on actual product questions, missing answers, conflicting documentation and several languages before enabling automatic replies.</p>
+<p>Keep the API key server-side. If users bring OpenAI, Anthropic or OpenRouter credentials, encrypt them with managed key protection, isolate them per tenant/project, mask them in interfaces and exclude them from logs. Implement rotation, deletion, provider timeouts and per-project spend limits. A browser bundle is not a key vault.</p>
+<pre><code>// State machine sketch. State/version changes must be atomic.
+AI_ACTIVE
+  -&gt; HUMAN_PENDING   on human request, rule trigger or uncertainty
+  -&gt; HUMAN_ACTIVE    when an authorized teammate takes over
+
+HUMAN_PENDING
+  -&gt; HUMAN_ACTIVE    on assignment/claim
+
+HUMAN_ACTIVE
+  -&gt; AI_ACTIVE       only on an explicit authorized resume
+
+Before sending an AI reply:
+  require conversation.state == AI_ACTIVE
+  require conversation.version == versionAtGenerationStart
+  require no newer visitor message invalidates this answer</code></pre>
+<p>That final check matters: an agent may take over while a model is still generating. Cancel the call if possible, and in all cases prevent a stale answer from being sent after the handoff. Keep the entire authorized conversation history available to the person taking over.</p>
+<p>Support explicit human requests, keyword triggers, frustration signals and questions beyond the knowledge base. A model’s self-reported “confidence” is not a calibrated probability. Combine retrieval evidence, known unsupported intents and evaluation results; route uncertain answers for review. Notify all, online or selected teammates according to project settings and send the configured visitor handoff message.</p>
+<p>Keep retrieved pages and visitor messages as untrusted data. They cannot rewrite your instructions, grant access to another project or authorize a refund. Tool execution, if you later add it, needs independent permission checks and confirmation rules.</p>
+<p>Then add summaries, urgency scores, quick drafting actions, two-way conversation translation and article translation. Preserve original text. Each is a separate call budget; log model, billed tokens, outcome and latency without indiscriminately logging message contents.</p>
+<p><strong>Cost example:</strong> 1,000 replies at 5,000 input and 500 billed output tokens each cost $7.50 with Haiku 4.5 ($1/$5 per million), or $0.75 with GPT-6 Luna short-context standard rates ($0.10/$0.50). Those assume uncached standard processing, no extra tool/reasoning charges, and the same billed token counts—not equivalent quality. <a href="https://platform.claude.com/docs/en/about-claude/pricing">Anthropic ↗</a> · <a href="https://developers.openai.com/api/docs/pricing">OpenAI ↗</a></p>
+</section>
+<section id="mobile"><h2>Ship an operator app, not merely a web page in a phone frame.</h2>
+<p>React Native/Expo is one reasonable route to sharing iOS and Android code. Reuse your API and message protocol, then implement secure session storage, push token registration, deep links, unread badges, reconnect behavior and accessible touch interactions.</p>
+<p>Test a killed app, a restored session, an expired token, a notification for a project the agent can no longer access, and a message typed offline. Synchronize from server cursors after resume. Store only the sensitive data you need on the device and clear it on logout.</p>
+<p>Distinguish two products: an <strong>operator app</strong> lets your team answer support on a phone; an <strong>embedded customer chat</strong> lives inside your customers’ app. Building the first does not automatically provide a native SDK for the second.</p>
+<p><strong>Cost:</strong> Apple’s developer membership is $99/year or local equivalent; Google Play registration is $25 once. Expo has a Free plan and a $19/month Starter plan plus additional usage. Review, signing, testing, OS updates and hardware are separate work. <a href="https://developer.apple.com/help/account/basics/about-your-developer-account">Apple ↗</a> · <a href="https://support.google.com/googleplay/android-developer/answer/6112435?hl=en">Google Play ↗</a> · <a href="https://expo.dev/pricing">Expo ↗</a></p>
+</section>
+<section id="analytics"><h2>Define what your reports mean before drawing charts.</h2>
+<p>Emit events for accepted visitor messages, first human response, assignments, resolutions, reopenings, satisfaction responses and AI handoffs. Keep timestamps and actor types explicit. Does “response time” include a bot answer? Does the clock pause outside business hours? State the answer in the UI.</p>
+<p>Aggregate by project, teammate and time bucket in background jobs. Track late events and avoid counting a retried event twice. Tags and filters should agree with the reporting model. Satisfaction surveys need delivery rules, deduplication and protection against repeated submissions.</p>
+<p><strong>Cost:</strong> events, indexed storage, aggregate jobs and retention. You can build initial dashboards over your existing database without a BI subscription. Add specialized analytics only when query latency or volume justifies another system.</p>
+</section>
+<section id="release"><h2>The release checklist a coding agent cannot own for you.</h2>
+<ul class="blog-checklist"><li><strong>Isolation:</strong> test every public/agent/API route and socket subscription with another tenant’s IDs. Include search results, files, map details, private notes and AI retrieval.</li><li><strong>Recovery:</strong> restore a backup to a separate environment, replay the outbox and demonstrate that a failed deployment can roll back.</li><li><strong>Failure:</strong> simulate email rejection, slow AI, provider rate limits, duplicate jobs, queue backlog and an unavailable database projection.</li><li><strong>Privacy:</strong> document retention, deletion and export. Remove user data consistently from primary storage, files, indexes and derived views. Define what happens in backups.</li><li><strong>Operations:</strong> alert on message acceptance failures, oldest pending outbox event, queue lag, failed email, push errors and sudden token spend. Logs should avoid credentials and unnecessary message bodies.</li><li><strong>Abuse:</strong> rate-limit sessions and expensive operations, limit uploads and crawls, support blocking, and test your challenge flow. Turnstile’s free plan can help, but it does not replace authorization. <a href="https://developers.cloudflare.com/turnstile/plans/">Plan limits ↗</a></li><li><strong>Performance:</strong> load-test realistic fan-out and idle time, not only HTTP throughput. Measure the host site’s performance with the widget installed.</li><li><strong>Usability:</strong> try keyboard-only support, a small phone screen, large text, slow networks and reduced motion.</li></ul>
+<p>Start with your own low-risk project and a small number of teammates. Keep a fallback contact channel while you validate delivery. Expand once you can explain what happens to a message at every stage.</p>
+</section>
+<section id="budget"><h2>The build budget, without pretending every feature needs a SaaS.</h2>
+<p>The companion article prices all <!-- FEATURE_COUNT --> Orka-like capabilities, including imports, banners, AI handoff, permissions, help localization, live typing, mobile and reports. Its full-suite work estimate is <strong><!-- TOTAL_HOURS --> hours</strong>; the assumed one-developer opportunity cost at $50/hour is <strong><!-- TOTAL_LABOR --></strong>. These are our estimates, not a measured industry standard.</p>
+<p>For services, the three explicit examples total <strong><!-- SCENARIO_TOTALS --> per month</strong>, respectively, including their stated reserves and optional selections. They represent a lean web tool, a small AI team and a larger setup with mobile—not identical feature scope. Human labor, hardware and taxes are separate. <a href="/should-i-code-my-own-live-chat-in-2026#monthly-examples">Inspect every line and quota assumption ↗</a></p>
+<p>Use this prompt to keep your coding agent focused on the next deliverable:</p>
+<pre><code>Build only the next reliable vertical slice of my live chat.
+First inspect the repository and document the current contracts.
+Specify tenant scope, actor permissions, durable state and failure cases.
+For each state change, explain retries, idempotency and recovery.
+Keep unfinished features behind flags; do not invent provider APIs.
+Add tests for cross-project access and duplicate message delivery.
+Show the exact migration, rollout and rollback procedure.
+Stop after this slice works; list the remaining guarantees explicitly.</code></pre>
+<p>If support infrastructure is where you want to invest, this is a rewarding build. If you want the context and control without owning every layer, <a href="/sdk">Orka’s SDK</a> can attach your product’s data to an existing inbox. <a href="/pricing">Compare the plans</a> against the scope you actually need, then return to building your product.</p>
+</section>
+<section id="questions"><h2>Frequently asked questions</h2>
+<h3>Should I use WebSockets or polling?</h3><p>WebSockets suit bidirectional messages, typing and presence; polling can be a reasonable simpler first implementation at low volume. Whichever transport you use, keep durable message IDs, authorization and reconnect recovery independent from it.</p>
+<h3>Do I need a separate service for each feature?</h3><p>No. Projects, tags, saved replies, hours, permissions and reports can share your database and backend; paid services are useful where they reduce work, such as email delivery or mobile builds.</p>
+<h3>Can I add AI before finishing the human inbox?</h3><p>You can experiment with drafts early, but automatic support needs a working human handoff and a way to inspect failures. Shipping a bot before you can reliably receive its escalations creates a poor support experience.</p>
+<h3>What should I deliberately leave out of version one?</h3><p>Native apps, many themes, advanced reports and autonomous replies can usually wait. Keep the first slice focused on authenticated, durable, recoverable conversations with a dependable offline path.</p>
+</section>

@@ -1,0 +1,85 @@
+<section id="the-answer">
+<h2>Yes, you can build it. Should you own it?</h2>
+<p><strong>Code your own live chat if the conversation experience is a core part of your product, you need control a hosted tool cannot give you, or the build itself is the point.</strong> If you mainly need to support customers across several products, compare the whole operating job before starting. A working widget is a useful milestone. It is only one part of a support platform.</p>
+<p>You are a strong vibe coder. You can read a migration, inspect an agent’s diff, diagnose a websocket reconnect and ship a decent interface. This article assumes that competence. “You could never build this” would be a silly argument in 2026.</p>
+<p>A better question is: <em>which parts do you want to be responsible for next month?</em> The missed message, the email that never arrived, the Android push token that expired, the search result from another project, the AI answer that ignored a handoff request?</p>
+<aside class="blog-note"><strong>Our interest is explicit.</strong><p>We build Orka, so we benefit when people choose a hosted live chat. The estimates below deliberately allow a cheap DIY stack. They describe a possible implementation of Orka-like capabilities, not Orka’s internal infrastructure, spending or development history.</p></aside>
+</section>
+<section id="choose-your-scope">
+<h2>There are three very different things you could build.</h2>
+<div class="blog-scope-grid"><article><span>01 / THE EXPERIMENT</span><h3>A chat demo</h3><p>A widget, an inbox and messages between two browsers. No delivery guarantees, mobile release process or imported knowledge base.</p><strong>Our estimate: 8–24 hours</strong></article><article><span>02 / THE WORKING TOOL</span><h3>Support for your own app</h3><p>Persistent conversations, authenticated agents, reconnects, offline follow-up, basic notifications, backups and enough testing to use it.</p><strong>Our estimate: 60–160 hours</strong></article><article><span>03 / THE PRODUCT</span><h3>An Orka-like support suite</h3><p>Multiple projects, permissions, native operator apps, help center, AI, handoff, live map, reports and everything in the inventory below.</p><strong><!-- TOTAL_HOURS --> hours</strong></article></div>
+<p>These are editorial planning ranges for one experienced developer using AI coding tools and managed services. They include implementation, integration, review and tests. They are not measured benchmarks or delivery promises. Existing components can shorten them; unfamiliar mobile tooling, a migration or stricter reliability requirements can lengthen them. The ranges are alternatives, not three phases to add together.</p>
+<p>For the full-suite estimate, we assume a practical internal tool for your own portfolio: one reusable design system, a cross-platform mobile codebase and a defined feature set. Building a commercial competitor adds customer provisioning, billing, abuse disputes, documentation and supporting other developers. That is a larger project.</p>
+</section>
+<section id="service-prices">
+<h2>The service bill, line by line.</h2>
+<p>The following is a menu of building blocks. <strong>Do not add every row.</strong> Resend and Postmark are alternatives; edge geolocation can replace a paid IP lookup service; your own vector search can replace hosted file search. The $5 Workers subscription appears once, not once per feature.</p>
+<p>Official public prices checked on <time datetime="2026-10-12">12 October 2026</time>. Vendor amounts are USD, before tax, unless stated otherwise. Orka prices later in this article are EUR. We do not silently convert currencies, assume annual discounts, or count promotional credits as permanent savings.</p>
+<!-- COST_LEDGER -->
+<h3>The $0 rows are real. So are their limits.</h3>
+<p>You do not need a paid SaaS subscription for a saved reply, an emoji picker or a business-hours switch. Those features use code and the database you already run. That makes the incremental vendor bill small, while leaving the implementation and maintenance work intact.</p>
+<p>Free allowances also belong to an account or project, depending on the service. If your existing apps have already used them, a new chat is not starting from zero. Separate staging environments, load tests and backups can consume the same allowance.</p>
+</section>
+<section id="realtime-trap">
+<h2>Real time can be cheap. Keeping everything awake can be expensive.</h2>
+<p>A good Cloudflare implementation can keep socket costs low using Durable Object hibernation. Idle connections remain open while the object is allowed to sleep; state must survive its reinitialization. Timers or continuously active work can prevent the expected savings. This is an architecture decision, not a discount code. <a href="https://developers.cloudflare.com/durable-objects/best-practices/websockets/">Cloudflare’s hibernation guidance ↗</a></p>
+<p>Track connection establishments, incoming frames, fan-out, active object duration and persisted writes separately. “We sent 10,000 chat messages” does not tell you any of those numbers. Typing previews, presence updates, tabs left open overnight and every teammate watching the inbox are part of the workload.</p>
+<p>The same distinction applies to the map. A visitor moving between pages should update a pin or list entry, not recreate the map and buy another IP lookup. Cache suitable location data, expire presence, and update only what changed.</p>
+</section>
+<section id="ai-cost">
+<h2>Your AI bill is per call, not per customer.</h2>
+<p>Here is a transparent example: one generated reply reads <strong>5,000 input tokens</strong> and produces <strong>500 billed output tokens</strong>. Input includes instructions, retrieved passages and conversation history. These are planning assumptions, not an observed average or a maximum.</p>
+<div class="blog-equation"><span>1,000 AI replies · Claude Haiku 4.5</span><strong>5M × $1 + 0.5M × $5 = $7.50</strong><p>Direct API, standard uncached rates. <a href="https://platform.claude.com/docs/en/about-claude/pricing">Anthropic source ↗</a></p></div>
+<p>At the same assumed billed token counts, GPT-6 Luna’s short-context standard rates give <strong>$0.75 for 1,000 replies</strong>. That is a price calculation, not a claim that models produce equally good support answers. Test your own questions, languages and handoff cases. Tokens may differ by tokenizer; reasoning and tool usage can add cost. <a href="https://developers.openai.com/api/docs/pricing">OpenAI source ↗</a></p>
+<p>Five replies per conversation means five calls. Add a translation on each side, a summary, an urgency classifier, a retry and a confidence check, and “one conversation” contains many billable operations. Returning a cached FAQ answer can reduce calls. Blindly resending the complete history forever increases them.</p>
+<p>Do not forget ingestion: fetching your site, parsing PDFs, making chunks, embedding new content and invalidating old vectors. Our scenario budgets use self-managed retrieval; OpenAI hosted file search is shown as an alternative in the ledger. A ChatGPT, Claude or coding-editor subscription is not a credit balance for your customer-facing bot.</p>
+</section>
+<section id="monthly-examples">
+<h2>Three monthly budgets you can actually inspect.</h2>
+<p>These are modeled budgets, not bills measured from Orka. All assume one Cloudflare Paid account, efficient queries, hibernating sockets and usage within the included real-time/database/queue allowances described below. Reserve lines are money set aside by us, not provider fees.</p>
+<!-- SCENARIOS -->
+<details class="blog-assumptions"><summary>Exact usage envelope behind the $0 Cloudflare lines</summary><p>For all three examples, assume at most 1M Worker requests and 10M CPU-ms/month; at most 1M billable Durable Object requests and 400,000 active GB-s; at most 1 GB Durable Object SQLite storage; at most 5 GB D1 storage, 10M row reads and 1M row writes; at most 300,000 queue operations; and at most 100,000 R2 Class A plus 1M Class B operations. R2 storage is shown separately. Database/index overhead is included within those assumed row and storage ceilings.</p><p>For retrieval, assume at most 5,000 chunks at 1,536 dimensions, and at most 50M queried dimensions/month, including insertion/query accounting. The first two examples use the edge’s location fields; the third selects 250,000 ipbase lookups within Medium. Each uses at most 10,000 Mapbox map initializations/month. Free quotas are assumed unused by other applications. These ceilings are constraints to measure in a load test, not a promise that visitor counts automatically imply this usage.</p><p>No SMS, phone, OCR service, external security audit, new hardware, coding-assistant subscription, paid custom-hostname service, dedicated email IP or premium support contract is included. Optional costs are itemized below. Higher usage, retention and translation change the budget.</p></details>
+<p>The lean example can cost less than many support subscriptions. That is a legitimate reason to build if its deliberately narrow scope is enough. The larger examples mostly get more expensive because we selected many AI replies and optional services, not because a chat bubble inherently needs hundreds of dollars in hosting.</p>
+</section>
+<section id="every-feature">
+<h2>Now price the work: the complete feature inventory.</h2>
+<p>We mapped <strong><!-- FEATURE_COUNT --> capabilities</strong> from <a href="/features">Orka’s feature catalogue</a> into non-overlapping work packages. Every capability appears below, including the unglamorous ones. Open a package for its exact scope. Several features share one underlying implementation; charging a whole new backend for each would exaggerate the cost.</p>
+<p>Hours are our estimates for a strong AI-assisted developer. The dollar equivalent uses an illustrative <strong>$50/hour opportunity cost</strong>, not a quoted freelance rate. If you build it yourself, no one sends you that labor invoice. The time is still unavailable for another product.</p>
+<!-- WORK_PACKAGES -->
+<aside class="blog-note"><strong><!-- TOTAL_HOURS --> hours, or <!-- TOTAL_LABOR --> at $50/hour.</strong><p>That estimate includes the scoped build, integration and initial hardening. It excludes ongoing support staffing, legal advice, independent audits and future feature requests. It is intentionally not presented as what Orka actually spent.</p></aside>
+</section>
+<section id="forgotten-costs">
+<h2>The expenses that do not fit neatly into a per-message price.</h2>
+<ul class="blog-checklist">
+<li><strong>Maintenance:</strong> reserve 4–12 hours/month for a small production installation, or 12–30 hours/month for the full suite with native apps and AI. These are our planning allowances; an incident or OS migration can exceed them. At $50/hour, that is $200–600 or $600–1,500 of time.</li>
+<li><strong>Hardware:</strong> $0 incremental if you already have suitable build access and test devices. Otherwise put an explicit $500–2,000 one-time planning allowance in your worksheet, then replace it with actual hardware quotes. This is a budget range, not a vendor price.</li>
+<li><strong>Coding agents:</strong> $0 incremental if your existing allowance covers the work; otherwise reserve $20–200/month as a planning range, then insert your actual tool’s subscription and usage. API overage can exceed it.</li>
+<li><strong>Domains and monitoring:</strong> an existing subdomain costs no additional registration. For a new domain, budget roughly $10–30/year until you have a registrar quote. The scenario monitoring/CI lines are $0–30/month allowances; retention-heavy logs, macOS builds and external uptime checks can require more.</li>
+<li><strong>Knowledge upkeep:</strong> budget 2–8 hours/month to review answers, update articles and evaluate regressions. At $50/hour that is $100–400. This also exists when you buy a support tool; do not count it as a DIY-only disadvantage.</li>
+<li><strong>Human support:</strong> both options still need people to answer exceptions. Use your actual staffing budget on both sides of the comparison. An AI feature is not a commitment to answer everything correctly.</li>
+<li><strong>Security, privacy and recovery:</strong> initial internal checks are in the work packages. External penetration testing, specialist advice and contractual requirements need scoped quotes; there is no honest universal price. Deletion must reach files, embeddings and backups according to your retention design.</li>
+</ul>
+<p>If you want to sell your build to other companies, add subscription billing, taxes, account provisioning, customer migrations, abuse management and support for the support tool. The estimates here do not include launching that second business.</p>
+</section>
+<section id="your-time">
+<h2>Put your own time in the calculation.</h2>
+<p>Try your own assumptions. This worksheet calculates the economic cost of ownership; it is not a vendor quote or an Orka savings claim. Keep all inputs in USD. Set your hourly value to zero to see the selected service budget alone.</p>
+<!-- OWNERSHIP_CALCULATOR -->
+<p>Already pay for a service? Use its <em>incremental</em> cost. Already own the code? Treat past work as sunk cost and compare the next twelve months. Expect learning or a reusable capability? Give that benefit a value too.</p>
+</section>
+<section id="decision">
+<h2>When building is the right call.</h2>
+<p>Build when messaging differentiates the product: specialized collaboration, unusual data flows, deep proprietary workflows, or requirements a hosted vendor cannot meet. Build when you want to learn distributed product engineering. Build when you have an engineer who will remain responsible for it and the narrowed scope makes the economics work.</p>
+<p>Buying is more attractive when the inbox is supporting the business rather than being the business. Running three SaaS apps, two Shopify apps and a weekend project creates a strong incentive to share the support layer while spending engineering time on the products themselves.</p>
+<h3>What the Orka alternative actually costs.</h3>
+<p><a href="/pricing">Orka’s current plans</a> are Free (€0, one teammate), Light (€9/month, two), Pro (€29/month, three) and Max (€99/month, twelve). Every plan includes unlimited projects; Max offers extra teammates at €8/member/month. Light adds operational tools; AI starts on Pro; Max adds assistant branding and deeper reporting. Check the plan matrix rather than assuming every feature is included in Free.</p>
+<p>AI usage is separate. On Pro and Max you can use Orka-managed AI without a key, or connect your own <strong>OpenAI, Anthropic or OpenRouter</strong> key. Orka adds no markup to your own-key usage; provider or router charges still apply. <a href="/ai">See AI billing and controls ↗</a></p>
+<p>Orka is not the answer to every requirement. If you need self-hosting, phone support, enterprise identity management or a complex contact center, examine those requirements first. <a href="/is-orka-right-for-you">Read the product boundaries ↗</a></p>
+<p>Our practical advice: write down the five things you need today, then the failures you refuse to accept. Price that scope. If you still want to build, the next article gives you a concrete route from the data model to a reliable release.</p>
+</section>
+<section id="questions"><h2>Frequently asked questions</h2>
+<h3>Can I vibe code a live chat in a weekend?</h3><p>A prototype or deliberately small internal tool, yes. A support suite with reliable email, native operator apps, project permissions, a help center and AI handoff is a different scope; use the work-package estimate rather than a demo’s completion time.</p>
+<h3>Can I run my own live chat for free?</h3><p>A small web-only experiment can fit free allowances if its usage and daily peaks stay within their limits. Production email volume, paid AI, native distribution and your time can introduce costs even when the socket layer is free.</p>
+<h3>Is the live map expensive?</h3><p>Not necessarily: approximate edge geolocation and a map within its free allowance can add no service charge. Presence tracking, clustering, privacy controls and avoiding repeated lookups are the parts you still implement.</p>
+<h3>What is usually the biggest cost?</h3><p>For low-volume DIY support, it is often the time needed to build, test and maintain the complete workflow. At higher AI volume, model calls can dominate the service bill; the examples separate those two kinds of cost.</p>
+</section>

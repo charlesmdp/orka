@@ -6,6 +6,8 @@ export async function buildFaqKnowledge(directory){
  for(const file of (await readdir(directory)).filter(x=>x.endsWith('.html')).sort()){
   const html=await readFile(path.join(directory,file),'utf8');
   if (/<meta\s+name="robots"\s+content="[^"]*noindex/i.test(html)) continue;
+  // DIY articles contain hypothetical costs and code, not Orka product facts.
+  if (/<meta name="orka-content-kind" content="editorial">/.test(html)) continue;
   const title=decode(html.match(/<title>(.*?)<\/title>/s)?.[1]||'Orka');
   // Demo conversations illustrate the UI; they are not product policies or facts.
   const main=(html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[1]||'').replace(/<!-- FEATURE_PREVIEW_START -->[\s\S]*?<!-- FEATURE_PREVIEW_END -->/g,'');

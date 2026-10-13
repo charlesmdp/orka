@@ -1,3 +1,4 @@
+import {productUpdates} from './product-updates.mjs';
 import {mkdir, rm, cp, readFile, writeFile, readdir} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
@@ -43,7 +44,7 @@ const credits = homepage.match(/<details class="artwork-credits">[\s\S]*?<\/deta
 const footer = sharedFooter(comparisons,credits);
 let headers = '/\n  Cache-Control: no-cache\n/assets/optimized/*\n  Cache-Control: public, max-age=31536000, immutable\n';
 const assetNames = new Map();
-for (const filename of ['map-model.js', 'live-map.js', 'style.css', 'refinement.css', 'refresh.css', 'product-polish.css', 'app.js', 'pages.css', 'pages.js', 'features.js', 'feature-visuals.css', 'blog.css', 'blog-budget.js', 'pricing-model.js', 'help-demo-data.js', 'editorial.css', 'about.css', 'comparison.css', 'site-chrome.css', 'guides.css', 'site-interactions.js', 'editorial.js', 'hero-experiments.css', 'hero-experiments.js', 'new2-mosaic.css', 'not-found.css', 'not-found.js']) {
+for (const filename of ['map-model.js', 'live-map.js', 'style.css', 'refinement.css', 'refresh.css', 'product-polish.css', 'app.js', 'pages.css', 'pages.js', 'features.js', 'feature-visuals.css', 'blog.css', 'blog-budget.js', 'open.css', 'product-updates.css', 'pricing-model.js', 'help-demo-data.js', 'editorial.css', 'about.css', 'comparison.css', 'site-chrome.css', 'guides.css', 'site-interactions.js', 'editorial.js', 'hero-experiments.css', 'hero-experiments.js', 'new2-mosaic.css', 'not-found.css', 'not-found.js']) {
   let content = await readFile(path.join(root, 'public', filename), 'utf8');
   content = rewriteImageUrls(content, images);
   for (const [original, versioned] of assetNames) content = content.replaceAll('./' + original, './' + versioned);
@@ -61,6 +62,7 @@ for (const filename of (await readdir(path.join(output, 'client'))).filter(name 
   if (!html.includes('href="site-chrome.css"')) html = html.replace('</head>','<link rel="stylesheet" href="site-chrome.css"></head>');
   html = html.replace('<html lang="en">','<html lang="en" data-brand-theme="green">');
   html = html.replace('</head>','<script>try{if(sessionStorage.getItem("orka-letter-read")==="1")document.documentElement.dataset.letterRead="true";}catch{}</script><script type="module" src="site-interactions.js"></script></head>');
+  html = html.replace('<!-- HOME_PRODUCT_UPDATES -->', productUpdates());
   html = html.replace('<!-- HOME_FAQ -->',faqSection(homeFaqs,{title:'More projects.\nFewer unanswered questions.'})+faqSchema(homeFaqs));
   html = html.replace('<!-- PRICING_CARDS -->',homePlanCards());
   html = html.replaceAll('<!-- PROJECT_HELP -->',projectHelp()).replace('<!-- PROJECT_DIALOG -->',projectDialog()).replace('<!-- BYOK_SPOTLIGHT -->',byokSpotlight());

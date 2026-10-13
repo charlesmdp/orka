@@ -18,6 +18,23 @@ export async function openQuestionInChat(question, {
 export function safeFaqSource(url){try{const u=new URL(url);return u.origin==='https://orka.chat'&&!u.username&&!u.password?u.href:null;}catch{return null;}}
 if(typeof document!=='undefined'){
  document.documentElement.dataset.brandTheme='green';
+ document.querySelectorAll('[data-orka-draft]').forEach(button=>button.addEventListener('click',async()=>{
+  const status=button.parentElement.querySelector('.product-contact-status');
+  button.disabled=true;
+  if(status)status.textContent='Opening Orka…';
+  try{await openQuestionInChat(button.dataset.orkaDraft);if(status)status.textContent='Your draft is ready. Complete it and press Send when you’re ready.';}
+  catch(error){if(status)status.textContent=error.message+' You can also email hello@orka.chat.';}
+  finally{button.disabled=false;}
+ }));
+ document.querySelectorAll('[data-mode-demo]').forEach(demo=>{
+  demo.querySelectorAll('[data-demo-mode]').forEach(button=>button.addEventListener('click',()=>{
+   const email=button.dataset.demoMode==='email';
+   demo.querySelectorAll('[data-demo-mode]').forEach(control=>control.setAttribute('aria-pressed',String(control===button)));
+   demo.querySelector('#mode-chat-preview').hidden=email;
+   demo.querySelector('#mode-email-preview').hidden=!email;
+  }));
+ });
+
  try{localStorage.removeItem('orka-brand-theme');}catch{}
  const projectDialog=document.getElementById('project-explainer');
  if(projectDialog){

@@ -9,7 +9,7 @@ export function refreshFeatureCatalogue(html, catalogue) {
     const features = catalogue.features.filter(feature => feature[1] === category);
     const cards = features.map(([id,,name,copy,audiences,source,plan]) => {
       const more = id === 'sdk' || id === 'custom-data' || id === 'api-limits' ? ['/sdk','Explore the SDK'] : links[category];
-      const extra = id === 'mobile' ? '<a href="/ios-app">Orka for iOS ↗</a> · <a href="/android-app">Orka for Android ↗</a>' : more ? `<a href="${more[0]}">${more[1]} ↗</a>` : '';
+      const extra = id === 'help-import' ? '<button type="button" class="feature-contact-link" data-orka-draft="Hi! Could you add a one-click importer for my current help center? I use: ">Request another importer ↗</button><span class="product-contact-status" role="status"></span>' : id === 'mobile' ? '<a href="/ios-app">Orka for iOS ↗</a> · <a href="/android-app">Orka for Android ↗</a>' : more ? `<a href="${more[0]}">${more[1]} ↗</a>` : '';
       const visual = featureVisual(id,category);
       return `<article class="catalogue-card" id="feature-${id}" data-feature-card data-category="${category}" data-audiences="${audiences}" data-source-features="${source}">${visual || `<span class="feature-card-symbol" aria-hidden="true">${symbols[category]}</span>`}<h4>${escape(name)}</h4><p>${escape(copy)}${extra?' '+extra:''}</p>${plan?`<span class="feature-plan">${escape(plan)}</span>`:''}<span class="feature-fit" hidden>Useful for your setup</span></article>`;
     }).join('');

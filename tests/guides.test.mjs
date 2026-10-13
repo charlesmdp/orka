@@ -4,7 +4,7 @@ import {mkdtemp,readFile,rm,access} from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
 import {conversationTokens,CONVERSATION_PROFILES,aiCost} from '../public/pricing-model.js';
-import {openQuestionInChat} from '../public/site-interactions.js';
+import {openQuestionInChat,isOrkaWidgetReady} from '../public/site-interactions.js';
 import {installationGuides,exampleSnippet} from '../scripts/installation-content.mjs';
 import {bestChatGuides} from '../scripts/best-chat-content.mjs';
 import {generateEditorial} from '../scripts/editorial-pages.mjs';
@@ -84,4 +84,10 @@ test('installation guides protect the project ID and all buying guides have navi
    }
   }
  }finally{await rm(temp,{recursive:true,force:true});}
+});
+
+test('contact drafts recognize both isolated and legacy Orka launchers',()=>{
+ assert.equal(isOrkaWidgetReady({querySelector:()=>({}),getElementById:()=>null}),true);
+ assert.equal(isOrkaWidgetReady({querySelector:()=>null,getElementById:()=>({shadowRoot:{querySelector:()=>({})}})}),true);
+ assert.equal(isOrkaWidgetReady({querySelector:()=>null,getElementById:()=>null}),false);
 });

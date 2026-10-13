@@ -1,6 +1,9 @@
+export function isOrkaWidgetReady(doc=document){
+ return !!(doc.querySelector('.orka-container .orka-button')||doc.getElementById('orka-launcher')?.shadowRoot?.querySelector('.orka-button'));
+}
 export async function openQuestionInChat(question, {
  getWidget=()=>window.Orka,
- isReady=()=>!!document.querySelector('.orka-container .orka-button'),
+ isReady=()=>isOrkaWidgetReady(),
  wait=()=>new Promise(resolve=>setTimeout(resolve,200))
 }={}){
  const text=String(question).trim().slice(0,600);

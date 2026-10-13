@@ -18,7 +18,7 @@ const banner = (kind,title,copy) => window('Your website',`<div class="fv-site-l
 const article = (title,copy,footer='') => window('Your help center',`<div class="fv-article"><span class="fv-eyebrow">GETTING STARTED</span><strong>${e(title)}</strong><span>${e(copy)}</span>${lines}${footer}</div>`);
 const bars = (title,labels,values) => window(title,`<div class="fv-chart">${values.map((v,i)=>`<div><span style="--bar:${v}%" class="fv-bar-grow"></span><small>${e(labels[i])}</small></div>`).join('')}</div>`);
 const switcher = (title,label,on=true) => window(title,row(e(label),`<span class="fv-switch ${on?'on':''}"><i></i></span>`)+row('This conversation',chip(on?'AI enabled':'Human replies'))+`<div class="fv-site-lines">${lines}</div>`);
-const sources = (title,names,last='Ready for Orky') => window(title,`<div class="fv-source-grid">${names.map((n,i)=>`<span><b>${['▤','↗','⊞','≡'][i]}</b>${e(n)}</span>`).join('')}</div><div class="fv-source-result fv-arrive">${icon}<span>${e(last)}</span><b>✓</b></div>`,'fv-ai');
+const sources = (title,names,last='Ready for Orky') => window(title,`<div class="fv-source-grid">${names.map((n,i)=>`<span><b>${['▤','↗','⊞','≡'][i%4]}</b>${e(n)}</span>`).join('')}</div><div class="fv-source-result fv-arrive">${icon}<span>${e(last)}</span><b>✓</b></div>`,'fv-ai');
 const settings = (title,label,value) => window(title,`<span class="fv-eyebrow">${e(label)}</span><div class="fv-input">${e(value)}<b>✓</b></div><div class="fv-site-lines">${lines}</div>`);
 const widget = (title,body,kind='') => window(title,`<div class="fv-mini-site"><div>${lines}<span class="fv-site-button"></span></div><div class="fv-mini-widget ${kind}"><span class="fv-widget-top">${avatar('Emma')} Here to help</span>${body}</div></div>`);
 
@@ -70,7 +70,7 @@ const previews = {
   'help-center':()=>article('How can we help?','Find the answer before you start a chat.',`<div class="fv-help-search">⌕ Search for an answer</div>`),
   'multilingual-help':()=>window('Make everyone feel at home',`<div class="fv-language-grid"><span>🇬🇧 Hello</span><span>🇫🇷 Bonjour</span><span>🇪🇸 Hola</span><span>🇩🇪 Hallo</span></div><div class="fv-footnote">One help center. Their language.</div>`),
   'help-domain':()=>settings('Your home for helpful answers','YOUR DOMAIN','help.yourbrand.com'),
-  'help-import':()=>sources('Bring your existing articles',['Crisp','GitBook','Intercom','Gleap'],'Knowledge, together'),
+  'help-import':()=>sources('One-click imports',['Gleap','Gorgias','Intercom','GitBook','Help Scout','Fernand'],'Your Orka help center'),
   'help-markdown':()=>window('Write it. Preview it.',`<div class="fv-editor"><div><span># Getting started</span><span>**Connect your store**</span><span>- Add the widget</span></div><div><strong>Getting started</strong><b>Connect your store</b><span>• Add the widget</span></div></div>`),
   'help-collections':()=>list('A little structure helps',['▤ Getting started','▤ Your account','▤ Billing & plans']),
   'help-auto-translation':()=>window('One article. More languages.',`<div class="fv-language-source">🇬🇧 Getting started</div><div class="fv-translation-routes"><span>🇫🇷 Bien démarrer <b>✓</b></span><span>🇪🇸 Primeros pasos <b>✓</b></span></div>`),
@@ -81,7 +81,7 @@ const previews = {
   'help-insights':()=>window('Learn what helps',`<div class="fv-insights"><div><span>Article views</span><strong>128</strong></div><div><span>Helpful reactions</span><strong>😊 24</strong></div></div><div class="fv-meter"><i></i></div>`),
   'help-seo':()=>keyValues('Ready to be found',[['URL','/getting-started'],['Title','Getting started | Your brand'],['Description','Everything you need to begin.']]),
   'help-branding':()=>article('Welcome to Coast & Co.','Answers from the people behind your brand.',`<div class="fv-palette"><i></i><i></i><i></i><i></i></div>`),
-  'online-away':()=>window('Set the right expectation',`<div class="fv-status-pair"><div><i></i><strong>Available</strong><span>Come say hello</span></div><div class="away"><i></i><strong>Away</strong><span>Back a little later</span></div></div>`),
+  'online-away':()=>window('A different pace for every project',row('Your website',chip('Live chat'))+row('Your app',chip('Email form'))+`<div class="fv-footnote">Switch modes. Keep the conversations.</div>`),
   'reply-time':()=>widget('Before they say hello',`<strong>Chat with us</strong><span class="fv-reply-estimate">◷ Usually replies in a few minutes</span>`),
   'night-banner':()=>banner('night','The humans are asleep','Leave a message. We’ll be back.'),
   'break-banner':()=>banner('day','Taking a little break','Back tomorrow. Thanks for your patience.'),

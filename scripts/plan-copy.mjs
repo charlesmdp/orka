@@ -42,7 +42,7 @@ export const featureGroups=[
  ['Unlimited projects',all],['Team members',['1','2','3','12']],['Additional team members',[false,false,false,'€8/member/mo']],
  ['Project access & permissions',['N/A',true,true,true],'Assign teammates to specific projects and control the features they can access within each project.']]},
  {name:'A proper support home',icon:'chat',rows:[
- ['Import your existing knowledge',all,'Import from Crisp, GitBook, Intercom, Gleap & Help Scout.'],['SDK & custom visitor data',all],['Dozens of widget designs',all],['Live chat & email follow-up',all],['Live typing preview',all,'See what visitors are typing before they send.'],['Help center',all],['iOS & Android apps',all]]},
+ ['Import your existing knowledge',all,'One-click imports from Gleap, Gorgias, Intercom, GitBook, Help Scout & Fernand. Crisp is also supported; other sources on request.'],['SDK & custom visitor data',all],['Dozens of widget designs',all],['Live chat & email follow-up',all],['Live typing preview',all,'See what visitors are typing before they send.'],['Help center',all],['iOS & Android apps',all]]},
  {name:'A smoother support day',icon:'clock',rows:[
  ['Custom banners',light,'Night banners, emergencies, announcements and more.'],['Automatic offline contact form',light],['Business hours & availability scheduling',light],['Saved replies',light,'Reusable shortcuts for answers you send often.'],['Conversation search',light],['Image & file sharing',light],['Conversation tags & filters',light],['Follow-up reminders',light],['Live visitor map',light],['Support analytics',light]]},
  {name:'An AI teammate, on your terms',icon:'spark',note:'Pro & Max · AI usage billed separately',rows:[

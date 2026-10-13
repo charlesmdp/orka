@@ -40,7 +40,7 @@ test('pricing renders a crawlable 4-plan comparison, valid EUR offers and the pr
  const html=pricingBody({aiCalculator:()=>'',finalCta:()=>''});
  for(const p of plans)assert.ok(html.includes(`data-orka-plan-card="${p.name}"`));
  assert.equal((html.match(/<tr><th scope="row">/g)||[]).length,38);
- assert.match(html,/Crisp, GitBook, Intercom, Gleap &amp; Help Scout/);
+ assert.match(html,/Gleap, Gorgias, Intercom, GitBook, Help Scout &amp; Fernand/);
  assert.match(html,/OpenAI, Anthropic or OpenRouter/);assert.match(html,/data-project/);
  const json=[...html.matchAll(/<script type="application\/ld\+json">([^<]+)<\/script>/g)].map(m=>JSON.parse(m[1]));
  const offers=json.find(j=>j['@type']==='SoftwareApplication').offers;

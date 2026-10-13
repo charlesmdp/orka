@@ -65,3 +65,5 @@
 @media(max-width:760px){.feature-visual{margin:-18px -18px 19px}.fv-bar{font-size:8px;padding:0 8px}.fv-provider-list>span{font-size:8px}}
 @media(max-width:480px){.feature-visual{margin:-22px -22px 21px;padding:18px 19px 0;height:194px}.fv-map{margin:-18px -19px 0;height:194px}.fv-content{padding:14px}.fv-bar{font-size:9px;padding:0 12px}.fv-phone{gap:22px}.fv-phone-caption{font-size:16px}.fv-provider-list>span{font-size:9px}}
 @media(prefers-reduced-motion:reduce){.feature-visual *, .feature-visual *::before,.feature-visual *::after{animation:none!important;transition:none!important}}
+
+#feature-help-import .feature-visual{height:220px}

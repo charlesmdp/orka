@@ -395,8 +395,8 @@
     [
       "online-away",
       "boundaries",
-      "Online & away status",
-      "Show whether a human is available before someone starts a conversation.",
+      "Live chat or email form, per project",
+      "Turn live chat on when you want a real-time conversation, or switch it off to show an email form and reply later. Choose the mode for each project and switch back whenever you like. Visitors who have already written keep their conversation. Your online or away status also sets expectations.",
       "solo team legal shop saas agency",
       "9",
       ""
@@ -539,8 +539,8 @@
     [
       "help-import",
       "help-center",
-      "Bring your existing knowledge",
-      "Import help content from GitBook, Intercom, Crisp, Gorgias or Gleap.",
+      "One-click help center imports",
+      "Import your help content in one click from Gleap, Gorgias, Intercom, GitBook, Help Scout or Fernand. Crisp imports are available too. Need another source? Contact us to request an importer.",
       "solo team legal shop saas agency",
       "",
       "Help center included on every plan"

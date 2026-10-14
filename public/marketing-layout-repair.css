@@ -229,3 +229,25 @@ html .pod-audience-diagram .diagram-hub .wordmark>span {color:#7a955b}
   .context-bento>:is(.typing-card,.translation-card) {padding:23px 19px}
   .context-bento .context-card-heading h3 {font-size:25px}
 }
+
+/* Eight supported help centers, with a separate invitation for other sources. */
+.launch-providers {grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.launch-providers .import-provider {flex-direction:column;justify-content:center;text-align:center;padding:12px 6px;font-size:11px;gap:7px}
+.launch-providers .import-provider-other {flex-direction:row}
+.import-constellation>div {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.import-constellation>div>.import-provider {flex-direction:column;justify-content:center;padding:12px 5px;font-size:10px}
+.import-constellation>div>.import-provider-other {grid-column:1/-1;flex-direction:row}
+.import-contact-status {grid-column:1/-1}
+.customer-context-card.real-contact-panel .context-sdk-link {margin:18px 21px 21px;padding:16px 18px}
+.customer-context-card.real-contact-panel .contact-extra:last-of-type .context-block {padding-bottom:18px}
+.orky-composer-actions>[data-orky-send] {margin-left:auto;white-space:nowrap}
+@media(max-width:700px){
+  .launch-providers,.import-constellation>div{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .launch-providers .import-provider{flex-direction:row;justify-content:flex-start;padding:12px;font-size:12px}
+  .launch-providers .import-provider-other{justify-content:center}
+  .customer-context-card.real-contact-panel .context-sdk-link{margin:16px 17px 17px}
+}
+.help-import-grid {grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px!important}
+.help-import-grid .import-provider{flex-direction:column;justify-content:center;text-align:center;font-size:9px;padding:9px 3px}
+.help-import-grid .import-provider-other{grid-column:1/-1;flex-direction:row}
+@media(max-width:430px){.help-import-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}

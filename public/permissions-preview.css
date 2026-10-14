@@ -23,3 +23,10 @@
 #feature-project-permissions .permission-group{margin-top:12px}
 #feature-project-permissions .permission-preview-footer{padding-block:10px}
 @media(max-width:760px){#feature-project-permissions .permission-copy{padding:0}#feature-project-permissions .permission-copy h4{font-size:25px}}
+
+/* A distinct, polished icon for each permission; no change to plan access. */
+.permission-group .permission-feature-icon{width:25px;height:25px;flex:0 0 25px;display:grid;place-items:center;border:1px solid #dce6d3;border-radius:7px;background:linear-gradient(145deg,#fff,#f0f5e9);color:#638047;box-shadow:0 2px 3px #263c2710}
+.permission-group .permission-feature-icon>.dp-icon{width:15px;height:15px;stroke-width:1.8}
+.permission-group>div>span{gap:8px;line-height:1.35;min-width:0}
+.permission-group>div>span>span:last-child{min-width:0}
+@media(max-width:760px){.permission-group .permission-feature-icon{width:21px;height:21px;flex-basis:21px;border-radius:6px}.permission-group .permission-feature-icon>.dp-icon{width:13px;height:13px}.permission-group>div>span{gap:5px}}

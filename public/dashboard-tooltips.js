@@ -1,5 +1,6 @@
 // One accessible tooltip layer for every copy of a dashboard composer.
 // Appending to the document/top layer keeps cards and preview overflow from clipping it.
+import {dashboardShortcuts, shortcutDetails} from './dashboard-shortcut-icons.js';
 const descriptions = {
   hi: ['Say Hi', 'Say hi, introduce yourself, and ask how you can help. A short, friendly introduction in your own name.', 'Hi Alex! Emma here — how can I help you today?'],
   bye: ['Say Bye', 'Wrap up warmly and remind them they can come back for help.', 'You’re very welcome! If anything else comes up, we’re right here. Have a lovely day!'],
@@ -14,6 +15,7 @@ const descriptions = {
   apologize: ['Apologize Deeply', 'Draft a sincere apology. You choose the words before sending.'],
   email: ['Confirm Email', 'Ask the visitor to confirm their email address.'],
   review: ['Ask for a Review', 'Thank the visitor and ask for a review in a friendly, personal way.'],
+  emergency: ['Emergency', 'Draft a clear, reassuring response when a visitor needs urgent help. Review the wording and next steps before sending.'],
   suggest: ['Suggest a reply', 'Writes a reply from the whole conversation and your knowledge base, to a question or a simple hello. You review it before sending.']
 };
 const labels = new Map(Object.entries(descriptions).map(([key, [label]]) => [label.toLowerCase(), key]));
@@ -47,9 +49,34 @@ function decorate(root) {
       const glyph = control.querySelector('svg,.plain-ai-badge');
       if (glyph) glyph.outerHTML = sparkle;
       else control.insertAdjacentHTML('afterbegin', sparkle);
+    } else if (shortcutDetails[key]) {
+      const [title, color] = shortcutDetails[key];
+      let icon = control.querySelector('.dp-shortcut-icon,.detail-shortcut-icon,.quick-shortcut-icon,.dashboard-shortcut-icon');
+      if (!icon) {
+        icon = document.createElement('span');
+        const previous = control.querySelector('svg');
+        if (previous) previous.replaceWith(icon);
+        else {
+          // Earlier replicas used an emoji as their leading icon.
+          const first = control.firstChild;
+          if (first?.nodeType === Node.TEXT_NODE) first.textContent = first.textContent.replace(/^[^a-z]+/i, '');
+          control.prepend(icon);
+        }
+      }
+      icon.classList.add('dashboard-shortcut-icon');
+      icon.style.setProperty('--shortcut-color', color);
+      icon.innerHTML = dashboardShortcuts[title];
+      icon.setAttribute('aria-hidden', 'true');
     }
     // A preview containing buttons is a labelled group, rather than an opaque image.
     control.closest('.product-preview[role="img"]')?.setAttribute('role', 'group');
+  }
+  for (const icon of root.querySelectorAll('[data-quick-icon]:not([data-shortcut-icon-ready])')) {
+    const details = shortcutDetails[icon.dataset.quickIcon];
+    if (!details) continue;
+    icon.dataset.shortcutIconReady = 'true';
+    icon.style.color = details[1];
+    icon.innerHTML = dashboardShortcuts[details[0]];
   }
 }
 

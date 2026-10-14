@@ -1,3 +1,5 @@
+import {mediaComposerPreview,shortcutButtonsPreview} from './composer-media-previews.mjs';
+import {conversationFeaturePreviews} from './conversation-feature-previews.mjs';
 import {teamChatPreview} from './collaboration-pages.mjs';
 import {permissionsPreview} from './permissions-preview.mjs';
 import {dashboard, detailPreview, widgetPreview, settingsPreview, mapPreview} from './dashboard-previews.mjs';
@@ -134,6 +136,11 @@ for (const id of ['help-domain']) previews[id] = () => settingsPreview('help');
 previews['offline-form'] = () => widgetPreview({offline:true});
 previews['live-map'] = () => mapPreview();
 previews['visitor-list'] = () => mapPreview();
+
+// The control being described stays visible instead of reusing an unrelated chat.
+Object.assign(previews, conversationFeaturePreviews);
+previews['emoji'] = () => mediaComposerPreview();
+previews['ai-shortcuts'] = shortcutButtonsPreview;
 
 export const illustratedFeatureIds = Object.keys(previews);
 export function featureVisual(id, category) {

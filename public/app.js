@@ -1002,12 +1002,12 @@ if ('IntersectionObserver' in window) {
 
 // These shortcuts only edit this illustration's local draft.
 const quickActions = {
-  hi:{title:'👋 Say hi',description:'Start with a warm welcome, using the visitor’s name.',context:'Hi! I have a question about my booking.',draft:'Hi Jessy! 👋 Thanks for reaching out. What can I help you with today?'},
-  bye:{title:'✋ Say goodbye',description:'Wrap up warmly and remind them they can come back for help.',context:'That worked, thank you!',draft:'You’re very welcome, Jessy! If anything else comes up with your bookings, we’re right here. Have a lovely day!'},
-  chat:{title:'☕ Chit chat',description:'Keep the conversation human while you look into their question.',context:'Thanks for checking. I’m planning a birthday surprise!',draft:'A birthday surprise — lovely! 🎉 I’m checking those booking details for you now, Jessy.'},
-  weather:{title:'☀️ Talk about the weather',description:'A little small talk while you help. No made-up forecast.',context:'Thanks! I’m taking a quick break while you check.',draft:'You’re welcome, Jessy! How’s the weather where you are? Hope you get a little sunshine on your break. ☀️'},
+  hi:{title:'Say Hi',description:'Start with a warm welcome, using the visitor’s name.',context:'Hi! I have a question about my booking.',draft:'Hi Jessy! 👋 Thanks for reaching out. What can I help you with today?'},
+  bye:{title:'Say Bye',description:'Wrap up warmly and remind them they can come back for help.',context:'That worked, thank you!',draft:'You’re very welcome, Jessy! If anything else comes up with your bookings, we’re right here. Have a lovely day!'},
+  chat:{title:'Chit Chat',description:'Keep the conversation human while you look into their question.',context:'Thanks for checking. I’m planning a birthday surprise!',draft:'A birthday surprise — lovely! 🎉 I’m checking those booking details for you now, Jessy.'},
+  weather:{title:'Weather',description:'A little small talk while you help. No made-up forecast.',context:'Thanks! I’m taking a quick break while you check.',draft:'You’re welcome, Jessy! How’s the weather where you are? Hope you get a little sunshine on your break. ☀️'},
   answer:{title:'AI Answer',description:'Draft a useful answer from your own help docs and FAQs.',context:'How do I reschedule my appointment?',draft:'Hi Jessy! Open your confirmation email and choose Reschedule. You’ll be able to pick another available time. Let me know if you need a hand.'},
-  summary:{title:'☷ Summarize',description:'Catch up on the conversation in a private note for your team.',context:'Perfect, I’ve moved my appointment to Friday. Thank you!',draft:'Jessy wanted to reschedule an appointment. We explained how to use the link in the confirmation email. The appointment is now on Friday and the visitor has confirmed everything is sorted.',private:true}
+  summary:{title:'Summarize',description:'Catch up on the conversation in a private note for your team.',context:'Perfect, I’ve moved my appointment to Friday. Thank you!',draft:'Jessy wanted to reschedule an appointment. We explained how to use the link in the confirmation email. The appointment is now on Friday and the visitor has confirmed everything is sorted.',private:true}
 };
 let selectedQuickAction = 'bye';
 const quickSend = $('[data-quick-send]');
@@ -1018,6 +1018,7 @@ function chooseQuickAction(key) {
   selectedQuickAction=key;
   $$('[data-quick-action]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.quickAction===key)));
   $('#quick-action-title').textContent=action.title;
+  $('#quick-action-preview').dataset.quickSelected=key;
   $('#quick-action-description').textContent=action.description;
   $('#quick-context-message').textContent=action.context;
   $('#quick-action-example').textContent=action.draft;

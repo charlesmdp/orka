@@ -144,9 +144,18 @@
       "private-notes",
       "team",
       "Private notes & @mentions",
-      "Leave context for teammates and bring the right person into the conversation. Visitors do not see internal notes.",
+      "Leave colorful private notes in the conversation and @mention the right teammate. Choose mint, pink, lime, yellow, purple, blue or orange. Visitors never see your notes.",
       "team legal agency saas",
       "11",
+      ""
+    ],
+    [
+      "team-chat",
+      "team",
+      "Talk to your team inside Orka",
+      "Message a teammate directly or start a group conversation. Keep a small teammate chat open while working in the inbox, without switching to WhatsApp or Slack.",
+      "team agency saas shop legal",
+      "",
       ""
     ],
     [
@@ -540,7 +549,7 @@
       "help-import",
       "help-center",
       "One-click help center imports",
-      "Import your help content in one click from Gleap, Gorgias, Intercom, GitBook, Help Scout or Fernand. Crisp imports are available too. Need another source? Contact us to request an importer.",
+      "Import your help content in one click from Gleap, Gorgias, Intercom, GitBook, Help Scout or Fernand. Need another source? Contact us to request an importer.",
       "solo team legal shop saas agency",
       "",
       "Help center included on every plan"
@@ -648,7 +657,7 @@
       "project-permissions",
       "team",
       "Project access & feature permissions",
-      "Assign teammates to specific projects and choose which features they can access in each one. Give marketing the landing page and technical support the app.",
+      "Choose who joins each project, then give them the right role. Admins can manage everything except deleting the project. Agents answer conversations; you choose their access to AI tools, pages and settings.",
       "team agency saas shop legal",
       "",
       "Light, Pro & Max"
@@ -742,6 +751,15 @@
       "team saas agency",
       "",
       "Max"
+    ],
+    [
+      "mcp",
+      "setup",
+      "Yes, Orka has an MCP server",
+      "Connect your AI tools to an Orka project. Work on help articles, read conversations and configure your AI agent from the tools you already use.",
+      "solo team agency saas",
+      "",
+      ""
     ]
   ],
   "profiles": [

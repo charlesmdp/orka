@@ -1,3 +1,4 @@
+import {enrichCollaborationContent} from './collaboration-pages.mjs';
 import {repairSeasonalPreviews} from './seasonal-preview-repair.mjs';
 import {repairMarketingLayouts} from './marketing-layout-repair.mjs';
 import {refreshProductPreviews} from './dashboard-previews.mjs';
@@ -47,7 +48,7 @@ const credits = homepage.match(/<details class="artwork-credits">[\s\S]*?<\/deta
 const footer = sharedFooter(comparisons,credits);
 let headers = '/\n  Cache-Control: no-cache\n/assets/optimized/*\n  Cache-Control: public, max-age=31536000, immutable\n';
 const assetNames = new Map();
-for (const filename of ['map-model.js', 'live-map.js', 'style.css', 'refinement.css', 'refresh.css', 'product-polish.css', 'app.js', 'pages.css', 'pages.js', 'features.js', 'feature-visuals.css', 'dashboard-previews.css', 'dashboard-fidelity.css', 'seasonal-preview-repair.css', 'marketing-layout-repair.css', 'dashboard-details-repair.css', 'live-map-fidelity.css', 'translation.css', 'translation.js', 'blog.css', 'blog-budget.js', 'open.css', 'product-updates.css', 'pricing-model.js', 'help-demo-data.js', 'editorial.css', 'about.css', 'comparison.css', 'site-chrome.css', 'guides.css', 'site-interactions.js', 'editorial.js', 'hero-experiments.css', 'hero-experiments.js', 'new2-mosaic.css', 'not-found.css', 'not-found.js']) {
+for (const filename of ['map-model.js', 'live-map.js', 'style.css', 'refinement.css', 'refresh.css', 'product-polish.css', 'app.js', 'pages.css', 'pages.js', 'features.js', 'feature-visuals.css', 'dashboard-previews.css', 'dashboard-fidelity.css', 'seasonal-preview-repair.css', 'marketing-layout-repair.css', 'dashboard-details-repair.css', 'live-map-fidelity.css', 'dashboard-tooltips.css', 'dashboard-tooltips.js', 'permissions-preview.css', 'collaboration.css', 'collaboration.js', 'translation.css', 'translation.js', 'blog.css', 'blog-budget.js', 'open.css', 'product-updates.css', 'pricing-model.js', 'help-demo-data.js', 'editorial.css', 'about.css', 'comparison.css', 'site-chrome.css', 'guides.css', 'site-interactions.js', 'editorial.js', 'hero-experiments.css', 'hero-experiments.js', 'new2-mosaic.css', 'not-found.css', 'not-found.js']) {
   let content = await readFile(path.join(root, 'public', filename), 'utf8');
   content = rewriteImageUrls(content, images);
   for (const [original, versioned] of assetNames) content = content.replaceAll('./' + original, './' + versioned);
@@ -89,8 +90,8 @@ const clicksNotice = clicks.enabled
   : '';
 for (const filename of (await readdir(path.join(output, 'client'))).filter(name => name.endsWith('.html'))) {
   const pagePath = path.join(output, 'client', filename);
-  const html = repairMarketingLayouts(repairSeasonalPreviews(refreshProductPreviews(await readFile(pagePath, 'utf8'))))
-    .replace('</head>', `<link rel="stylesheet" href="${assetNames.get('dashboard-previews.css')}"><link rel="stylesheet" href="${assetNames.get('dashboard-fidelity.css')}"><link rel="stylesheet" href="${assetNames.get('seasonal-preview-repair.css')}"><link rel="stylesheet" href="${assetNames.get('marketing-layout-repair.css')}"><link rel="stylesheet" href="${assetNames.get('dashboard-details-repair.css')}"><link rel="stylesheet" href="${assetNames.get('live-map-fidelity.css')}"></head>`)
+  const html = enrichCollaborationContent(repairMarketingLayouts(repairSeasonalPreviews(refreshProductPreviews(await readFile(pagePath, 'utf8')))))
+    .replace('</head>', `<link rel="stylesheet" href="${assetNames.get('dashboard-previews.css')}"><link rel="stylesheet" href="${assetNames.get('dashboard-fidelity.css')}"><link rel="stylesheet" href="${assetNames.get('seasonal-preview-repair.css')}"><link rel="stylesheet" href="${assetNames.get('marketing-layout-repair.css')}"><link rel="stylesheet" href="${assetNames.get('dashboard-details-repair.css')}"><link rel="stylesheet" href="${assetNames.get('live-map-fidelity.css')}"><link rel="stylesheet" href="${assetNames.get('dashboard-tooltips.css')}"><link rel="stylesheet" href="${assetNames.get('permissions-preview.css')}"><link rel="stylesheet" href="${assetNames.get('collaboration.css')}"><script type="module" src="${assetNames.get('dashboard-tooltips.js')}"></script><script type="module" src="${assetNames.get('collaboration.js')}"></script></head>`)
     .replace('</head>', clicksHead + '</head>')
     .replace('<!-- CLICKS_PRIVACY_NOTICE -->', clicksNotice);
   await writeFile(pagePath, optimizePageImages(html, images));

@@ -24,8 +24,9 @@ const marks = {
   Intercom: vendorLogos.intercom.path,
 };
 const logo = name => `<img class="import-provider-logo" src="${marks[name]}" width="28" height="28" alt="" loading="lazy" decoding="async">`;
-const provider = name => `<span class="import-provider">${logo(name)}<span>${name}</span></span>`;
-const importNames = ['Gleap', 'Gorgias', 'Intercom', 'GitBook', 'Help Scout', 'Fernand', 'Crisp'];
+const otherProvider = () => `<button type="button" class="import-provider import-provider-other" data-orka-draft="Hi! Could you add a one-click help center import from: " aria-label="Ask us to migrate another help center"><span class="import-other-icon" aria-hidden="true">+</span><span>Other</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></button><span class="product-contact-status import-contact-status" role="status"></span>`;
+const provider = name => name === 'Other' || name === 'Crisp' ? otherProvider() : `<span class="import-provider">${logo(name)}<span>${name}</span></span>`;
+const importNames = ['Gleap', 'Gorgias', 'Intercom', 'GitBook', 'Help Scout', 'Fernand', 'Other'];
 
 function compactDevices() {
   return `<div class="accurate-devices marketing-device-scene">
@@ -62,5 +63,15 @@ export function repairMarketingLayouts(html) {
       (entry, name) => marks[name] ? provider(name) : entry);
   });
   html = replaceProductElement(html, 'accurate-devices', compactDevices);
+  // The profile spans the two conversation examples. Show useful real data
+  // in that space rather than stretching a mostly collapsed white panel.
+  html = replaceProductElement(html, 'customer-context-card', old => old
+    .replace('<details class="contact-extra contact-cart" id="context-cart">', '<details class="contact-extra contact-cart" id="context-cart" open>')
+    .replace('<details class="contact-extra">', '<details class="contact-extra" open>'));
+
+  // Google's supplied image includes a 41px transparent safe area on every
+  // edge. A CSS viewport gives its visible badge the same height as Apple's.
+  html = html.replace(/<img\b[^>]*src="[^"]*google-play-badge\.png"[^>]*>/g,
+    image => `<span class="store-badge-art store-badge-google">${image}</span>`);
   return html;
 }

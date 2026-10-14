@@ -1,0 +1,22 @@
+/* Shared top-layer UI keeps composer tips readable in every card and carousel. */
+.dashboard-action-tooltip{position:fixed;inset:auto;margin:0;z-index:2147483000;width:360px;max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px);overflow:auto;box-sizing:border-box;padding:22px;border:1px solid #d9dce4;border-radius:20px;background:#fff;color:#303436;box-shadow:0 16px 44px #14211d24;font:400 14px/1.55 'Orka Dashboard',sans-serif;letter-spacing:-.015em;text-align:left;pointer-events:auto;isolation:isolate}
+.dashboard-action-tooltip[hidden]{display:none!important}
+.dashboard-action-tooltip::backdrop{background:transparent;pointer-events:none}
+.dashboard-action-tooltip :is(p,blockquote){margin:0}
+.dashboard-action-tooltip .dashboard-tip-heading{display:flex;align-items:center;gap:9px;margin-bottom:13px;line-height:1.3}
+.dashboard-tip-heading strong{font-size:18px;font-weight:700}
+.dashboard-action-tooltip .dashboard-tip-icon{display:flex;align-items:center;color:#5274ff;flex:none}
+.dashboard-tip-icon svg{display:block;width:21px;height:21px}
+.dashboard-action-tooltip[data-kind=hi] .dashboard-tip-icon{color:#08c686}
+.dashboard-action-tooltip[data-kind=chat] .dashboard-tip-icon{color:#ef6274}
+.dashboard-action-tooltip[data-kind=weather] .dashboard-tip-icon{color:#f4b000}
+.dashboard-tip-heading .dashboard-tip-badge{flex:none;margin-left:auto;padding:4px 7px;border-radius:9px;background:#edf4e6;color:#537d3f;font-size:11px;line-height:1.4;white-space:nowrap}
+.dashboard-action-tooltip blockquote{padding:14px;margin:16px 0;border:1px solid #e1e5ee;border-radius:14px;background:#f6f7fb}
+.dashboard-action-tooltip blockquote>span{display:block;color:#8b91a1;font-size:12px;margin-bottom:5px}
+.dashboard-action-tooltip>small{display:block;margin-top:15px;color:#8b91a1;font-size:12px;line-height:1.45}
+.dashboard-action-tooltip[data-kind=suggest]{width:385px;padding:14px 17px;border:0;border-radius:13px;background:#111814;color:#fff;font-size:14px}
+.dashboard-ai-sparkle{display:inline-block;vertical-align:middle;flex:none;width:1.15em;height:1.15em}
+[data-dashboard-tip-ready]{cursor:help}
+[data-dashboard-tip-ready]:focus-visible{outline:2px solid #537d3f;outline-offset:3px}
+html[data-dashboard-tooltips=ready] .detail-shortcut-tooltip{display:none!important}
+@media(max-width:600px){.dashboard-action-tooltip{width:330px;padding:18px;font-size:13px}.dashboard-tip-heading strong{font-size:17px}.dashboard-tip-heading .dashboard-tip-badge{font-size:10px}.dashboard-action-tooltip[data-kind=suggest]{font-size:13px}}

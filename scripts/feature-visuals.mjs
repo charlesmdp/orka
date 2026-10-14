@@ -1,3 +1,4 @@
+import {helpSetupPreviews} from './help-setup-previews.mjs';
 import {aiFeaturePreviews} from './ai-feature-previews.mjs';
 import {productFeaturePreviews} from './product-feature-previews.mjs';
 import {mediaComposerPreview,shortcutButtonsPreview} from './composer-media-previews.mjs';
@@ -140,7 +141,7 @@ previews['live-map'] = () => mapPreview();
 previews['visitor-list'] = () => mapPreview();
 
 // The control being described stays visible instead of reusing an unrelated chat.
-Object.assign(previews, conversationFeaturePreviews, productFeaturePreviews, aiFeaturePreviews);
+Object.assign(previews, conversationFeaturePreviews, productFeaturePreviews, aiFeaturePreviews, helpSetupPreviews);
 previews['emoji'] = () => mediaComposerPreview();
 previews['ai-shortcuts'] = shortcutButtonsPreview;
 

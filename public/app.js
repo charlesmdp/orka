@@ -135,10 +135,10 @@ $('[data-takeover-send]').addEventListener('click', () => {
   $('#autopilot-status').textContent = 'Human handover complete. Emma replied in this demo.';
 });
 const urgencyExamples = {
-  low: {label:'Easy life', icon:'🐠', count:1, message:'Can I switch between grams and ounces?'},
-  normal: {label:'Starting to sting', icon:'🐡', count:1, message:'Can I save a meal to log it again?'},
-  high: {label:'That really stings', icon:'🪼', count:2, message:'My saved meals have disappeared.'},
-  critical: {label:'They want blood', icon:'🦈', count:3, message:'The app is down. I can’t sign in.'}
+  low: {label:'Low urgency', icon:'🫑', count:1, message:'Can I switch between grams and ounces?'},
+  normal: {label:'Normal urgency', icon:'🌶️', count:1, message:'Can I save a meal to log it again?'},
+  high: {label:'High urgency', icon:'🌶️', count:2, message:'My saved meals have disappeared.'},
+  critical: {label:'Critical urgency', icon:'🌶️', count:3, message:'The app is down. I can’t sign in.'}
 };
 $$('[data-urgency]').forEach(button => button.addEventListener('click', () => {
   const level = button.dataset.urgency;
@@ -213,26 +213,26 @@ $('#year').textContent = new Date().getFullYear();
 const bannerExamples = {
   night: {
     icon:'moon',
-    message:"It’s <strong>11:49 PM</strong> here. Our humans are asleep. Orky is still here to help.",
+    message:"It’s <strong>11:49 PM</strong> for the Coast &amp; Co. team. Please note it might take some time to get a response.",
     title:'Orky · AI agent',
-    body:'Hi! The team is asleep, but I’m here to help. What do you need?',
-    status:'Answer within an hour',
+    body:'Hello, how can we help you?',
+    status:'3 people online',
     caption:'Actual humans. Occasionally horizontal.'
   },
   break: {
     icon:'coffee',
-    message:"<strong>It’s our day off.</strong> We’re taking a little break today. Leave a message and we’ll get back to you tomorrow.",
+    message:"The Coast &amp; Co. team is having a break. Please note it might take some time to get a response.",
     title:'Orky · AI agent',
-    body:'The team is taking today off. I can help while they recharge. What’s your question?',
-    status:'Answer within an hour',
+    body:'Hello, how can we help you?',
+    status:'3 people online',
     caption:'A day off is allowed. Yes, even for founders.'
   },
   panic: {
     icon:'alert',
     message:'I’m a one-person team, and I had to take my dog to the vet. I’ll be back as soon as I can. Sorry!',
     title:'Orky · AI agent',
-    body:'Thanks for your patience. Leave your message and the team will get back to you as soon as they can.',
-    status:'Replies may take longer',
+    body:'Hello, how can we help you?',
+    status:'3 people online',
     caption:'Life happens. Your visitors can understand that.'
   }
 };

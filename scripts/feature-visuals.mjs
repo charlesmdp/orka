@@ -1,3 +1,4 @@
+import {dashboard, detailPreview, widgetPreview, settingsPreview, mapPreview} from './dashboard-previews.mjs';
 // Small, self-contained product illustrations: no video player or animation library.
 const e = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const icon = '<img src="/assets/orky-app-icon.svg" width="24" height="24" alt="">';
@@ -101,6 +102,34 @@ const previews = {
   'blocking':()=>keyValues('Your chat. Your boundaries.',[['IP address','192.0.2.42'],['Access','Blocked'],['Country rules','You choose']]),
   'api-limits':()=>window('More room for your integrations',`<div class="fv-api-flow"><span>Your app</span><b>→</b><span>Orka API</span></div><div class="fv-meter"><i></i></div><div class="fv-footnote">Higher rate limits with Max</div>`)
 };
+
+
+// Use the same product components as the full dashboard. These are close-ups
+// of the reference interface, not separately invented miniature applications.
+const referenceGroups = {
+ 'chat': ['live-chat','emoji','read-receipts','email-follow-up','resolved','reminders','human-takeover','seamless-handoff'],
+ 'attachments': ['attachments'],
+ 'ai': ['ai-per-chat','automatic-replies'],
+ 'typing': ['live-typing'],
+ 'draft': ['saved-replies','ai-drafts','ai-shortcuts','summaries'],
+ 'notes': ['private-notes','assignment'],
+ 'translation': ['translation'],
+ 'profile': ['visitor-profile','reply-time'],
+ 'data': ['custom-data','browsing-context','sdk','blocking','visitor-cart'],
+ 'modes': ['online-away'],
+ 'connection': ['ai-providers','own-key','usage-pricing'],
+};
+for (const [kind,ids] of Object.entries(referenceGroups)) for (const id of ids) previews[id] = () => detailPreview(kind);
+for (const id of ['shared-inbox','filters','history-search','tags','urgency','visitor-list']) previews[id] = () => detailPreview('inbox');
+for (const id of ['help-center','help-widget','help-collections','multilingual-help','help-branding']) previews[id] = () => widgetPreview({help:true});
+for (const [id,banner] of [['night-banner','night'],['break-banner','break'],['panic-banner','panic'],['announcement-banner','panic']]) previews[id] = () => widgetPreview({banner});
+for (const id of ['custom-orky']) previews[id] = () => settingsPreview('assistant');
+for (const id of ['widget-brand','widget-layouts','seasonal-themes','remove-branding']) previews[id] = () => settingsPreview('design');
+for (const id of ['help-domain']) previews[id] = () => settingsPreview('help');
+
+previews['offline-form'] = () => widgetPreview({offline:true});
+previews['live-map'] = () => mapPreview();
+previews['visitor-list'] = () => mapPreview();
 
 export const illustratedFeatureIds = Object.keys(previews);
 export function featureVisual(id, category) {

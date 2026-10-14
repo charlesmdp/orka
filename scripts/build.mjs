@@ -4,6 +4,7 @@ import {repairSeasonalPreviews} from './seasonal-preview-repair.mjs';
 import {repairMarketingLayouts} from './marketing-layout-repair.mjs';
 import {refreshProductPreviews} from './dashboard-previews.mjs';
 import {productUpdates} from './product-updates.mjs';
+import {headerNavigationScript} from './header-navigation.mjs';
 import {mkdir, rm, cp, readFile, writeFile, readdir} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
@@ -74,6 +75,7 @@ for (const filename of (await readdir(path.join(output, 'client'))).filter(name 
   if (!html.includes('href="site-chrome.css"')) html = html.replace('</head>','<link rel="stylesheet" href="site-chrome.css"></head>');
   html = html.replace('<html lang="en">','<html lang="en" data-brand-theme="green">');
   html = html.replace('</head>','<script>try{if(sessionStorage.getItem("orka-letter-read")==="1")document.documentElement.dataset.letterRead="true";}catch{}</script><script type="module" src="site-interactions.js"></script></head>');
+  if (html.includes('class="ed-menu-toggle"')) html = html.replace('</body>', headerNavigationScript + '</body>');
   html = html.replace('<!-- HOME_PRODUCT_UPDATES -->', productUpdates());
   html = html.replace('<!-- HOME_FAQ -->',faqSection(homeFaqs,{title:'More projects.\nFewer unanswered questions.'})+faqSchema(homeFaqs));
   html = html.replace('<!-- PRICING_CARDS -->',homePlanCards());

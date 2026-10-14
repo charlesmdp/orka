@@ -72,8 +72,8 @@ test('Pages output includes the API, linked assets and cache headers', async () 
 
   const allPages=(await readdir(output)).filter(n=>n.endsWith('.html'));
   const pageNames=allPages.filter(n=>!['new.html','new2.html','new3.html','new4.html','old.html','404.html'].includes(n));
-  assert.equal(allPages.length,89);
-  assert.equal(pageNames.length,83);
+  assert.equal(allPages.length,90);
+  assert.equal(pageNames.length,84);
   const knowledge=JSON.parse(await readFile(new URL('faq-knowledge.json',output),'utf8'));
   assert.equal(selectFaqSources('What does Pro cost?',knowledge.documents)[0].url,'https://orka.chat/pricing');
   assert.ok(!knowledge.documents.some(doc=>doc.url==='https://orka.chat/old'));

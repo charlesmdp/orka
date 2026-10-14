@@ -62,3 +62,23 @@ if (typeof document !== 'undefined') {
     visuals.forEach(visual => observer.observe(visual));
   }
 }
+
+// The product tour reuses the same previews as the homepage and feature cards.
+if (typeof document !== 'undefined') document.querySelectorAll('.product-tour').forEach(tour => {
+ const tabs=[...tour.querySelectorAll('[role="tab"]')];
+ const activate=tab=>{
+  tabs.forEach(item=>{
+   const active=item===tab;
+   item.setAttribute('aria-selected',String(active));item.tabIndex=active?0:-1;
+   tour.querySelector('#'+item.getAttribute('aria-controls')).hidden=!active;
+  });
+ };
+ tabs.forEach((tab,index)=>{
+  tab.addEventListener('click',()=>activate(tab));
+  tab.addEventListener('keydown',event=>{
+   const next=event.key==='ArrowRight'?(index+1)%tabs.length:event.key==='ArrowLeft'?(index+tabs.length-1)%tabs.length:event.key==='Home'?0:event.key==='End'?tabs.length-1:null;
+   if(next===null)return;
+   event.preventDefault();activate(tabs[next]);tabs[next].focus();
+  });
+ });
+});

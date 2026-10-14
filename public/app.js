@@ -89,15 +89,6 @@ draftMotion.addEventListener('change', () => {
 });
 $('[data-copilot-reset]').addEventListener('click', resetCopilot);
 $('[data-copilot-suggest]').addEventListener('click', resetCopilot);
-$('[data-orky-clear]').addEventListener('click', () => {
-  stopDraftWriting();
-  $('#orky-draft').value = '';
-  $('#orky-draft').placeholder = 'Your words. Your reply.';
-  $('#orky-draft').focus();
-  $('#orky-draft-badge').textContent = 'YOUR DRAFT · NOT SENT';
-  $('#copilot-status').textContent = 'Start fresh. Write your own reply.';
-  $('[data-orky-send]').disabled = true;
-});
 $('#orky-draft').addEventListener('input', event => {
   stopDraftWriting();
   $('[data-orky-send]').disabled = !event.currentTarget.value.trim();
@@ -533,8 +524,6 @@ $$('[data-visitor]').forEach(button => button.addEventListener('click', () => {
   $('#context-project-logo').src = 'assets/' + profile.logo;
   $('#context-session').textContent = 'Session · ' + visitor.session;
   $('#context-previous-time').textContent = visitor.previousTime;
-  $('#map-active-person').textContent = visitor.name + ' · ' + visitor.location.split(',')[0];
-  $('#map-active-page').textContent = visitor.page;
   $('#context-attributes').innerHTML = visitor.attributes.map(([key, value]) => `<div><dt>${key}</dt><dd>${value}</dd></div>`).join('');
   $('#admin-example').textContent = 'Example deep link: ' + visitor.admin;
   $('#admin-example').hidden = true;

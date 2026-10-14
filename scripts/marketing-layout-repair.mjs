@@ -20,13 +20,14 @@ export const importLogoSources = {
 const marks = {
   ...officialMarks,
   Crisp: vendorLogos.crisp.path,
+  'tawk.to': vendorLogos.tawk.path,
   Gorgias: vendorLogos.gorgias.path,
   Intercom: vendorLogos.intercom.path,
 };
 const logo = name => `<img class="import-provider-logo" src="${marks[name]}" width="28" height="28" alt="" loading="lazy" decoding="async">`;
 const otherProvider = () => `<button type="button" class="import-provider import-provider-other" data-orka-draft="Hi! Could you add a one-click help center import from: " aria-label="Ask us to migrate another help center"><span class="import-other-icon" aria-hidden="true">+</span><span>Other</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></button><span class="product-contact-status import-contact-status" role="status"></span>`;
-const provider = name => name === 'Other' || name === 'Crisp' ? otherProvider() : `<span class="import-provider">${logo(name)}<span>${name}</span></span>`;
-const importNames = ['Gleap', 'Gorgias', 'Intercom', 'GitBook', 'Help Scout', 'Fernand', 'Other'];
+const provider = name => name === 'Other' ? otherProvider() : `<span class="import-provider">${logo(name)}<span>${name}</span></span>`;
+const importNames = ['Gleap', 'Gorgias', 'Intercom', 'Crisp', 'GitBook', 'Help Scout', 'Fernand', 'tawk.to', 'Other'];
 
 function compactDevices() {
   return `<div class="accurate-devices marketing-device-scene">
@@ -59,6 +60,7 @@ export function repairMarketingLayouts(html) {
   html = replaceProductElement(html, 'fv-source-grid', old => {
     // The same component is also used for Orky's knowledge sources, which must
     // retain their own illustrations. Only replace recognized vendor entries.
+    if (old.includes('Gleap') && old.includes('Gorgias')) return `<div class="fv-source-grid help-import-grid">${importNames.map(provider).join('')}</div>`;
     return old.replace(/<span><b>[^<]*<\/b>([^<]+)<\/span>/g,
       (entry, name) => marks[name] ? provider(name) : entry);
   });

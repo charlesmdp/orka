@@ -1,0 +1,66 @@
+import {uiIcon, person, chili} from './dashboard-previews.mjs';
+
+// Close-ups of the real conversation controls. All names and messages are examples.
+const escape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+const frame = (kind, label, content) => `<div class="conversation-feature-preview cfp-${kind}" data-conversation-preview="${kind}" role="group" aria-label="${label}. Preview with example data."><div class="cfp-stage">${content}</div></div>`;
+const panelHeading = (title, icon='chat') => `<div class="cfp-panel-heading">${uiIcon(icon)}<strong>${title}</strong>${uiIcon('down')}</div>`;
+const chip = (label, icon='') => `<span class="cfp-chip">${icon?uiIcon(icon):''}${label}</span>`;
+const button = (label, icon, attribute, className='') => `<button type="button" class="cfp-button ${className}" ${attribute}>${icon?uiIcon(icon):''}${label}</button>`;
+const composer = (draft='Write a reply…') => `<div class="cfp-composer" tabindex="-1"><div class="cfp-composer-tabs"><span class="active">${uiIcon('reply')} Reply</span><span>${uiIcon('lock')} Private note</span><span class="cfp-compose-ai">${uiIcon('suggest')}</span></div><div class="cfp-draft" data-cfp-draft>${draft}</div><div class="cfp-compose-tools">${uiIcon('smile')}<b>GIF</b>${uiIcon('clip')}${uiIcon('lightning')}<span>${uiIcon('send')} Send</span></div></div>`;
+const message = (text, outgoing=false) => `<div class="cfp-message${outgoing?' outgoing':''}">${text}</div>`;
+const date = '<span class="cfp-date">Today at 2:38 PM</span>';
+const note = (text, color='yellow', name='Judy') => `<div class="cfp-note ${color}"><div>${person(2)}<strong>${name}</strong><time>14:38</time>${chip('Private note','lock')}</div><p>${text}</p></div>`;
+
+function tags() {
+ return frame('tags','Conversation tags',`<div class="cfp-detail cfp-tag-language">🇺🇸 American English ${uiIcon('translate')}</div>${panelHeading('Tags','tag')}<div class="cfp-tag-body"><div class="cfp-tag-list" data-cfp-tag-list><span>demanding customer</span></div><label class="cfp-tag-input"><input type="text" data-cfp-add-tag aria-label="Add a conversation tag" placeholder="Add tag…" maxlength="26" autocomplete="off"><button type="button" data-cfp-add-tag-button aria-label="Add tag">${uiIcon('plus')}</button></label></div>${panelHeading('Visitor Data','data')}`);
+}
+function filters() {
+ const options=[['All','circle'],['Unread','eyeOff'],['Unresolved','unresolved'],['Tag','at'],['Urgent','fire'],['Longest waiting','timer'],['Resolved','circleCheck']];
+ const customIcon={circle:'<circle cx="12" cy="12" r="9"/>',unresolved:'<circle cx="12" cy="12" r="9"/><path d="M12 7v6m0 4h.01"/>',at:'<circle cx="12" cy="12" r="4"/><path d="M16 8v7c0 4 6 2 6-3a10 10 0 1 0-5 9"/>',fire:'<path d="M12 2c1 5-4 5-2 10 1 2 3 0 3-2 7 6 5 12-1 12S3 18 5 13c0 3 3 3 3 0-2-4-1-8 4-11Z"/>',timer:'<circle cx="12" cy="14" r="8"/><path d="M9 2h6m-3 4V2m0 12 3-3"/>'};
+ return frame('filters','Conversation filters',`<div class="cfp-filter-toolbar"><span>All projects ${uiIcon('down')}</span><span data-cfp-filter-name>All</span><span>${uiIcon('users')} Agent</span><span>${uiIcon('tag')} Tags</span></div><div class="cfp-filter-menu" role="group" aria-label="Filter conversations">${options.map(([name,icon],i)=>`<button type="button" data-cfp-filter="${name}" aria-pressed="${i===0}">${customIcon[icon]?`<svg class="dp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${customIcon[icon]}</svg>`:uiIcon(icon)}<span>${name}</span><span class="cfp-filter-check">${uiIcon('check')}</span></button>`).join('')}</div><div class="cfp-filter-result" aria-live="polite"><strong data-cfp-filter-result>All conversations</strong><span>Across your projects</span></div>`);
+}
+function resolved() {
+ return frame('resolved','Mark a conversation as resolved',`<div class="cfp-thread">${message('Perfect, that fixed it. Thank you!')}${date}<div class="cfp-resolution" data-cfp-resolution>${uiIcon('circleCheck')}<span>The conversation has been resolved by <strong>Judy</strong></span></div>${button('Reopen conversation','reply','data-cfp-resolve','cfp-resolution-button')}</div>${composer()}`);
+}
+function reminders() {
+ const times=['5 minutes','30 minutes','1 hour','2 hours','6 hours','12 hours','24 hours','48 hours','1 week','Custom time'];
+ return frame('reminders','Set a conversation reminder',`<div class="cfp-reminder-dialog" data-cfp-reminder-dialog><div class="cfp-dialog-heading"><span class="cfp-heading-icon">${uiIcon('clock')}</span><div><strong>Set reminder</strong><span>Select the time you want to be reminded</span></div></div><div class="cfp-reminder-options">${times.map(time=>button(time,'',`data-cfp-remind="${time}"`)).join('')}</div><div class="cfp-custom-reminder" hidden><label>Choose a time<input type="datetime-local" data-cfp-reminder-date aria-label="Custom reminder date and time"></label>${button('Set reminder','clock','data-cfp-set-custom')}</div></div><div class="cfp-reminder-saved" data-cfp-reminder-saved hidden>${date}${message('<span data-cfp-reminder-copy>You left a reminder to be sent in 30 minutes</span><small>Only you can see this reminder</small>',true)}<div class="cfp-confirmation" role="status">${uiIcon('circleCheck')} Your reminder has been set</div>${button('Change reminder','clock','data-cfp-change-reminder')}</div>`);
+}
+function summary() {
+ return frame('summary','Conversation summary',`<div class="cfp-summary-modal"><header><strong>Conversation summary</strong>${uiIcon('close')}</header><div class="cfp-summary-person"><img src="/assets/orca-cap.webp" width="32" height="32" alt=""><span><strong>Jamie Chen</strong><small>Coast & Co.</small></span>${chip('Catch-up','note')}</div><div class="cfp-summary-scroll"><h5>Delivery address update</h5><p>Jamie needs an order sent to a new address. The parcel has not shipped; Judy has checked the change with the warehouse.</p><div class="cfp-summary-stats"><div><small>People who answered</small><strong>2</strong><span>${person(2)} Judy ${person(3)} Theo</span></div><div><small>Messages exchanged</small><strong>12</strong><span>Private notes: 2</span></div><div><small>Current status</small><strong class="cfp-summary-status">${uiIcon('chat')} Customer replied</strong></div></div><div class="cfp-summary-context"><strong>Earlier context</strong><ul><li>Order #1048 is ready to pack.</li><li>Next: confirm the updated delivery address.</li></ul></div></div><footer><span>AI summary · Uses AI tokens</span>${button('↻','','data-cfp-refresh-summary aria-label="Refresh conversation summary"')}${button('Add as a private note','lock','data-cfp-save-summary')}</footer><div class="cfp-summary-saved" data-cfp-summary-saved role="status" hidden>${uiIcon('circleCheck')} Added as a private note</div></div>`);
+}
+function shortcuts() {
+ const replies=[['shipping','Orders ship within 2–3 working days. We’ll email your tracking link.'],['refund','I can help with that. Could you share your order number?'],['review','Thanks for chatting with us! Would you leave a quick review?']];
+ return frame('shortcuts','Saved reply shortcuts',`<div class="cfp-shortcut-panel"><header><strong>${uiIcon('lightning')} Shortcuts</strong><span>Manage</span></header><div class="cfp-saved-replies">${replies.map(([name,text],i)=>`<button type="button" data-cfp-saved-reply="${escape(text)}" aria-pressed="${i===0}"><span><strong>${name}</strong><code>/${name}</code></span><small>${text}</small></button>`).join('')}</div><div class="cfp-shortcuts-empty" data-cfp-shortcuts-empty hidden>No saved replies found.</div><footer><input type="search" data-cfp-shortcut-search aria-label="Search saved replies" placeholder="Search by title or text"><span>↑↓ browse &nbsp; ↵ insert</span></footer></div>${composer('/shipping')}`);
+}
+function email() {
+ return frame('email','Continue a conversation by email',`<div class="cfp-email-conversation"><div class="cfp-email-person">${person(3)}<div><strong>Jamie Chen</strong><span>jamie@example.com</span></div><small>Offline</small></div><div class="cfp-email-history">${message('I have to go. Could you email me when it’s ready?')}${message('Of course. Your new delivery address is now confirmed.',true)}<span class="cfp-delivery">${uiIcon('send')} Delivered by email</span></div><div class="cfp-email-reply"><span>${uiIcon('mail')} Reply from Jamie’s email</span><p>Just received it — thank you!</p><small>Back in the same conversation</small></div></div>`);
+}
+function privateNotes() {
+ return frame('private-notes','Private notes and mentions',`<div class="cfp-thread">${note('<strong>@Theo</strong> Their trial ends Friday. Please check in with the team tomorrow.','violet')}<div class="cfp-private-hint">${uiIcon('eyeOff')} Only seen by your team</div></div><div class="cfp-private-compose"><div>${uiIcon('reply')} Reply <strong>${uiIcon('lock')} Private note</strong><span class="cfp-note-color"></span></div><p>Leave a note for your team. Use @ to mention someone.</p><span>${uiIcon('clip')} ${uiIcon('lightning')}<b>Add note ↑</b></span></div>`);
+}
+function assignment() {
+ return frame('assignment','Assign a conversation to a teammate',`<div class="cfp-assignment-toolbar">${button('Mark as resolved','circleCheck','data-cfp-assignment-resolve')}<span class="cfp-current-agent">${person(2)} <strong data-cfp-assignee>Judy</strong> ${uiIcon('down')}</span></div><div class="cfp-assignment-menu"><strong>Assign conversation</strong>${[['Judy',2],['Theo',3],['Milo',1]].map(([name,n],i)=>`<button type="button" data-cfp-assign="${name}" aria-pressed="${i===0}">${person(n)}<span>${name}<small>Available</small></span><i></i><b>${uiIcon('check')}</b></button>`).join('')}</div><div class="cfp-assignment-status" role="status">${uiIcon('users')} Assigned to <strong data-cfp-assignee>Judy</strong></div>`);
+}
+function aiActive(takeover=false) {
+ return frame(takeover?'takeover':'ai-active',takeover?'Take over from AI':'AI preparing a reply',`<div class="cfp-thread">${message(takeover?'Could someone help me check the setup?':'Where can I find my invoice?')}</div><div class="cfp-ai-composer"><div class="cfp-ai-top">${chip('AI Active')}<span>${uiIcon('clock')}</span></div><div class="cfp-ai-draft" data-cfp-ai-draft>AI is preparing an answer…</div><div class="cfp-ai-bottom">${button('Take Over','circleCheck','data-cfp-takeover')}<span>${uiIcon('clock')} Preparing an answer…</span><button type="button" class="cfp-button cfp-ai-send" disabled>${uiIcon('send')} Send now</button></div></div><div class="cfp-human-composer" data-cfp-human-composer hidden>${composer('I’m here. Let’s check your setup together.')}<span class="cfp-takeover-status" role="status">You’ve taken over. AI is paused for this conversation.</span></div>`);
+}
+
+function urgency() {
+ const levels=[['low','Low','A simple question or a low-impact issue that can wait'],['normal','Normal','A question or issue to handle within the usual response time'],['high','High','A frustrated customer or a blocking issue that needs attention soon'],['critical','Critical','An extremely upset customer, or a potentially serious bug to fix immediately']];
+ return frame('urgency','Conversation urgency',`<div class="cfp-urgency-panel"><header><span>Urgency</span><small>${uiIcon('suggest')} Rated by AI</small></header>${levels.map(([key,name,copy])=>`<button type="button" data-cfp-urgency="${key}" aria-pressed="${key==='normal'}"><span class="cfp-urgency-peppers ${key}">${chili(key)}</span><span><strong>${name}</strong><small>${copy}</small></span><b>${uiIcon('check')}</b></button>`).join('')}</div>`);
+}
+function search() {
+ return frame('search','Search conversation history',`<div class="cfp-history-search"><label>${uiIcon('search')}<input type="search" aria-label="Search example conversations" data-cfp-search value="delivery" placeholder="Search conversations…"></label><span class="cfp-search-count" data-cfp-search-count>2 conversations</span>${[['Jamie Chen','Coast & Co.','Can I change my delivery address?','Today',2],['Sam Rivera','My cap store','Do you offer delivery to France?','Yesterday',3],['Alex Morgan','My calorie tracker','How do I invite another teammate?','Tuesday',1]].map(([name,project,text,time,n])=>`<div class="cfp-history-result" data-cfp-search-result ${text.includes('delivery')?'':'hidden'}>${person(n)}<div><strong>${name}<small>${time}</small></strong><span>${project}</span><p>${text}</p></div></div>`).join('')}</div>`);
+}
+function receipts() {
+ return frame('receipts','Message delivery and read receipts',`<div class="cfp-thread">${message('Your order is ready. I’ve sent the tracking link.',true)}<span class="cfp-receipt"><b>✓✓</b> Read in chat</span>${message('Let me know if you need anything else.',true)}<span class="cfp-receipt delivered"><b>✓✓</b> Delivered</span></div>${composer()}`);
+}
+
+export const conversationFeaturePreviews = {
+ 'urgency':urgency, 'history-search':search, 'read-receipts':receipts,
+ 'tags':tags, 'filters':filters, 'resolved':resolved, 'reminders':reminders,
+ 'summaries':summary, 'saved-replies':shortcuts, 'email-follow-up':email,
+ 'private-notes':privateNotes, 'assignment':assignment,
+ 'automatic-replies':()=>aiActive(), 'human-takeover':()=>aiActive(true)
+};

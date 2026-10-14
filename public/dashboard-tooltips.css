@@ -19,4 +19,14 @@
 [data-dashboard-tip-ready]{cursor:help}
 [data-dashboard-tip-ready]:focus-visible{outline:2px solid #537d3f;outline-offset:3px}
 html[data-dashboard-tooltips=ready] .detail-shortcut-tooltip{display:none!important}
+.dashboard-shortcut-icon{display:inline-flex!important;align-items:center;justify-content:center;flex:none;width:2em;height:2em;border-radius:.65em;background:#f3f4fa;color:var(--shortcut-color)!important;opacity:1!important}
+.dashboard-shortcut-icon svg{display:block;width:1.15em!important;height:1.15em!important;flex:none}
+[data-dashboard-tip-ready]:not([data-dashboard-tip=suggest]){display:inline-flex;align-items:center;gap:.45em}
+.dashboard-action-tooltip .dashboard-tip-icon{width:30px;height:30px;justify-content:center;border-radius:9px;background:#f3f4fa}
+.dashboard-action-tooltip[data-kind=summary] .dashboard-tip-icon{color:#7374f1}
+.dashboard-action-tooltip[data-kind=time] .dashboard-tip-icon,.dashboard-action-tooltip[data-kind=review] .dashboard-tip-icon{color:#ffbd16}
+.dashboard-action-tooltip[data-kind=understanding] .dashboard-tip-icon,.dashboard-action-tooltip[data-kind=email] .dashboard-tip-icon{color:#51b857}
+.dashboard-action-tooltip[data-kind=empathy] .dashboard-tip-icon{color:#eb77ef}
+.dashboard-action-tooltip[data-kind=apologize] .dashboard-tip-icon{color:#ff9d26}
+.dashboard-action-tooltip[data-kind=emergency] .dashboard-tip-icon{color:#f1646e}
 @media(max-width:600px){.dashboard-action-tooltip{width:330px;padding:18px;font-size:13px}.dashboard-tip-heading strong{font-size:17px}.dashboard-tip-heading .dashboard-tip-badge{font-size:10px}.dashboard-action-tooltip[data-kind=suggest]{font-size:13px}}

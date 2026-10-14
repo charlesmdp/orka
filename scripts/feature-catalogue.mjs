@@ -16,7 +16,18 @@ export function refreshFeatureCatalogue(html, catalogue) {
     const group = `<section class="catalogue-group" data-feature-group="${category}" aria-labelledby="category-${category}"><div class="catalogue-group-title"><span>${number}</span><div><h3 id="category-${category}">${escape(title)}</h3><p>${escape(description)}</p></div></div><div class="feature-card-grid">${cards}</div></section>`;
     const pattern = new RegExp(`<section class="catalogue-group" data-feature-group="${category}"[\\s\\S]*?</section>`);
     if (!pattern.test(html)) throw new Error(`Missing feature group: ${category}`);
-    html = html.replace(pattern, group);
+    // Feature examples may contain their own sections (e.g. emoji categories).
+    // Match the complete catalogue group rather than its first nested closing tag.
+    const start = html.search(pattern);
+    const sectionTags = /<\/?section\b[^>]*>/gi;
+    sectionTags.lastIndex = start;
+    let depth = 0, token, end = start;
+    while ((token = sectionTags.exec(html))) {
+      depth += token[0].startsWith('</') ? -1 : 1;
+      if (depth === 0) { end = sectionTags.lastIndex; break; }
+    }
+    if (end === start) throw new Error(`Unclosed feature group: ${category}`);
+    html = html.slice(0, start) + group + html.slice(end);
     html = html.replace(new RegExp(`(data-category="${category}" aria-pressed="(?:true|false)">[^<]*<span>)\\d+(</span>)`), `$1${features.length}$2`);
   }
   if (!html.includes('href="feature-visuals.css"')) html=html.replace('</head>','<link rel="stylesheet" href="feature-visuals.css"></head>');

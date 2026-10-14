@@ -36,7 +36,7 @@ test('a draft starts on arrival, grows progressively, and is ready before sendin
   assert.equal(get('#copilot-sent-copy').textContent,get('#orky-draft').value);
 });
 
-test('typing pauses offscreen and user edits or discard cancel the animation',()=>{
+test('typing pauses offscreen and user edits cancel the animation',()=>{
   const {get,show,hide,finish,timers,click}=setup();
   show();hide();const paused=get('#orky-draft').value;
   finish();assert.equal(get('#orky-draft').value,paused);
@@ -45,7 +45,9 @@ test('typing pauses offscreen and user edits or discard cancel the animation',()
   get('#orky-draft').handlers.input({currentTarget:get('#orky-draft')});
   finish();hide();show();assert.equal(get('#orky-draft').value,'My own answer');
   assert.equal(timers.size,0);
-  click('[data-copilot-suggest]');click('[data-orky-clear]');finish();
+  click('[data-copilot-suggest]');
+  get('#orky-draft').value='';
+  get('#orky-draft').handlers.input({currentTarget:get('#orky-draft')});finish();
   assert.equal(get('#orky-draft').value,'');assert.equal(get('[data-orky-send]').disabled,true);
 });
 

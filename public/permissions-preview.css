@@ -1,0 +1,25 @@
+/* Project access mirrors the real invitation dialog with fictional examples. */
+#feature-project-permissions {grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(210px,.8fr);column-gap:36px;padding:28px;align-items:start}
+#feature-project-permissions .feature-visual {grid-column:1;grid-row:1;margin:0;aspect-ratio:auto!important;background:#eef1e7!important;border:0;border-radius:20px;padding:18px!important}
+#feature-project-permissions>h4 {grid-column:2;align-self:end;font-size:clamp(23px,2.1vw,32px);line-height:1.18;letter-spacing:-.035em;margin:35px 0 18px}
+#feature-project-permissions>p {grid-column:2;font-size:16px;line-height:1.7;margin:0 0 22px}
+#feature-project-permissions>.feature-plan {grid-column:2;justify-self:start;align-self:start}
+.permission-preview {background:#fff;border:1px solid #dfe2e6;border-radius:20px;padding:24px;color:#202532;font:500 13px/1.4 'Orka Dashboard',sans-serif;box-shadow:0 8px 22px #243c2110;max-width:660px;margin:auto}
+.permission-preview-title {display:flex;gap:14px;align-items:center;margin-bottom:22px}
+.permission-preview-title>span {display:grid;place-items:center;background:#eef4e5;color:#577a40;width:46px;height:46px;border-radius:14px;flex-shrink:0}
+.permission-preview .dp-icon{width:23px;height:23px}.permission-preview-title>.dp-icon {margin-left:auto;color:#777;width:16px}
+.permission-preview-title strong{font-size:20px}.permission-preview-title p{margin:3px 0 0;color:#7d7d7d;font-size:13px}
+.permission-preview-email {display:grid;gap:7px;margin-bottom:16px}.permission-preview-email>b,.permission-role-label {font-size:13px}.permission-preview-email>span{border:1px solid #d6d9df;border-radius:9px;padding:10px 13px;color:#a1a4ab}
+.permission-roles {display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}.permission-roles>div{position:relative;padding:13px 13px 13px 37px;border:1px solid #dfe3ed;border-radius:13px}.permission-roles>div.selected{border-color:#b4c8a1;background:#edf3e5}.permission-roles strong{font-size:15px}.permission-roles p{font-size:12px;color:#777;line-height:1.4;margin:5px 0 0}.permission-roles i{position:absolute;left:13px;top:15px;width:15px;height:15px;border:1px solid #cdd5e0;border-radius:50%;background:white}.permission-roles .selected i{border:5px solid #080808}
+.permission-included{color:#858585;margin:18px 0;font-size:12px}.permission-group{margin-top:17px}.permission-group>span{font-size:11px;color:#888;letter-spacing:.025em}.permission-group>div{display:grid;grid-template-columns:1fr 1fr;gap:9px 14px;margin-top:9px}.permission-group>div>span{display:flex;align-items:center;gap:9px;font-size:12px}.permission-group i{display:grid;place-items:center;width:15px;height:15px;flex:0 0 15px;border:1px solid #cfd6e0;border-radius:4px;box-shadow:0 1px 2px #1a243522;font-style:normal;font-size:10px;color:white}.permission-group i.checked{background:#0b0b0b;border-color:#0b0b0b}
+.permission-preview-footer{border-top:1px solid #edeef1;margin:20px -24px -24px;padding:14px 24px;display:flex;align-items:center;gap:16px;color:#888;font-size:11px}.permission-preview-footer>span:nth-child(2){margin-left:auto;color:#202532}.permission-preview-footer>b{background:#222;color:white;padding:10px 14px;border-radius:9px;font-size:12px}
+@media(max-width:760px){#feature-project-permissions{display:block;padding:18px}#feature-project-permissions .feature-visual{margin:0 0 22px;padding:10px!important}#feature-project-permissions>h4{font-size:25px;margin:0 0 12px}.permission-preview{padding:16px;font-size:11px;border-radius:14px}.permission-preview-title strong{font-size:15px}.permission-preview-title p{font-size:10px}.permission-preview-title>span{width:34px;height:34px;border-radius:10px}.permission-roles>div{padding:10px 8px 10px 29px}.permission-roles i{left:9px;top:12px;width:13px;height:13px}.permission-roles strong{font-size:12px}.permission-roles p{font-size:10px}.permission-group>div{gap:8px}.permission-group>div>span{font-size:10px;gap:7px}.permission-group i{width:12px;height:12px;flex-basis:12px}.permission-preview-footer{margin:18px -16px -16px;padding:13px 16px;gap:10px;font-size:9px}.permission-preview-footer>b{font-size:10px;padding:9px}.permission-preview-title{gap:9px}}
+
+#feature-project-permissions .permission-copy{grid-column:2;grid-row:1;align-self:center;padding-block:24px}
+#feature-project-permissions .permission-copy h4{font-size:clamp(24px,2.2vw,34px);line-height:1.18;letter-spacing:-.035em;margin:0 0 20px}
+#feature-project-permissions .permission-copy p{font-size:16px;line-height:1.7;margin:0 0 24px}
+#feature-project-permissions .permission-preview p{line-height:1.4}
+#feature-project-permissions .permission-preview-title{margin-bottom:16px}
+#feature-project-permissions .permission-group{margin-top:12px}
+#feature-project-permissions .permission-preview-footer{padding-block:10px}
+@media(max-width:760px){#feature-project-permissions .permission-copy{padding:0}#feature-project-permissions .permission-copy h4{font-size:25px}}

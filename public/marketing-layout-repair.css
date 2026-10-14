@@ -18,9 +18,7 @@
 .fv-source-grid .import-provider {padding:8px;font-size:10px}
 .fv-source-grid .import-provider-logo {width:20px;height:20px;border-radius:4px}
 .hero-night .launch-providers .import-provider {color:#27332e}
-.launch-providers>.import-provider:last-child {
-  grid-column:1/-1;justify-content:center;
-}
+
 
 /* Buttons previously inherited bare SVG sizing and split icon from label. */
 .product-modes-card .launch-mode-controls {
@@ -122,4 +120,112 @@
   .marketing-device-site>span {font-size:6px}
   .marketing-site-button {font-size:6px;padding:7px}
   .marketing-device-scene .accurate-mobile-links>.marketing-app-badges {margin-left:0}
+}
+
+
+/* Keep the navigation inside its pill at intermediate desktop widths. */
+.site-header .nav-wrap {flex-wrap:nowrap;align-items:center}
+.site-header .desktop-nav {order:0;width:auto;flex-basis:auto;flex-wrap:nowrap;min-width:0}
+.site-header .desktop-nav>a {white-space:nowrap}
+.site-header .nav-actions {flex-shrink:0;margin-left:auto}
+@media (min-width:1361px) {
+  .site-header .desktop-nav {display:flex;gap:clamp(14px,1.5vw,23px)}
+  .site-header .nav-wrap {gap:20px}
+  .site-header .mobile-menu {display:none}
+}
+@media (max-width:1360px) {
+  .site-header .desktop-nav {display:none!important}
+  .site-header .mobile-menu {display:block;flex:0 0 auto}
+  .site-header .nav-wrap {padding-block:0;gap:16px}
+  .site-header .mobile-nav:not([hidden]) {
+    width:calc(100% - 64px);max-width:1440px;margin:10px auto 0;
+    padding:22px 25px;border:1px solid #cbd7c5;border-radius:20px;
+    background:#fffdf4;box-shadow:0 15px 35px #183d321a;
+  }
+  .site-header .mobile-nav a {color:#244b3e}
+  .hero-night .site-header .mobile-nav:not([hidden]) {background:#102939;border-color:#315061}
+  .hero-night .site-header .mobile-nav a {color:#e3f1e7}
+}
+@media (max-width:700px) {
+  .site-header .mobile-nav:not([hidden]) {width:calc(100% - 30px)}
+  .site-header .nav-wrap {gap:10px}
+}
+
+/* The last migration choice is a small invitation, not a large vendor ad. */
+:is(.launch-providers,.import-constellation,.fv-source-grid) .import-provider-other {
+  font-family:inherit;font-size:inherit;font-weight:500;cursor:pointer;
+  border:1px dashed #bdcdb4;border-radius:9px;background:#f4f7ee;color:#45613b;
+  min-height:46px;padding:10px 14px;box-shadow:none;transition:background .15s,border-color .15s;
+}
+.launch-providers>.import-provider-other {grid-column:1/-1;justify-content:center;font-size:13px;min-height:42px;padding:8px 14px}
+.import-provider-other .import-other-icon {display:grid;place-items:center;width:28px;height:28px;flex:0 0 28px;border:1px solid #c7d5bd;border-radius:7px;font-size:21px;font-weight:400;line-height:1;background:#fff}
+.import-provider-other>svg {width:16px;height:16px;flex:0 0 16px;margin-left:auto}
+.launch-providers>.import-provider-other>svg {margin-left:4px}
+:is(.launch-providers,.import-constellation,.fv-source-grid) .import-provider-other:is(:hover,:focus-visible) {background:#e9f1dd;border-color:#6d8c54;outline-offset:3px}
+.fv-source-grid .import-provider-other {font-size:10px;padding:7px 8px;min-height:36px;gap:6px}
+.fv-source-grid .import-provider-other .import-other-icon {width:20px;height:20px;flex-basis:20px;font-size:16px}
+.fv-source-grid .import-provider-other>svg {width:12px;height:12px;flex-basis:12px}
+
+.import-contact-status:empty {display:none}
+.import-contact-status:not(:empty) {display:block;grid-column:1/-1;flex-basis:100%;font:12px/1.6 var(--sans,sans-serif);color:#607769;padding:6px 2px;background:transparent;border:0;box-shadow:none}
+
+/* Match the visible black badges, accounting for Google's transparent margin. */
+.store-badge-art {--store-badge-height:40px;position:relative;display:block;flex:0 0 auto;width:calc(var(--store-badge-height)*3.357143);height:var(--store-badge-height);overflow:hidden;border-radius:5px}
+.store-badge-art>picture {display:contents}
+html .store-badge-art img {
+  position:absolute;left:-7.2695%;top:-24.405%;display:block;
+  width:114.539%!important;height:148.81%!important;max-width:none!important;
+  object-fit:fill!important;margin:0!important;vertical-align:middle;
+}
+.marketing-app-badges .store-badge-art {--store-badge-height:30px}
+.orka-store-links .store-badge-art {--store-badge-height:50px}
+.accurate-mobile-links a {line-height:0}
+.accurate-mobile-links img[src*="app-store-badge"] {display:block;height:40px;width:auto;max-width:none}
+.marketing-app-badges img[src*="app-store-badge"] {height:30px}
+
+/* A pale central hub and a shared lavender accent for the crew story. */
+.mobile-nav .letter-nav-stamp {align-self:flex-start;width:max-content;max-width:100%;margin:12px 7px}
+html .pod-audience-diagram .diagram-hub {
+  color:#204a3c;background:#f7f6e8;border:1px solid #b9cbb2;
+  box-shadow:0 7px 20px #395c3920;
+}
+html .pod-audience-diagram .diagram-hub>span:last-child {color:#55724b}
+html .pod-audience-diagram .diagram-hub .wordmark {color:#204a3c}
+html .pod-audience-diagram .diagram-hub .wordmark>span {color:#7a955b}
+.story-workflow>span {background:#c4a0f9;border-color:#ad84e4;color:#392754}
+.story-workflow>b {color:#70568f}
+
+/* A purposeful bento: one visitor profile, two complementary conversation views. */
+@media (min-width:1001px) {
+  .context-bento {grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:22px;align-items:start}
+  .context-bento>.real-livemap-card {grid-column:1/-1;grid-row:1}
+  .context-bento>.customer-context-card {grid-column:1;grid-row:2 / 4;display:block;align-self:stretch;height:auto}
+  .context-bento>.typing-card {grid-column:2;grid-row:2}
+  .context-bento>.translation-card {grid-column:2;grid-row:3;display:block}
+  .context-bento>:is(.typing-card,.translation-card) {padding:25px 28px;align-self:stretch}
+  .context-bento .context-card-heading h3 {font-size:27px}
+  .context-bento>.typing-card>.product-preview {margin-top:18px}
+  .context-bento>.typing-card>.product-preview>.dp {font-size:12px;padding:20px}
+  .context-bento>.translation-card .translation-thread {margin-top:18px;padding:17px}
+  .context-bento>.translation-card .translated-message {max-width:calc(100% - 35px);padding:13px 15px}
+  .context-bento>.translation-card .translation-chat-row {margin:0 0 12px}
+  .context-bento>.translation-card .translation-chat-row:last-child {margin-bottom:0}
+  .context-bento>.translation-card .translated-message>p {font-size:13px;line-height:1.5}
+  .context-bento>.translation-card .translation-result>p {font-size:12px;line-height:1.5}
+  .context-bento>.translation-card .translation-result-label {font-size:10px}
+  .context-bento>.translation-card .translation-note {margin-top:12px}
+  .context-bento>.translation-card>.text-link {display:inline-flex;margin-top:12px;font-size:12px}
+  .context-bento>.urgency-card {grid-column:1/-1;grid-row:4}
+  .context-bento>.customer-context-card .context-sdk-link {padding-block:19px}
+}
+@media (max-width:1000px) {
+  .context-bento {grid-template-columns:minmax(0,1fr);gap:20px}
+  .context-bento>:is(.customer-context-card,.typing-card,.translation-card) {grid-column:1;grid-row:auto;display:block;width:100%;height:auto}
+  .context-bento>.customer-context-card .contact-detail-list {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px}
+  .context-bento>.customer-context-card .contact-detail-list>div {margin:0;min-width:0;overflow-wrap:anywhere}
+}
+@media (max-width:600px) {
+  .context-bento>.customer-context-card .contact-detail-list {display:grid;grid-template-columns:minmax(0,1fr);gap:13px}
+  .context-bento>:is(.typing-card,.translation-card) {padding:23px 19px}
+  .context-bento .context-card-heading h3 {font-size:25px}
 }

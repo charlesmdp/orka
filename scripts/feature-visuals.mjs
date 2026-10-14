@@ -1,3 +1,5 @@
+import {teamChatPreview} from './collaboration-pages.mjs';
+import {permissionsPreview} from './permissions-preview.mjs';
 import {dashboard, detailPreview, widgetPreview, settingsPreview, mapPreview} from './dashboard-previews.mjs';
 // Small, self-contained product illustrations: no video player or animation library.
 const e = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -24,6 +26,8 @@ const settings = (title,label,value) => window(title,`<span class="fv-eyebrow">$
 const widget = (title,body,kind='') => window(title,`<div class="fv-mini-site"><div>${lines}<span class="fv-site-button"></span></div><div class="fv-mini-widget ${kind}"><span class="fv-widget-top">${avatar('Emma')} Here to help</span>${body}</div></div>`);
 
 const previews = {
+  'team-chat':()=>teamChatPreview().replace(/<!-- FEATURE_PREVIEW_(?:START|END) -->/g,''),
+  'mcp':()=>settingsPreview('developers'),
   'live-chat':()=>chat('Does this come in green?','Yes! Forest green is in stock.'),
   'live-typing':()=>window('A little head start',`<span class="fv-eyebrow">VISITOR IS TYPING</span><div class="fv-compose"><span class="fv-type-text">Can I change my delivery address?</span><i class="fv-caret"></i></div>${row(typing,'Before they press send')}`),
   'history-search':()=>window('Find the conversation',`<div class="fv-input">⌕ <span>delivery address</span></div><div class="fv-search-result fv-arrive">${avatar('Alex',2)}<div><strong>Alex · Your store</strong><span>Can I change my <mark>delivery address</mark>?</span></div></div>`),
@@ -42,7 +46,7 @@ const previews = {
   'urgency':()=>window('See what needs you first',row('🐟 A quick question',chip('Low'))+row('🦈 Checkout is down',chip('Critical','warm'),'fv-highlight')+row('🐡 Setup help',chip('Normal'))),
   'team-size':()=>window('Your crew, together',people(['Emma','Theo','Jules'])+`<div class="fv-team-plans"><span>Free <b>1</b></span><span>Light <b>2</b></span><span>Pro <b>3</b></span><span>Max <b>12</b></span></div>`),
   'extra-members':()=>window('Room to grow on Max',`<div class="fv-seats"><strong>12</strong><span>included teammates</span><b>+</b>${avatar('New',3)}</div><div class="fv-footnote">€8 / extra member / month</div>`),
-  'project-permissions':()=>window('The right team, for each project',row('Landing page',`${avatar('Emma')} Marketing`)+row('Your app',`${avatar('Theo',2)} Technical`)+`<div class="fv-permission"><span>Conversations ✓</span><span>Settings —</span></div>`),
+  'project-permissions':permissionsPreview,
   'knowledge':()=>sources('Your knowledge, connected',['Help center','Website','Files','Instructions']),
   'automatic-replies':()=>window('Orky is covering for you',bubble('Where can I find my invoice?')+orky('Go to Settings → Billing → Invoices.'),'fv-ai'),
   'ai-drafts':()=>window('A draft. You have the final say.',`<div class="fv-draft">${orky('Your order ships within 2–3 working days.')}<span>Review and make it your own.</span></div><div class="fv-actions"><span>Edit draft</span><strong>Send reply ↗</strong></div>`,'fv-ai'),
@@ -134,5 +138,5 @@ previews['visitor-list'] = () => mapPreview();
 export const illustratedFeatureIds = Object.keys(previews);
 export function featureVisual(id, category) {
   if (!previews[id]) return '';
-  return `<!-- FEATURE_PREVIEW_START --><div class="feature-visual fv-${category}" data-feature-visual data-nosnippet aria-hidden="true">${previews[id]()}</div><!-- FEATURE_PREVIEW_END -->`;
+  return `<!-- FEATURE_PREVIEW_START --><div class="feature-visual fv-${category}" data-feature-visual data-nosnippet>${previews[id]()}</div><!-- FEATURE_PREVIEW_END -->`;
 }

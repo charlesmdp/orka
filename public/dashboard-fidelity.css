@@ -62,3 +62,19 @@
 .product-preview.pp-translation .dp-demo-avatar>*{visibility:hidden}
 @media(max-width:700px){.pp-dashboard .dp-filters{font-size:.7em;gap:.4em}.pp-dashboard .dp-filters>span:nth-child(3),.pp-dashboard .dp-filters>span:nth-child(4){display:none}.pp-dashboard .dp-shortcut-next{display:none}}
 .product-preview .dp-nav-icon[viewBox="0 0 86 86"]{border-radius:50%;overflow:hidden}
+
+/* Preserve the full logo silhouette and keep distinct projects identifiable. */
+.product-preview .dp-logo{display:block;flex:none;object-fit:contain;object-position:center;overflow:visible;clip-path:none;filter:none;border-radius:0}
+.product-preview .dp-wordmark{flex:none;align-items:center;gap:.38em;line-height:1}
+.product-preview .dp-wordmark .dp-logo{width:1.5em;height:auto;aspect-ratio:767.12/710}
+.product-preview .dp-top>.dp-person,.product-preview .dp-top>.dp-team,.product-preview .dp-available{flex-shrink:0}
+.product-preview .dp-project-icon{display:block;flex:none;width:1.2em;height:1.2em;object-fit:cover;border-radius:50%;background:#fff}
+.product-preview .dp-inbox-project{display:block;padding-left:1.8em;margin-top:.12em;color:#a5b9ac;font-size:.64em;letter-spacing:.015em;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.product-preview .dp-inbox-row,.feature-visual .pp-dashboard .dp-inbox-row{padding-top:.65em;padding-bottom:.65em}
+.product-preview .dp-composer-top .dp-suggest{display:inline-flex;align-items:center;gap:.35em;border:0;background:transparent;padding:0;font:inherit;color:#537d3f;font-weight:700;white-space:nowrap}
+.product-preview .dp-shortcuts button{font:inherit;color:inherit;cursor:help}
+.product-preview .dp-shortcuts .dp-shortcut-next{padding:.25em;border:1px solid #e1e5ec;border-radius:.6em;background:#fff}
+.product-preview .dp-shortcut-next .dp-shortcut-icon{opacity:1}
+.product-preview .dp-tip-trigger:is(:hover,:focus-visible){color:#537d3f;background:#edf4e6;border-color:#adc498}
+.product-preview .dp-tip-trigger:focus-visible{outline:2px solid #537d3f;outline-offset:2px}
+.product-preview .dp-suggest .dp-icon{flex:none}

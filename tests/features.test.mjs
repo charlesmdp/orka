@@ -10,14 +10,15 @@ import path from 'node:path';
 
 const html = await readFile(new URL('../public/features.html', import.meta.url), 'utf8');
 
-test('feature illustrations stay decorative and their example conversations never become FAQ facts',async()=>{
+test('feature previews keep sample conversations out of FAQ facts and avoid submitting forms',async()=>{
   const catalogue=JSON.parse(await readFile(new URL('../scripts/product-catalogue.json',import.meta.url),'utf8'));
   assert.ok(illustratedFeatureIds.length>=catalogue.features.length*.8,'Illustrate most of the catalogue');
   for(const id of illustratedFeatureIds){
     assert.ok(catalogue.features.some(f=>f[0]===id),id+' must belong to the catalogue');
     const preview=featureVisual(id,'conversations');
-    assert.match(preview,/aria-hidden="true"/);
-    assert.doesNotMatch(preview,/<(?:button|input|a\s|script)/,'Previews must not add fake controls or tab stops');
+    assert.match(preview,/data-nosnippet/);
+    assert.doesNotMatch(preview,/<(?:form|script)\b|type="submit"/,'Preview interactions must not submit anything');
+    assert.doesNotMatch(preview,/<div class="feature-visual[^>]*aria-hidden="true"/,'Tooltip buttons must remain keyboard accessible');
   }
   const dir=await mkdtemp(path.join(tmpdir(),'orka-feature-preview-'));
   try{

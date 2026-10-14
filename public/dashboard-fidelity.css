@@ -1,0 +1,64 @@
+/* Product UI assets and proportions observed in the real dashboard, 14 Oct 2026.
+   These rules are scoped to product previews, not the marketing page design. */
+@font-face{font-family:'Orka Dashboard';font-style:normal;font-weight:400;font-display:swap;src:url('/assets/dashboard/fonts/jakarta-400.ttf') format('truetype')}
+@font-face{font-family:'Orka Dashboard';font-style:normal;font-weight:500;font-display:swap;src:url('/assets/dashboard/fonts/jakarta-500.ttf') format('truetype')}
+@font-face{font-family:'Orka Dashboard';font-style:normal;font-weight:600;font-display:swap;src:url('/assets/dashboard/fonts/jakarta-600.ttf') format('truetype')}
+@font-face{font-family:'Orka Dashboard';font-style:normal;font-weight:700;font-display:swap;src:url('/assets/dashboard/fonts/jakarta-700.ttf') format('truetype')}
+.product-preview .dp{font-family:'Orka Dashboard',sans-serif;letter-spacing:-.025em;--dp-nav:#14211d;--dp-forest:#243a30;--dp-green:#537d3f}
+.product-preview .dp-blue{--dp-nav:#101932;--dp-forest:#406ef1;--dp-green:#527cff}
+.product-preview .dp-animal{background:var(--animal-color,#2f343b);overflow:visible}
+.product-preview .dp-animal>.dp-animal-art{width:100%;height:100%;object-fit:cover;border-radius:50%;filter:none}
+.product-preview .dp-animal .dp-flag{width:.82em;height:.82em;top:-.04em;left:-.03em;border:2px solid #20352b;border-radius:50%;overflow:hidden;font-size:inherit;line-height:1;background:#fff}
+.product-preview .dp-animal .dp-flag img{display:block;width:100%;height:100%;object-fit:cover;filter:none}
+.product-preview .dp-animal>i{width:.92em;height:.92em;right:-.08em;bottom:-.02em;border:.13em solid #20352b;background:#26d741}
+.product-preview .dp-rail{padding:.6em 0 .4em;color:#9fb3a6}
+.product-preview .dp-rail>span{position:relative;height:5.1em;flex-shrink:0;clip-path:none;background:none;isolation:isolate}
+.product-preview .dp-rail .selected:before{content:'';position:absolute;inset:.4em 0;transform:skewY(-6deg);background:#d5fb65;z-index:-1}
+.product-preview .dp-nav-icon{display:block;width:2.15em;height:2.15em;flex-shrink:0;overflow:visible}
+.product-preview .dp-nav-icon .fill-shell-icon{fill:#9fb3a6}
+.product-preview .dp-nav-icon .fill-shell-icon-muted{fill:#5f7a6b}
+.product-preview .dp-nav-icon :is(.fill-shell,.fill-shell-land){fill:#14211d}
+.product-preview .dp-rail .selected .fill-shell-icon{fill:#14211d}
+.product-preview .dp-rail .selected :is(.fill-shell,.fill-shell-land){fill:#d5fb65}
+.product-preview .dp-rail .dp-nav-count{position:absolute;top:.6em;left:54%;font-size:.64em;font-weight:700;background:#ff5624;color:#fff;border-radius:2em;padding:.12em .4em;box-shadow:0 0 0 .15em #14211d}
+.product-preview .dp-rail .dp-icon{width:1.9em;height:1.9em;stroke-width:1.7}
+.product-preview .dp-theme-dot{position:absolute;left:57%;top:58%;width:.5em;height:.5em;border-radius:50%;background:#42a9ef}
+.product-preview .dp-inbox{background:linear-gradient(110deg,#1b2e25,#20342b)}
+.product-preview .dp-filters{padding:1.5em 1.5em 1em;gap:.7em;min-height:4.4em;font-size:.78em}
+.product-preview .dp-filters>span{display:inline-flex;align-items:center;gap:.35em}
+.product-preview .dp-filters .dp-icon{width:1.1em;height:1.1em}
+.product-preview .dp-inbox-row,.feature-visual .pp-dashboard .dp-inbox-row{padding:.9em .85em;margin:0 1.3em;gap:.9em;border:0;min-height:4.95em;align-items:center}
+.product-preview .dp-inbox-row:after{content:'';position:absolute;left:4.6em;right:.85em;bottom:0;height:1px;background:#ffffff12}
+.product-preview .dp-inbox-row.selected:after{display:none}
+.product-preview .dp-inbox-row.selected:before{top:50%;height:1.9em;transform:translateY(-50%);background:#d5fb65}
+.product-preview .dp-inbox-row strong{font-size:1em;gap:.4em;font-weight:600;line-height:1.4}
+.product-preview .dp-inbox-row strong>span{min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis}
+.product-preview .dp-inbox-row strong small{margin-left:auto;flex:none;font-size:.74em}
+.product-preview .dp-inbox-row .dp-logo{width:1.07em;height:1.07em}
+.product-preview .dp-inbox-subline{display:flex;gap:.35em;align-items:center;min-width:0;margin-top:.3em;font-size:.86em;color:#ffffff93}
+.product-preview .dp-agent-tag{flex:none;margin:0;font-size:.9em;padding:.03em .35em;line-height:1.2;background:#ffffff26;border-radius:.27em}
+.product-preview .dp-inbox-snippet{min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.product-preview .dp-inbox-snippet>.dp-icon{width:1em;height:1em;margin-right:.3em}
+.product-preview .dp-note-label{color:#ee4f97;margin-right:.3em}
+.product-preview .dp-inbox-row .dp-row-urgency{position:static;display:flex;align-items:center;gap:.25em;flex-shrink:0;font-size:1em}
+.product-preview .dp-row-urgency em{font-size:1.05em;margin-left:.2em;letter-spacing:-.25em}
+.dp-chilis{display:inline-flex;align-items:center;vertical-align:middle;flex-shrink:0;gap:0;line-height:1}
+.dp-chilis svg{display:block;width:.8em;height:1.15em;overflow:visible;margin-inline:-.03em}
+.product-preview .dp-conversation{background:linear-gradient(#edf0e659,#edf0e659),url('/assets/dashboard/orka-chat-bg.png');background-size:auto,25em;background-color:#eff0e6}
+.product-preview .dp-settings-main{background:linear-gradient(#edf0e659,#edf0e659),url('/assets/dashboard/orka-chat-bg.png');background-size:auto,25em;background-color:#eff0e6}
+.product-preview .dp-amber{display:inline-flex;align-items:center;gap:.4em}
+.product-preview .dp-shortcut-icon{display:inline-flex;align-items:center;justify-content:center;width:2em;height:2em;border-radius:.65em;background:#f4f5fb;color:#08c686;flex-shrink:0}
+.product-preview .dp-shortcut-icon.bye{color:#4977ff}.product-preview .dp-shortcut-icon.chit{color:#ed9fa8}
+.product-preview .dp-shortcut-icon svg{width:1.1em;height:1.1em}
+.product-preview .dp-shortcuts .dp-pill{padding:.25em .6em .25em .3em;gap:.45em}
+.product-preview .dp-shortcut-next{display:flex;align-items:center;gap:.5em;color:#919191}
+.product-preview .dp-shortcut-next .dp-shortcut-icon{opacity:.6}
+.product-preview .dp-composer-bottom{gap:.6em}.product-preview .dp-attachments{gap:.65em}
+.product-preview .dp-panel-title>.dp-icon:first-child{border:1px solid #c7d8bc;border-radius:.4em;padding:.2em;width:1.55em;height:1.55em;background:#f8fbf5;box-shadow:0 .1em .2em #14211d0a}
+.product-preview .dp-details>div{align-items:center;line-height:1.45;min-height:1.3em}
+.product-preview .dp-details>div>span{min-width:0}.product-preview .dp-details>.dp-weather{white-space:normal}
+.product-preview.pp-translation .dp-conversation{background:linear-gradient(#e7e8f2b8,#e7e8f2b8),url('/assets/dashboard/orka-chat-bg.png');background-size:auto,25em}
+.product-preview.pp-translation .dp-demo-avatar{background:#263a6b url('/assets/dashboard/animals/sea-lion.png') center/cover no-repeat;color:transparent}
+.product-preview.pp-translation .dp-demo-avatar>*{visibility:hidden}
+@media(max-width:700px){.pp-dashboard .dp-filters{font-size:.7em;gap:.4em}.pp-dashboard .dp-filters>span:nth-child(3),.pp-dashboard .dp-filters>span:nth-child(4){display:none}.pp-dashboard .dp-shortcut-next{display:none}}
+.product-preview .dp-nav-icon[viewBox="0 0 86 86"]{border-radius:50%;overflow:hidden}

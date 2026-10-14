@@ -134,11 +134,32 @@ $('[data-takeover-send]').addEventListener('click', () => {
   $('#human-takeover').hidden = true;
   $('#autopilot-status').textContent = 'Human handover complete. Emma replied in this demo.';
 });
+// Optional composer shortcuts share the same editable-draft controls above.
+const copilotShortcutReplies = {
+  hi: 'Hi Amy! Emma here. Thanks for reaching out. How can I help you today?',
+  bye: 'You’re very welcome, Amy! If anything else comes up, we’re right here. Have a lovely day!'
+};
+$$('[data-copilot-shortcut]').forEach(button => button.addEventListener('click', () => {
+  stopDraftWriting();
+  draftStarted = true;
+  $('#orky-draft').value = copilotShortcutReplies[button.dataset.copilotShortcut];
+  $('#orky-draft-badge').textContent = 'NOT SENT';
+  $('[data-orky-send]').disabled = false;
+  $('#copilot-status').textContent = 'Your draft is ready. Review it, then send.';
+}));
+$$('.detail-shortcut-wrap').forEach(wrapper => {
+  wrapper.addEventListener('keydown', event => {
+    if (event.key === 'Escape') wrapper.dataset.tooltipDismissed = 'true';
+  });
+  wrapper.addEventListener('pointerleave', () => delete wrapper.dataset.tooltipDismissed);
+  wrapper.addEventListener('focusout', () => delete wrapper.dataset.tooltipDismissed);
+});
+
 const urgencyExamples = {
-  low: {label:'Low urgency', icon:'🫑', count:1, message:'Can I switch between grams and ounces?'},
-  normal: {label:'Normal urgency', icon:'🌶️', count:1, message:'Can I save a meal to log it again?'},
-  high: {label:'High urgency', icon:'🌶️', count:2, message:'My saved meals have disappeared.'},
-  critical: {label:'Critical urgency', icon:'🌶️', count:3, message:'The app is down. I can’t sign in.'}
+  low: {label:'Low urgency', message:'Can I switch between grams and ounces?'},
+  normal: {label:'Normal urgency', message:'Can I save a meal to log it again?'},
+  high: {label:'High urgency', message:'My saved meals have disappeared.'},
+  critical: {label:'Critical urgency', message:'The app is down. I can’t sign in.'}
 };
 $$('[data-urgency]').forEach(button => button.addEventListener('click', () => {
   const level = button.dataset.urgency;
@@ -148,7 +169,7 @@ $$('[data-urgency]').forEach(button => button.addEventListener('click', () => {
     item.classList.toggle('active', active);
     item.setAttribute('aria-pressed', String(active));
   });
-  $('#urgency-inbox-sharks').innerHTML = `<span class="shark-set ${level}" aria-hidden="true">${`<span class="shark-icon">${example.icon}</span>`.repeat(example.count)}</span>`;
+  $('#urgency-inbox-sharks').replaceChildren(button.querySelector('.shark-set').cloneNode(true));
   $('#urgency-example-message').textContent = example.message;
   $('#urgency-current-label').textContent = example.label;
 }));
@@ -477,12 +498,12 @@ const visitors = {
  mia:{initials:'KB',name:'Kai Brooks',location:'Miami, United States',email:'kai@example.com',domain:'booking.example',session:'4m 19s',page:'/book/consultation',previous:'/services',previousTime:'3 minutes ago',attributes:[['service','Consultation'],['duration','30 minutes'],['timezone','America/New_York']],admin:'admin.booking.example/customers/kai'}
 };
 const visitorProfiles = {
-  van:{flag:'🇨🇦',time:'06:30 (GMT−7)',ip:'192.0.2.38',logo:'calorie-app.svg',weather:'☁️',temperature:'15°C'},
-  sf:{flag:'🇺🇸',time:'06:30 (GMT−7)',ip:'198.51.100.24',logo:'trustarr-mark.svg',weather:'☀️',temperature:'18°C'},
-  den:{flag:'🇺🇸',time:'07:30 (GMT−6)',ip:'192.0.2.62',logo:'blogging-app.svg',weather:'☀️',temperature:'21°C'},
-  chi:{flag:'🇺🇸',time:'08:30 (GMT−5)',ip:'198.51.100.86',logo:'outreach-app.svg',weather:'☁️',temperature:'17°C'},
-  ny:{flag:'🇺🇸',time:'09:30 (GMT−4)',ip:'192.0.2.42',logo:'orca-cap.webp',weather:'☀️',temperature:'22°C'},
-  mia:{flag:'🇺🇸',time:'09:30 (GMT−4)',ip:'203.0.113.19',logo:'cowlendar-official-home.png',weather:'☀️',temperature:'28°C'}
+  van:{flag:'🇨🇦',time:'06:30 (GMT−7)',ip:'192.0.2.38',logo:'calorie-app.svg',weather:'cloud',temperature:15},
+  sf:{flag:'🇺🇸',time:'06:30 (GMT−7)',ip:'198.51.100.24',logo:'trustarr-mark.svg',weather:'sun',temperature:18},
+  den:{flag:'🇺🇸',time:'07:30 (GMT−6)',ip:'192.0.2.62',logo:'blogging-app.svg',weather:'sun',temperature:21},
+  chi:{flag:'🇺🇸',time:'08:30 (GMT−5)',ip:'198.51.100.86',logo:'outreach-app.svg',weather:'cloud',temperature:17},
+  ny:{flag:'🇺🇸',time:'09:30 (GMT−4)',ip:'192.0.2.42',logo:'orca-cap.webp',weather:'sun',temperature:22},
+  mia:{flag:'🇺🇸',time:'09:30 (GMT−4)',ip:'203.0.113.19',logo:'cowlendar-official-home.png',weather:'sun',temperature:28}
 };
 let selectedVisitor = 'ny';
 $$('[data-visitor]').forEach(button => button.addEventListener('click', () => {
@@ -505,8 +526,9 @@ $$('[data-visitor]').forEach(button => button.addEventListener('click', () => {
   $('[data-context-email-short]').textContent = visitor.email;
   $('#context-local-time').textContent = profile.time;
   $('#context-ip').textContent = profile.ip;
-  $('#context-weather').textContent = profile.weather;
-  $('#context-temperature').textContent = profile.temperature;
+  $('#context-weather use').setAttribute('href', '#i-' + profile.weather);
+  const fahrenheit = Math.round(profile.temperature * 9 / 5 + 32);
+  $('#context-temperature').innerHTML = `${profile.temperature}°C <span class="weather-fahrenheit">(${fahrenheit}°F)</span> · ${profile.weather === 'cloud' ? 'Cloudy' : 'Mostly clear'}`;
   $('#context-language').textContent = profile.flag + ' English';
   $('#context-project-logo').src = 'assets/' + profile.logo;
   $('#context-session').textContent = 'Session · ' + visitor.session;

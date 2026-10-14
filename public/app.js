@@ -128,7 +128,9 @@ $('[data-takeover-send]').addEventListener('click', () => {
 // Optional composer shortcuts share the same editable-draft controls above.
 const copilotShortcutReplies = {
   hi: 'Hi Amy! Emma here. Thanks for reaching out. How can I help you today?',
-  bye: 'You’re very welcome, Amy! If anything else comes up, we’re right here. Have a lovely day!'
+  bye: 'You’re very welcome, Amy! If anything else comes up, we’re right here. Have a lovely day!',
+  chat: 'How are things in London today, Amy? Hope your week is going well!',
+  assistance: 'Is there anything else I can help you with today, Amy?'
 };
 $$('[data-copilot-shortcut]').forEach(button => button.addEventListener('click', () => {
   stopDraftWriting();

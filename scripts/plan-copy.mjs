@@ -6,15 +6,15 @@ export const plans = [
     button:'Start free · No card required',footnote:'1 team member included. No credit card required.'},
   {name:'Light',style:'light',price:9,icon:'shell',tag:'SMALL CREW. SMOOTHER DAYS.',people:'2 team members',includes:'Everything in Free, plus',ai:false,
     title:'Two people. A lighter support day.',copy:'Stay organized, share the work and make time to switch off.',
-    items:[['team','Project access & permissions'],['clock','Banners, hours & offline forms'],['search','Saved replies & conversation search'],['file','Image & file sharing'],['tag','Tags, filters & follow-up reminders'],['chart','Live visitor map & analytics']],
-    button:'Choose Light',footnote:'2 team members included. AI features start on Pro.'},
+    items:[['chat','Team chat · direct & group messages'],['team','Project access & permissions'],['clock','Banners, hours & offline forms'],['search','Saved replies & conversation search'],['file','Image & file sharing'],['tag','Tags, filters & follow-up reminders'],['chart','Live visitor map & analytics']],
+    button:'Choose Light',footnote:'2 team members included. Talk here instead of WhatsApp or Slack. AI features start on Pro.'},
   {name:'Pro',style:'pod',price:29,icon:'orca',tag:'YOUR CREW, WITH AN AI TEAMMATE',people:'3 team members',includes:'Everything in Light, plus',ai:true,
     title:'Let Orky take a little off your plate.',copy:'Helpful AI that knows your business and knows when to hand over.',
     items:[['spark','AI drafts & automatic replies'],['handoff','Human handoff & custom triggers'],['shield','Confidence controls & team alerts'],['translate','Chat & help center AI translation'],['summary','AI summaries & urgency scores'],['key','Your own key or Orka AI']],
     button:'Choose Pro',footnote:'3 team members included. AI usage is billed separately.'},
   {name:'Max',style:'fleet',price:99,icon:'anchor',tag:'YOUR WHOLE TEAM. YOUR OWN BRAND.',people:'12 team members',includes:'Everything in Pro, plus',ai:true,
     title:'More people. Fully your own.',copy:'Grow your team, make Orky yours and see how support is doing.',
-    items:[['team','Extra teammates · €8/member/mo'],['palette','Custom AI name & image'],['badge','Remove Orka branding'],['heart','Conversation satisfaction scores'],['chart','Team performance reports'],['code','Higher API rate limits']],
+    items:[['team','Extra teammates · €8/member/mo'],['palette','Custom AI name & image'],['badge','Remove Orka branding'],['heart','Conversation satisfaction scores'],['chart','Team performance reports'],['code','MCP server & higher API rate limits']],
     button:'Choose Max',footnote:'12 team members included. Extra members €8/month each. AI usage is separate.'}
 ];
 const paths={
@@ -39,7 +39,7 @@ export function homePlanCards(){
 const all=[true,true,true,true],light=[false,true,true,true],ai=[false,false,true,true],max=[false,false,false,true];
 export const featureGroups=[
  {name:'Your projects & people',icon:'team',rows:[
- ['Unlimited projects',all],['Team members',['1','2','3','12']],['Additional team members',[false,false,false,'€8/member/mo']],
+ ['Unlimited projects',all],['Team members',['1','2','3','12']],['Team chat',light,'Direct messages and group conversations for teams of two or more. Stay in Orka instead of switching to WhatsApp or Slack.'],['Additional team members',[false,false,false,'€8/member/mo']],
  ['Project access & permissions',['N/A',true,true,true],'Assign teammates to specific projects and control the features they can access within each project.']]},
  {name:'A proper support home',icon:'chat',rows:[
  ['Import your existing knowledge',all,'One-click imports from Gleap, Gorgias, Intercom, GitBook, Help Scout & Fernand. Crisp is also supported; other sources on request.'],['SDK & custom visitor data',all],['Dozens of widget designs',all],['Live chat & email follow-up',all],['Live typing preview',all,'See what visitors are typing before they send.'],['Help center',all],['iOS & Android apps',all]]},
@@ -48,10 +48,10 @@ export const featureGroups=[
  {name:'An AI teammate, on your terms',icon:'spark',note:'Pro & Max · AI usage billed separately',rows:[
  ['AI reply suggestions & drafts',ai,'Based on your help center, website, uploaded files and business instructions.'],['AI auto-replies',ai],['Human handoff',ai,'AI steps aside when a visitor asks for a human, gets frustrated, or needs help beyond its capabilities or knowledge.'],['Custom handoff triggers',ai,'Escalate when specific keywords are mentioned.'],['AI confidence threshold',ai,'Flag low-confidence answers for human review.'],['Handoff notifications & assignment',ai,'Notify your whole team, online teammates or selected teammates, and assign the conversation.'],['Seamless handoff',ai,'Keep the full conversation history and customize the message your visitor sees.'],['Two-way AI conversation translation',ai],['AI help center translation',ai],['AI conversation summaries',ai],['AI urgency scores',ai],['Bring your own AI key or use Orka AI',ai,'Connect OpenAI, Anthropic or OpenRouter with no Orka markup, or let Orka handle AI without a key.']]},
  {name:'Your brand. Your growing team.',icon:'badge',rows:[
- ['Custom AI assistant name & image',max],['Remove Orka branding',max],['Conversation satisfaction scores',max],['Team performance reports',max,'Track response times by teammate and time of day.'],['Higher API rate limits',max]]}
+ ['Custom AI assistant name & image',max],['Remove Orka branding',max],['Conversation satisfaction scores',max],['Team performance reports',max,'Track response times by teammate and time of day.'],['Higher API rate limits',max],['MCP server',max,'Connect your AI tools to work on help articles, conversations and your AI agent.']]}
 ];
 // Every pricing row links to its explanation in the product catalogue.
-export const pricingFeatureIds=['shared-inbox','team-size','extra-members','project-permissions','help-import','sdk','widget-layouts','live-chat','live-typing','help-center','mobile','announcement-banner','offline-form','business-hours','saved-replies','history-search','attachments','tags','reminders','live-map','analytics','ai-drafts','automatic-replies','human-takeover','handoff-triggers','ai-confidence','handoff-assignment','seamless-handoff','translation','help-auto-translation','summaries','urgency','own-key','custom-orky','remove-branding','satisfaction','team-reports','api-limits'];
+export const pricingFeatureIds=['shared-inbox','team-size','team-chat','extra-members','project-permissions','help-import','sdk','widget-layouts','live-chat','live-typing','help-center','mobile','announcement-banner','offline-form','business-hours','saved-replies','history-search','attachments','tags','reminders','live-map','analytics','ai-drafts','automatic-replies','human-takeover','handoff-triggers','ai-confidence','handoff-assignment','seamless-handoff','translation','help-auto-translation','summaries','urgency','own-key','custom-orky','remove-branding','satisfaction','team-reports','api-limits','mcp'];
 export function featureTable(projectHelp){
  const cell=value=>value===true?`<span class="feature-yes">${planIcon('check')}<span class="sr-only">Included</span></span>`:value===false?'<span class="feature-no"><span aria-hidden="true">—</span><span class="sr-only">Not included</span></span>':esc(value);
  let rowIndex=0;

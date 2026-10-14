@@ -1,3 +1,4 @@
+import {nativeAppGallery} from './help-setup-previews.mjs';
 import {readFileSync} from 'node:fs';
 import {replaceProductElement, widgetPreview} from './dashboard-previews.mjs';
 
@@ -30,25 +31,7 @@ const provider = name => name === 'Other' ? otherProvider() : `<span class="impo
 const importNames = ['Gleap', 'Gorgias', 'Intercom', 'Crisp', 'GitBook', 'Help Scout', 'Fernand', 'tawk.to', 'Other'];
 
 function compactDevices() {
-  return `<div class="accurate-devices marketing-device-scene">
-    <div class="accurate-browser-label"><span aria-hidden="true">● ● ●</span> your-website.com</div>
-    <div class="marketing-device-canvas">
-      <div class="marketing-device-site" aria-hidden="true">
-        <strong>Coast &amp; Co.</strong><span>GOOD THINGS. MADE SIMPLY.</span>
-        <b>A little<br>closer to<br>your people.</b>
-        <div class="marketing-site-button">Explore the collection ↗</div>
-        <div class="marketing-site-lines"><i></i><i></i></div>
-      </div>
-      ${widgetPreview()}
-    </div>
-    <div class="accurate-mobile-links">
-      <div class="marketing-app-copy"><strong>Your team, on the go.</strong><span>Orka for iOS &amp; Android</span></div>
-      <div class="marketing-app-badges">
-        <a href="https://apps.apple.com/fr/app/orka-chat/id6473671891" aria-label="Get Orka for iOS"><img src="/assets/mobile-apps/app-store-badge.svg" width="120" height="40" alt="Download on the App Store" loading="lazy"></a>
-        <a href="https://play.google.com/store/apps/details?id=com.orka.chat" aria-label="Get Orka for Android"><img src="/assets/mobile-apps/google-play-badge.png" width="136" height="53" alt="Get it on Google Play" loading="lazy"></a>
-      </div>
-    </div>
-  </div>`;
+  return `<div class="accurate-devices marketing-device-scene">${nativeAppGallery()}</div>`;
 }
 
 // Run after refreshProductPreviews so these layout rules repair the final markup.

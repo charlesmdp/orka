@@ -183,7 +183,7 @@ projectButtons.forEach(button=>button.addEventListener('click',()=>{
   closeLocation();
   const matched=new Set(filteredPoints().map(point=>point.profileId));
   rows.forEach(row=>row.hidden=!matched.has(row.dataset.visitor));
-  document.querySelector('#map-project-summary').textContent = project==='all'?'6 projects. One live view.':projectNames[project]+' · live visitors';
+  document.querySelector('#map-project-summary').textContent = project==='all'?'Visitors across your projects':projectNames[project]+' · live visitors';
   zoom=1;view=homeView();selectedId=null;popup.hidden=true;
   rows.find(row=>!row.hidden)?.click();
   render();

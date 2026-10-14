@@ -26,6 +26,6 @@ export function mediaComposerPreview({mode='emoji'}={}) {
 }
 
 export function shortcutButtonsPreview() {
-  const keys=['hi','bye','chat','summary','assistance','time','understanding','empathy','apologize','email','review','emergency'];
+  const keys=['hi','bye','chat','weather','assistance','summary','time','understanding','empathy','apologize','email','review','emergency'];
   return `<div class="shortcut-preview" role="group" aria-label="Orka AI reply buttons"><div class="sp-header"><span>${uiIcon('suggest')}</span><div><strong>AI reply buttons</strong><p>Pick a button. Review the draft. Make it yours.</p></div></div><div class="sp-buttons">${keys.map(key=>{const [name,color]=shortcutDetails[key];return `<button type="button" data-dashboard-tip="${key}" style="--shortcut-color:${color}"><span class="dashboard-shortcut-icon">${dashboardShortcuts[name]}</span>${name}</button>`;}).join('')}</div><div class="sp-footnote">${uiIcon('eyeOff')} Your draft stays private until you send it.</div></div>`;
 }

@@ -78,6 +78,8 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   assert.equal(selectFaqSources('What does Pro cost?',knowledge.documents)[0].url,'https://orka.chat/pricing');
   assert.ok(!knowledge.documents.some(doc=>doc.url==='https://orka.chat/old'));
   assert.ok(!knowledge.documents.some(doc=>doc.url==='https://orka.chat/404'));
+  const aiFacts = knowledge.documents.filter(doc=>doc.url==='https://orka.chat/ai').map(doc=>doc.text).join(' ');
+  assert.doesNotMatch(aiFacts, /Delivery takes 3–5 working days|168 pages|191 published articles/, 'Illustrative AI data must stay out of the site FAQ facts');
   const notFound = await readFile(new URL('404.html',output),'utf8');
   assert.doesNotMatch(notFound,/<base\b/);
   assert.match(notFound,/<a class="skip-link" href="#main">/);

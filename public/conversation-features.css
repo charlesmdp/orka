@@ -39,3 +39,6 @@
  .cfp-resolved .cfp-composer{padding:.7em .85em}
  .cfp-resolved .cfp-draft{min-height:2em;padding:.4em 0}
 }
+
+/* Keep each note tab and its icon together at every preview size. */
+.cfp-private-compose .cfp-private-tab{display:inline-flex;align-items:center;gap:.4em;white-space:nowrap;line-height:1.4}.cfp-private-compose .cfp-private-tab .dp-icon{flex:none;display:block}.cfp-private-compose>div{gap:.9em}.cfp-private-compose>div>strong{margin-left:0}

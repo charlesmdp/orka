@@ -78,3 +78,8 @@
 .product-preview .dp-tip-trigger:is(:hover,:focus-visible){color:#537d3f;background:#edf4e6;border-color:#adc498}
 .product-preview .dp-tip-trigger:focus-visible{outline:2px solid #537d3f;outline-offset:2px}
 .product-preview .dp-suggest .dp-icon{flex:none}
+
+/* Shared inbox shortcuts keep their names; extra actions use spare width. */
+.product-preview .dp-composer{container-type:inline-size}.product-preview .dp-shortcuts{min-width:0;overflow-x:auto;scrollbar-width:none}.product-preview .dp-shortcuts .dp-pill{flex:none;white-space:nowrap}.product-preview .dp-shortcut-extra{display:none}.product-preview .dp-composer-bottom{flex-wrap:wrap}.product-preview .dp-composer-bottom>.dp-shortcuts{flex:1}.product-preview .dp-composer-bottom>.dp-language{margin-left:auto}
+@container(min-width:540px){.product-preview .dp-shortcuts .dp-shortcut-extra{display:inline-flex}}
+@container(max-width:380px){.product-preview .dp-composer-bottom>.dp-shortcuts{order:-1;flex-basis:100%;margin-bottom:.3em}}

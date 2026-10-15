@@ -27,3 +27,9 @@
 .best-directory:has(.audience-card-art) .best-directory-number{position:static;display:block;margin-top:3px;color:#81917c}
 .best-directory:has(.audience-card-art) h2{margin-top:12px}
 @media(max-width:740px){.mobile-support-art.mobile-mosaic-art{padding:110px 12px 16px}.mobile-mosaic-backdrop{border-width:4px;border-radius:19px}.mobile-mosaic-art .app-phone{width:min(275px,90%)}.mobile-mosaic-art .mobile-project-note{padding:16px}.best-directory .audience-card-art{aspect-ratio:1.7}}
+
+/* The iOS hero uses the supplied native conversation screenshot. */
+.operator-real-conversation{width:min(100%,310px);margin:0 auto;padding:0;justify-self:center}
+.operator-real-conversation>img{display:block;box-sizing:border-box;width:100%;height:auto;border:6px solid #17342a;border-radius:35px;background:#fff;box-shadow:12px 24px 50px #15352626}
+.operator-real-conversation>figcaption{margin-top:16px;text-align:center;font-size:11px;line-height:1.6;color:#71806a}
+@media(max-width:740px){.operator-real-conversation{width:min(100%,290px)}}

@@ -1,4 +1,4 @@
-import {AI_MODELS,AI_MARKUP,aiCost,orkaPlan,vendorCost,VENDOR_PLANS,CONVERSATION_PROFILES,conversationTokens} from './pricing-model.js';
+import {AI_MODELS,AI_MARKUP,aiCost,orkaPlan,vendorCost,projectCostSummary,VENDOR_PLANS,CONVERSATION_PROFILES,conversationTokens} from './pricing-model.js';
 import {helpArticles} from './help-demo-data.js';
 const money=(n)=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2}).format(n);
 const euros=(n)=>new Intl.NumberFormat('en-US',{style:'currency',currency:'EUR',minimumFractionDigits:2,maximumFractionDigits:2}).format(n);
@@ -11,14 +11,14 @@ export function searchHelp(query,language='en') {
 }
 if(typeof document!=='undefined'){
  for(const tool of document.querySelectorAll('[data-cost-tool]')){
-  const seats=tool.querySelector('[data-seats]'),plan=tool.querySelector('[data-vendor-plan]'),quote=tool.querySelector('[data-quote]');
+  const seats=tool.querySelector('[data-seats]'),projects=tool.querySelector('[data-projects]'),plan=tool.querySelector('[data-vendor-plan]'),quote=tool.querySelector('[data-quote]');
   const update=()=>{
-   const count=Number(seats.value),index=Number(plan.value),ours=orkaPlan(count),theirs=vendorCost(tool.dataset.vendor,index,count,quote?.value.trim()?Number(quote.value):null);
-   set(tool,'[data-seat-label]',String(count));set(tool,'[data-orka-plan]',ours?.name||'Ask us');set(tool,'[data-orka-price]',ours?euros(ours.price):'Ask us');
-   set(tool,'[data-vendor-price]',theirs===null?'Quote needed':money(theirs));
-   const chosen=VENDOR_PLANS[tool.dataset.vendor][index];
-   set(tool,'[data-plan-limit]',theirs===null?(chosen.quote?'Enter a valid amount from your own quote or estimate.':'This plan does not cover the selected team size. Choose another plan or ask the vendor.'):'Selected plan covers this team size. Usage and feature limits still apply.');
-
+   const count=Number(seats.value),projectCount=Number(projects.value),index=Number(plan.value),amount=quote?.value.trim()?Number(quote.value):null,ours=orkaPlan(count),theirs=vendorCost(tool.dataset.vendor,index,count,amount,projectCount);
+   set(tool,'[data-seat-label]',String(count));set(tool,'[data-project-label]',String(projectCount));
+   set(tool,'[data-orka-plan]',ours?.name||'Ask us');set(tool,'[data-orka-price]',ours?euros(ours.price):'Ask us');
+   set(tool,'[data-orka-projects]',`${projectCount} projects · one subscription · no extra project fee`);
+   set(tool,'[data-vendor-price]',theirs===null?'Confirm plan':money(theirs));
+   set(tool,'[data-plan-limit]',projectCostSummary(tool.dataset.vendor,index,count,projectCount,amount));
   };
   tool.addEventListener('input',update);tool.addEventListener('change',update);update();
  }

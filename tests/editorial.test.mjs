@@ -27,7 +27,8 @@ test('team calculations respect bundles, per-seat prices, limits and missing quo
  assert.equal(vendorCost('crisp',2,10),95);
  assert.equal(vendorCost('crisp',2,11),null);
  assert.equal(vendorCost('crisp',3,21),305);
- assert.equal(vendorCost('chatway',2,5),98);
+ assert.equal(vendorCost('chatway',1,5),96);
+ assert.equal(vendorCost('chatway',2,5),199);
  assert.equal(vendorCost('bestchat',3,7),null);
  assert.equal(vendorCost('tidio',1,11),null);
  assert.equal(vendorCost('willdesk',1,20),16.9);

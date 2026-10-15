@@ -1,6 +1,6 @@
 /* Hero-only design studies. The homepage and its lower sections stay unchanged. */
 .hero-experiment .site-header{position:sticky;top:20px;margin:20px 0 -92px;background:none;border:0;backdrop-filter:none;color:#183d32}
-.hero-experiment .nav-wrap{width:calc(100% - 64px);max-width:1440px;height:72px;padding:0 25px;gap:24px;background:#f8ffebbd;border:1px solid #ffffff8c;border-radius:50px;box-shadow:0 8px 32px #17372909;backdrop-filter:blur(20px)}
+.hero-experiment .nav-wrap{width:calc(100% - 64px);max-width:1240px;height:72px;padding:0 25px;gap:24px;background:#f8ffebbd;border:1px solid #ffffff8c;border-radius:50px;box-shadow:0 8px 32px #17372909;backdrop-filter:blur(20px)}
 .hero-experiment .wordmark{color:#183d32}.hero-experiment .wordmark>span{color:#528c42}
 .hero-experiment .desktop-nav{gap:23px;margin-left:0}.hero-experiment .desktop-nav>a,.hero-experiment .login{color:#294d3f}.hero-experiment .desktop-nav>a:hover,.hero-experiment .login:hover{color:#16784d}
 .hero-experiment .nav-actions{gap:19px}.hero-experiment .nav-cta{background:#193f31;color:#f6ffd9;border:1px solid #193f31;box-shadow:none;border-radius:24px;padding:11px 17px;font-size:11px;gap:10px}

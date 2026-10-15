@@ -72,8 +72,8 @@ test('Pages output includes the API, linked assets and cache headers', async () 
 
   const allPages=(await readdir(output)).filter(n=>n.endsWith('.html'));
   const pageNames=allPages.filter(n=>!['new.html','new2.html','new3.html','new4.html','old.html','404.html'].includes(n));
-  assert.equal(allPages.length,91);
-  assert.equal(pageNames.length,85);
+  assert.equal(allPages.length,97);
+  assert.equal(pageNames.length,91);
   const knowledge=JSON.parse(await readFile(new URL('faq-knowledge.json',output),'utf8'));
   assert.equal(selectFaqSources('What does Pro cost?',knowledge.documents)[0].url,'https://orka.chat/pricing');
   assert.ok(!knowledge.documents.some(doc=>doc.url==='https://orka.chat/old'));
@@ -90,6 +90,15 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   const homepageFooter=html.match(/<footer class="o-footer"[\s\S]*?<\/footer>/)[0];
   const sitemap=await readFile(new URL('sitemap.xml',output),'utf8');
   assert.ok(!sitemap.includes('<loc>https://orka.chat/old</loc>'));
+  for(const route of ['help-center-migration','migrate-crisp-help-center-to-orka','migrate-intercom-help-center-to-orka','migrate-help-scout-help-center-to-orka','zendesk-alternatives','chatwoot-alternatives']) {
+    const page=await readFile(new URL(route+'.html',output),'utf8');
+    assert.ok(page.includes('rel="canonical" href="https://orka.chat/'+route+'"'));
+    assert.equal((page.match(/<h1\b/g)||[]).length,1);
+    assert.ok(sitemap.includes('<loc>https://orka.chat/'+route+'</loc><lastmod>2026-10-15</lastmod>'));
+    const markdown=await readFile(new URL(route+'.md',output),'utf8');
+    assert.match(markdown,/Updated: 2026-10-15/);
+  }
+
   for (const [route,style] of [['new','pixel'],['new2','mosaic'],['new3','mosaic'],['new4','mosaic']]) {
     const preview=await readFile(new URL(route+'.html',output),'utf8');
     assert.match(preview,new RegExp('seascape-hero seascape-'+style));

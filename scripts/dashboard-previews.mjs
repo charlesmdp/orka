@@ -1,4 +1,5 @@
 import {dashboardNav, dashboardShortcuts} from './dashboard-ui-assets.mjs';
+import {useOriginalAvatars} from './original-avatars.mjs';
 import {aiFeaturePreviews, aiConnectionPreview, aiAutomaticReplyPreview, aiQuickRepliesPreview} from './ai-feature-previews.mjs';
 // Product UI reference: the owner's dashboard captures, 14 October 2026.
 // Shared fragments keep the marketing pages aligned. All visitor data is synthetic.
@@ -120,7 +121,7 @@ export function replaceProductElement(html, className, render) {
 export function refreshProductPreviews(html) {
   const example = markup => `<!-- FEATURE_PREVIEW_START -->${markup}<!-- FEATURE_PREVIEW_END -->`;
   if(html.includes('class="features-page')) html=html.replace('<section class="audience-section">',productTour()+'<section class="audience-section">');
-  html=replaceProductElement(html,'workspace-preview',dashboard('notes'));
+  html=replaceProductElement(html,'workspace-preview',useOriginalAvatars(dashboard('notes')));
   html=replaceProductElement(html,'typing-scene',()=>detailPreview('typing').replace('class="dp-typed"','class="dp-typed" data-typed-agent').replace('Thank you! Here’s my new address…','I’m trying to upgrade our team to Pro.'));
   html=replaceProductElement(html,'team-collaboration-visual',detailPreview('notes'));
   html=replaceProductElement(html,'bento-team',detailPreview('notes'));

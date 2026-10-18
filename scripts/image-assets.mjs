@@ -23,7 +23,7 @@ export async function buildImageAssets(directory) {
       const key = path.relative(assets, file).split(path.sep).join('/');
       const stem = key.replace(/\.[^.]+$/, '').replaceAll('/', '-');
       const hero = /^hero-.*\.jpg$/.test(key);
-      const width = key.startsWith('app-logos/') ? Math.min(meta.width,320) : meta.width;
+      const width = /^(?:app-logos|orka-original)\//.test(key) ? Math.min(meta.width,320) : meta.width;
       const encode = w => sharp(original).rotate().resize({width:w,withoutEnlargement:true});
       async function save(buffer, w, format) {
         const hash = createHash('sha256').update(buffer).digest('hex').slice(0,12);

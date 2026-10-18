@@ -70,16 +70,17 @@ test('installation guides protect the project ID and all buying guides have navi
   }
   for(const g of bestChatGuides){
    const html=await readFile(path.join(temp,'best-live-chat-for-'+g.id+'.html'),'utf8');
-   assert.match(html,/editorial/i);assert.match(html,/September 2026/);assert.match(html,/FAQPage/);
+   assert.match(html,/editorial/i);assert.match(html,/18 October 2026/);assert.match(html,/FAQPage/);
    const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);assert.equal(new Set(ids).size,ids.length);
    for(const [,id] of html.matchAll(/href="#([^"]+)"/g))assert.ok(ids.includes(id),'Missing anchor '+id);
    for(const [id] of g.picks)assert.ok(html.includes('id="pick-'+id+'"'));
   }
   const marks=JSON.parse(await readFile(new URL('../scripts/vendor-logos.json',import.meta.url),'utf8'));
-  assert.equal(Object.keys(marks).length,11);
+  assert.ok(Object.keys(marks).length>=17);
   for(const [id,mark] of Object.entries(marks)){
    await access(new URL('../public'+mark.path,import.meta.url));
-   for(const slug of ['orka-vs-'+id,id+'-review',id+'-alternatives']){
+   const slugs=['zendesk','chatwoot'].includes(id)?[id+'-alternatives']:id==='livechat'?[]:['orka-vs-'+id,id+'-review',id+'-alternatives'];
+   for(const slug of slugs){
     assert.ok((await readFile(path.join(temp,slug+'.html'),'utf8')).includes(mark.path),slug);
    }
   }

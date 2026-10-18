@@ -17,6 +17,11 @@ export function orkaPlan(seats) {
   return {name:'Max',price:99 + Math.max(0,seats-12)*8,seats:Math.max(12,seats)};
 }
 export const VENDOR_PLANS = {
+  gleap: [{name:'Starter · 1 seat, 1 project',base:35,seats:1,maxProjects:1},{name:'Team · unlimited seats & projects',base:179},{name:'Pro · unlimited seats & projects',base:359}],
+  helpscout: [{name:'Free · 100 contacts, 1 Docs site',base:0,seats:5,maxProjects:1},{name:'Standard · 2 inboxes & 2 Docs sites',base:30,perSeat:true,maxSeats:25,inboxes:2,docs:2,maxProjects:5},{name:'Plus · 5 inboxes & 3 Docs sites',base:54,perSeat:true,maxSeats:50,inboxes:5,docs:3,maxProjects:50},{name:'Pro · minimum 10 paid users',base:90,perSeat:true,minSeats:10,inboxes:10,docs:5}],
+  freshchat: [{name:'Free · up to 10 agents',base:0,seats:10},{name:'Growth',base:23,perSeat:true},{name:'Pro',base:59,perSeat:true},{name:'Enterprise',base:95,perSeat:true}],
+  zendesk: [{name:'Suite Team · 1 brand',base:69,perSeat:true,maxProjects:1},{name:'Suite Professional · up to 5 brands',base:149,perSeat:true,maxProjects:5},{name:'Enterprise · your complete quote',quote:true}],
+  chatwoot: [{name:'Cloud Hacker · 2 agents, 500 conversations',base:0,seats:2},{name:'Cloud Startups · published rate',base:19,perSeat:true},{name:'Cloud Business · published rate',base:39,perSeat:true},{name:'Cloud Enterprise · published rate',base:99,perSeat:true}],
   intercom: [{name:'Essential',base:39,perSeat:true},{name:'Advanced',base:99,perSeat:true},{name:'Expert',base:139,perSeat:true}],
   tidio: [{name:'Free · 50 handled conversations',base:0,seats:10},{name:'Starter · 100 handled conversations',base:29,seats:10},{name:'Growth · entry allowance',base:59,seats:10}],
   rocketchat: [{name:'Your license + hosting estimate',quote:true}],
@@ -32,6 +37,11 @@ export const VENDOR_PLANS = {
 // Projects mean distinct product setups, with the same answering team on each.
 // A shared widget installed on several domains is not several paid workspaces.
 export const PROJECT_BILLING = {
+  gleap: {mode:'plan',note:'Starter covers one seat and one project. Team and Pro include unlimited seats and projects in one subscription; AI usage and other metered services are additional.',source:'https://www.gleap.ai/pricing'},
+  helpscout: {mode:'addons',note:'One account can contain several inboxes and Docs sites. This estimate allocates one inbox, one Docs site and one Beacon to each project: extra inboxes are $12/month and extra Docs sites $24/month on monthly billing. Sharing them lowers that cost. Standard allows five Beacons; Pro has a ten-user minimum.',source:'https://www.helpscout.com/pricing/'},
+  freshchat: {mode:'included',note:'Freshworks documents one Freshchat account across several websites, with separate site IDs and multiple widgets. Seats and add-ons drive this estimate, not a subscription multiplied by every domain.',source:'https://crmsupport.freshworks.com/support/solutions/articles/50000004475-how-can-i-get-the-freshchat-messenger-across-all-my-websites-portals-products-'},
+  zendesk: {mode:'plan',note:'Suite Team includes one brand; Suite Professional supports up to five brands in one account. Select a plan that covers your brands rather than multiplying the whole subscription by each website. Enterprise pricing needs a complete quote.',source:'https://support.zendesk.com/hc/en-us/articles/4408829476378-Setting-up-multiple-brands'},
+  chatwoot: {mode:'included',note:'Several website inboxes can share one Chatwoot account, subject to its fair-use policy based on agents and plan. Cloud pricing is per agent, not per inbox. Published rates are a reference; confirm billing commitment and AI credits for your purchase. Self-hosting has separate infrastructure costs.',source:'https://app.chatwoot.com/hc/user-guide/articles/1677492191-adding-inboxes'},
   intercom: {mode:'workspace',note:'Separate monthly workspaces are billed separately. Expert also offers multiple brands within one workspace; a shared setup or a negotiated contract can change the total.',source:'https://www.intercom.com/help/en/articles/8991894-how-to-see-and-manage-your-usage'},
   crisp: {mode:'workspace',note:'Each separate workspace has its own subscription. One shared widget on several domains can remain in one workspace. Catalogue totals exclude eligible multi-workspace discounts.',source:'https://help.crisp.chat/en/article/how-to-manage-multiple-workspaces-under-the-same-account-tkdu37/'},
   tidio: {mode:'workspace',note:'Paid subscriptions apply to each independently configured project. Reusing a single widget across domains is a different setup.',source:'https://help.tidio.com/hc/en-us/articles/5444671465756-Manage-multiple-projects'},
@@ -47,18 +57,24 @@ export const PROJECT_BILLING = {
 export function vendorCost(vendor, planIndex, seats, quote=null, projects=1) {
   const plan=VENDOR_PLANS[vendor]?.[planIndex];
   if (!plan || !Number.isSafeInteger(seats) || seats < 1 || !Number.isSafeInteger(projects) || projects < 1) return null;
+  if ((plan.maxSeats && seats>plan.maxSeats) || (plan.maxProjects && projects>plan.maxProjects)) return null;
   if (plan.quote) return Number.isFinite(quote) && quote >= 0 ? quote : null;
   if (projects>1 && (vendor==='bestchat' || (vendor==='chatway' && planIndex<2) || (vendor==='willdesk' && (planIndex!==1 || projects>3)))) return null;
   if (plan.seats && seats > plan.seats && !plan.extra) return null;
-  const unit=plan.perSeat ? plan.base*seats : plan.base+Math.max(0,seats-(plan.seats||seats))*(plan.extra||0);
+  const unit=plan.perSeat ? plan.base*Math.max(seats,plan.minSeats||0) : plan.base+Math.max(0,seats-(plan.seats||seats))*(plan.extra||0);
   const multiplied=PROJECT_BILLING[vendor].mode==='workspace' || vendor==='tawk';
-  return Math.round(unit*(multiplied?projects:1)*100)/100;
+  const projectExtras=vendor==='helpscout' && plan.perSeat ? Math.max(0,projects-plan.inboxes)*12+Math.max(0,projects-plan.docs)*24 : 0;
+  return Math.round((unit*(multiplied?projects:1)+projectExtras)*100)/100;
 }
 export function projectCostSummary(vendor, planIndex, seats, projects, quote=null) {
   const total=vendorCost(vendor,planIndex,seats,quote,projects),billing=PROJECT_BILLING[vendor];
   if(total===null)return 'Choose a plan covering this team and all projects, or confirm the complete price with the vendor.';
-  if(billing.mode==='quote')return 'Your complete portfolio estimate · no project multiplier added.';
+  if(billing.mode==='quote'||VENDOR_PLANS[vendor][planIndex].quote)return 'Your complete portfolio estimate · no project multiplier added.';
   const unit=vendorCost(vendor,planIndex,seats,quote,1);
+  if(vendor==='helpscout')return `${projects} inbox${projects===1?'':'es'} + ${projects} Docs site${projects===1?'':'s'} · $${unit.toFixed(2)} team base + $${(total-unit).toFixed(2)} project add-ons / month`;
+  if(vendor==='zendesk')return `${projects} brand${projects===1?'':'s'} within the selected plan · $${total.toFixed(2)} / month`;
+  if(vendor==='gleap')return `${projects} project${projects===1?'':'s'} · one subscription · $${total.toFixed(2)} / month`;
+  if(vendor==='chatwoot')return `${projects} website inbox${projects===1?'':'es'} · one account · $${total.toFixed(2)} base at the published rate`;
   if(billing.mode==='workspace'||vendor==='tawk')return `${projects} ${vendor==='tawk'?'properties':vendor==='tidio'?'projects':'workspaces'} × $${unit.toFixed(2)} = $${total.toFixed(2)} / month`;
   return `${projects} ${vendor==='willdesk'||vendor==='commslayer'?'stores':'sites'} · one subscription · $${total.toFixed(2)} base total`;
 }

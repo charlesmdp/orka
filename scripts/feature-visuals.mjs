@@ -1,3 +1,4 @@
+import {vendorMark} from './vendor-marks.mjs';
 import {helpSetupPreviews} from './help-setup-previews.mjs';
 import {aiFeaturePreviews} from './ai-feature-previews.mjs';
 import {productFeaturePreviews} from './product-feature-previews.mjs';
@@ -26,7 +27,8 @@ const banner = (kind,title,copy) => window('Your website',`<div class="fv-site-l
 const article = (title,copy,footer='') => window('Your help center',`<div class="fv-article"><span class="fv-eyebrow">GETTING STARTED</span><strong>${e(title)}</strong><span>${e(copy)}</span>${lines}${footer}</div>`);
 const bars = (title,labels,values) => window(title,`<div class="fv-chart">${values.map((v,i)=>`<div><span style="--bar:${v}%" class="fv-bar-grow"></span><small>${e(labels[i])}</small></div>`).join('')}</div>`);
 const switcher = (title,label,on=true) => window(title,row(e(label),`<span class="fv-switch ${on?'on':''}"><i></i></span>`)+row('This conversation',chip(on?'AI enabled':'Human replies'))+`<div class="fv-site-lines">${lines}</div>`);
-const sources = (title,names,last='Ready for Orky') => window(title,`<div class="fv-source-grid">${names.map((n,i)=>`<span><b>${['▤','↗','⊞','≡'][i%4]}</b>${e(n)}</span>`).join('')}</div><div class="fv-source-result fv-arrive">${icon}<span>${e(last)}</span><b>✓</b></div>`,'fv-ai');
+const sourceVendorIds={Gleap:'gleap',Gorgias:'gorgias',Intercom:'intercom',Crisp:'crisp','Help Scout':'helpscout','tawk.to':'tawk'};
+const sources = (title,names,last='Ready for Orky') => window(title,`<div class="fv-source-grid">${names.map((n,i)=>`<span>${sourceVendorIds[n]?vendorMark({id:sourceVendorIds[n],name:n},28):`<b>${['▤','↗','⊞','≡'][i%4]}</b>`}${e(n)}</span>`).join('')}</div><div class="fv-source-result fv-arrive">${icon}<span>${e(last)}</span><b>✓</b></div>`,'fv-ai');
 const settings = (title,label,value) => window(title,`<span class="fv-eyebrow">${e(label)}</span><div class="fv-input">${e(value)}<b>✓</b></div><div class="fv-site-lines">${lines}</div>`);
 const widget = (title,body,kind='') => window(title,`<div class="fv-mini-site"><div>${lines}<span class="fv-site-button"></span></div><div class="fv-mini-widget ${kind}"><span class="fv-widget-top">${avatar('Emma')} Here to help</span>${body}</div></div>`);
 

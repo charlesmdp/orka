@@ -14,6 +14,8 @@ if(typeof document!=='undefined'){
   const seats=tool.querySelector('[data-seats]'),projects=tool.querySelector('[data-projects]'),plan=tool.querySelector('[data-vendor-plan]'),quote=tool.querySelector('[data-quote]');
   const update=()=>{
    const count=Number(seats.value),projectCount=Number(projects.value),index=Number(plan.value),amount=quote?.value.trim()?Number(quote.value):null,ours=orkaPlan(count),theirs=vendorCost(tool.dataset.vendor,index,count,amount,projectCount);
+   const quoteControl=tool.querySelector('[data-quote-control]');
+   if(quoteControl){quoteControl.hidden=!VENDOR_PLANS[tool.dataset.vendor][index].quote;quote.disabled=quoteControl.hidden;}
    set(tool,'[data-seat-label]',String(count));set(tool,'[data-project-label]',String(projectCount));
    set(tool,'[data-orka-plan]',ours?.name||'Ask us');set(tool,'[data-orka-price]',ours?euros(ours.price):'Ask us');
    set(tool,'[data-orka-projects]',`${projectCount} projects · one subscription · no extra project fee`);

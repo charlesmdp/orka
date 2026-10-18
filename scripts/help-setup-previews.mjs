@@ -16,7 +16,7 @@ const team = () => `<div class="hsp-team"><span>${person(1)}${person(2)}${person
 const articleTitle = 'How to change your booking';
 const articlePreview = () => `<div class="hsp-article"><small>BOOKINGS</small><strong>${articleTitle}</strong><p>Plans changed? Open your confirmation email and select <b>Manage booking.</b></p><div class="hsp-callout">Your new time is confirmed by email.</div></div>`;
 const vendorLogos = JSON.parse(readFileSync(new URL('./vendor-logos.json',import.meta.url),'utf8'));
-const providers = [['Gleap','/assets/competitors/gleap.svg'],['Gorgias',vendorLogos.gorgias.path],['Intercom',vendorLogos.intercom.path],['Crisp',vendorLogos.crisp.path],['GitBook','/assets/competitors/gitbook.png'],['Help Scout','/assets/competitors/helpscout.svg'],['Fernand','/assets/competitors/fernand.png'],['tawk.to',vendorLogos.tawk.path]];
+const providers = [['Gleap',vendorLogos.gleap.path],['Gorgias',vendorLogos.gorgias.path],['Intercom',vendorLogos.intercom.path],['Crisp',vendorLogos.crisp.path],['GitBook','/assets/competitors/gitbook.png'],['Help Scout',vendorLogos.helpscout.path],['Fernand','/assets/competitors/fernand.png'],['tawk.to',vendorLogos.tawk.path]];
 const launcherFaces = () => `<span class="hsp-launcher-faces">${person(1)}${person(2)}${person(3)}</span>`;
 const launcherLogo = '<img class="hsp-launcher-logo" src="/assets/orka-logo.svg" width="32" height="30" loading="lazy" alt="">';
 const launcherWelcome = '<span class="hsp-launcher-welcome"><strong>Chat with us</strong><small><i></i> We’re online</small></span>';

@@ -1,7 +1,8 @@
 import {escapeHtml as e} from './site-chrome.mjs';
 
 // One scene per competitor; its comparison, review and alternatives form a family.
-export const comparisonArt = id => `/assets/mosaic-comparison-${id}.webp`;
+const additionalComparisonArt={gleap:'mosaic-page-ai',helpscout:'mosaic-page-help-center',freshchat:'mosaic-page-features'};
+export const comparisonArt = id => `/assets/${additionalComparisonArt[id]||'mosaic-comparison-'+id}.webp`;
 
 const art = (file, alt, title, caption) => ({src:`/assets/${file}.webp`,alt,title,caption});
 const stores = art('mosaic-audience-stores','Ceramic mosaic of an orca beside a coastal shop, with a parcel and a customer’s message boat.','Your shop. A real conversation.','Help shoppers while they are still with you.');

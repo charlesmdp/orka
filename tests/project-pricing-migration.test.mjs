@@ -47,7 +47,7 @@ test('migration guides explain both real URL entry routes and scope',()=>{
   assert.match(p.body,/In the Help center tab/);
   assert.match(p.body,/automatically/);
   assert.match(p.body,/Conversation history, inbox rules and domain redirects are separate/);
-  assert.equal(p.updated,'2026-10-15');
+  assert.equal(p.updated,'2026-10-18');
   assert.match(p.body,/"@type":"FAQPage"/);
  }
 });
@@ -56,7 +56,7 @@ test('new alternatives use the actual multibrand and inbox billing models',()=>{
  assert.equal(zendesk.slug,'zendesk-alternatives');assert.match(zendesk.body,/\$447/);
  assert.equal(chatwoot.slug,'chatwoot-alternatives');assert.match(chatwoot.body,/\$57/);
  for(const page of [zendesk,chatwoot]){
-  assert.match(page.body,/15 October 2026/);assert.match(page.body,/id="sources"/);
+  assert.match(page.body,/18 October 2026/);assert.match(page.body,/id="sources"/);
   assert.doesNotMatch(page.body,/href="\/(?:orka-vs-(?:zendesk|chatwoot)|(?:zendesk|chatwoot)-review)"/);
   assert.match(page.body,/does not promise a Zendesk or Chatwoot importer/);
  }

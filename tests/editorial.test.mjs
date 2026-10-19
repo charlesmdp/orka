@@ -1,3 +1,4 @@
+import {comparisonArt} from '../scripts/mosaic-editorial-art.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {mkdtemp,readFile,rm,access,readdir} from 'node:fs/promises';
@@ -47,16 +48,16 @@ test('help-center search works in both demo languages, with accents and no-resul
  assert.equal(searchHelp('').length,4);
 });
 
-test('all eleven guides have over 1,000 editorial words, documented comparisons, FAQs and distinct illustrations',async()=>{
- assert.equal(comparisons.length,11);
- assert.equal(new Set(comparisons.map(c=>c.id)).size,11);
+test('all competitor guides have over 1,000 editorial words, documented comparisons, FAQs and distinct illustrations',async()=>{
+ assert.equal(comparisons.length,14);
+ assert.equal(new Set(comparisons.map(c=>c.id)).size,14);
  const catalogue=JSON.parse(await readFile(new URL('../scripts/product-catalogue.json',import.meta.url),'utf8'));
  const featureIds=new Set(catalogue.features.map(f=>f[0]));
  assert.equal(featureIds.size,catalogue.features.length,'Catalogue feature IDs must be unique');
  const temp=await mkdtemp(path.join(os.tmpdir(),'orka-editorial-'));
  try{
   const built=await generateEditorial(temp);
-  assert.equal(built.comparisons,11);
+  assert.equal(built.comparisons,14);
   for(const c of comparisons){
    const sections=comparisonSections(c);
    assert.ok(sections.flatMap(s=>s.paragraphs).join(' ').split(/\s+/).length>=1000,c.id);
@@ -70,16 +71,23 @@ test('all eleven guides have over 1,000 editorial words, documented comparisons,
    const md=await readFile(path.join(temp,`orka-vs-${c.id}.md`),'utf8');
    assert.ok([...html.matchAll(/<tr><th scope="row">/g)].length >= 7);
    assert.match(html,/data-longform/);
-   assert.match(html,new RegExp('mosaic-comparison-'+c.id+'\\.webp'));
+   assert.ok(html.indexOf('id="cost"')<html.indexOf('id="overview"'),c.id+' calculator should precede the long comparison');
+   assert.match(html,/c-product-evidence/);
+   assert.doesNotMatch(html,/21 September 2026|15 October 2026/);
+   assert.match(html,/dateModified":"2026-10-18/);
+   assert.ok(html.includes(comparisonArt(c.id)));
    assert.doesNotMatch(html,/not verified|unverified/i);
    assert.match(html,/rel="canonical"/);assert.match(html,/type="text\/markdown"/);
    for(const section of sections)assert.ok(md.includes(section.title));
+   assert.doesNotMatch(md,/Alex Morgan|Jamie Chen|Can I change the delivery address/,'Illustrative inbox content must not become article prose');
    for(const [,json] of html.matchAll(/<script type="application\/ld\+json">([^<]+)<\/script>/g))assert.doesNotThrow(()=>JSON.parse(json));
    const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);assert.equal(new Set(ids).size,ids.length);
    for(const kind of ['alternatives','review']) {
     const page=await readFile(path.join(temp,`${c.id}-${kind}.html`),'utf8');
     assert.match(page,/FAQPage/);
-    assert.match(page,/September 2026/);
+    assert.ok(page.indexOf('id="cost"')<page.indexOf('id="overview"'));
+    assert.doesNotMatch(page,/class="c-initial"|21 September 2026|15 October 2026/);
+    assert.match(page,/18 October 2026/);
     assert.match(page,/mailto:hello@orka.chat/);
     assert.doesNotMatch(page,/not verified|unverified/i);
    }

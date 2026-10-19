@@ -1,0 +1,40 @@
+{
+  "collection": "Orka original",
+  "sourcePage": "https://orka-avatar-studio.charlesmdp.chatgpt.site/",
+  "retrieved": "2026-10-18",
+  "notes": "Exact transparent PNG files from the user-selected Orka Original collection. Human teammate portraits are preserved. Avatar artwork is not redrawn or recolored.",
+  "assets": {
+    "souriante": {
+      "source": "https://orka-avatar-studio.charlesmdp.chatgpt.site/assets/original-souriante-v2.png",
+      "sha256": "19817ed1cc9a5f6810287888bfa809f86478f68a0ed7545dc6948ea79bee87bb"
+    },
+    "amusee": {
+      "source": "https://orka-avatar-studio.charlesmdp.chatgpt.site/assets/original-amusee-v2.png",
+      "sha256": "f8a621a7c16cc792b71740cdcb85307b339f51f925614c4df0a81ccff30bdefa"
+    },
+    "curieuse": {
+      "source": "https://orka-avatar-studio.charlesmdp.chatgpt.site/assets/original-curieuse-v2.png",
+      "sha256": "34144433b65c90774c5ec0727142286428b93a2af23c8d2cab9f55991ec92012"
+    },
+    "complice": {
+      "source": "https://orka-avatar-studio.charlesmdp.chatgpt.site/assets/original-complice-v2.png",
+      "sha256": "e0b413bb20f9340e3fb551611c675309518ee24069c1b455d8c7ee94f1985433"
+    },
+    "zen": {
+      "source": "https://orka-avatar-studio.charlesmdp.chatgpt.site/assets/original-zen-v2.png",
+      "sha256": "212dced8f5637212f634617abff0ff87fd7769317882057dc191059dbb357ec9"
+    },
+    "accueillante": {
+      "source": "https://orka-avatar-studio.charlesmdp.chatgpt.site/assets/original-accueillante.png",
+      "sha256": "c133835b4247243921a6454b1a458441b21ba4546ad47ac15f6b12bf4db5ea16"
+    },
+    "attentive": {
+      "source": "https://orka-avatar-studio.charlesmdp.chatgpt.site/assets/original-attentive.png",
+      "sha256": "b7165dc42b407e6d61001f7ff403e56422fa87018b1fcfedd3317dd3419803d6"
+    },
+    "rassurante": {
+      "source": "https://orka-avatar-studio.charlesmdp.chatgpt.site/assets/original-rassurante.png",
+      "sha256": "d733ea3bf7770c2a5b7ee61dcfb9f2398f9f952a96063382d31b41d780a62a64"
+    }
+  }
+}

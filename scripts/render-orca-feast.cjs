@@ -1,23 +1,24 @@
 // Optional animation renderer. Requires @napi-rs/canvas and ffmpeg.
 // Generated ceramic sprites and prompts: orca-chomp-artwork.md.
-// Rival marks retain the sources documented in the original artwork renderer.
+// Rival marks use the same verified registry as the comparison pages.
 const {createCanvas,loadImage}=require('@napi-rs/canvas');
 const {spawn,execFileSync}=require('node:child_process');
-const {writeFileSync}=require('node:fs');
+const {readFileSync,writeFileSync}=require('node:fs');
 const {once}=require('node:events');
 const path=require('node:path');
 const assets=path.join(__dirname,'../public/assets');
 const W=960,H=600,FPS=24,BEAT=3.2;
 const canvas=createCanvas(W,H),ctx=canvas.getContext('2d');
+const vendorLogos=JSON.parse(readFileSync(path.join(__dirname,'vendor-logos.json'),'utf8'));
 const vendors=[
- ['Crisp','vendor-logos/crisp.png','#149bf1'],
- ['Intercom','vendor-logos/intercom.png','#343a40'],
- ['tawk.to','vendor-logos/tawk.png','#36b449'],
- ['Help Scout','orca-feast-helpscout.png','#354be9'],
- ['Zendesk','orca-feast-zendesk.jpg','#1c302c'],
- ['Chatway','vendor-logos/chatway.png','#0755ed'],
- ['Gorgias','vendor-logos/gorgias.png','#ff9b80']
-];
+ ['Crisp','crisp','#149bf1'],
+ ['Intercom','intercom','#343a40'],
+ ['tawk.to','tawk','#36b449'],
+ ['Help Scout','helpscout','#354be9'],
+ ['Zendesk','zendesk','#1c302c'],
+ ['Chatway','chatway','#0755ed'],
+ ['Gorgias','gorgias','#ff9b80']
+].map(([name,id,color])=>[name,vendorLogos[id].path.replace(/^\/assets\//,''),color]);
 const clamp=x=>Math.max(0,Math.min(1,x));
 const smooth=x=>{x=clamp(x);return x*x*(3-2*x);};
 function round(x,y,w,h,r,fill){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fillStyle=fill;ctx.fill();}

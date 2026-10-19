@@ -1,57 +1,114 @@
 {
   "intercom": {
     "path": "/assets/vendor-logos/intercom.png",
-    "source": "https://www.intercom.com/intercom-marketing-site/favicons/favicon-32x32.png",
-    "bytes": 1193
+    "source": "https://cdn.sanity.io/images/4bgok82s/monorepo-static-assets/ed46d257e438b1f3263622b570e1ff6d2fa8112b-232x228.webp",
+    "bytes": 5140,
+    "checked": "2026-10-18",
+    "notes": "Official Organization logo from Intercom homepage JSON-LD; file is served as PNG."
   },
   "tidio": {
     "path": "/assets/vendor-logos/tidio.svg",
     "source": "https://www.tidio.com/images/favicon/icon.svg",
-    "bytes": 13752
+    "bytes": 6210,
+    "checked": "2026-10-18",
+    "notes": "Official light-background icon retained unchanged; dark-mode duplicate and CSS removed so the mark stays visible on white cards."
   },
   "rocketchat": {
     "path": "/assets/vendor-logos/rocketchat.png",
     "source": "https://cdn.prod.website-files.com/611a19b9853b7414a0f6b3f6/6132017f51d1acdee170210c_webclip%20256px.png",
-    "bytes": 7786
+    "bytes": 7786,
+    "checked": "2026-10-18"
   },
   "crisp": {
     "path": "/assets/vendor-logos/crisp.png",
-    "source": "https://crisp.chat/favicons/favicon-256x256.png",
-    "bytes": 6345
+    "source": "https://crisp.chat/favicons/favicon-512x512.png",
+    "bytes": 16105,
+    "checked": "2026-10-18"
   },
   "chatra": {
     "path": "/assets/vendor-logos/chatra.svg",
     "source": "https://chatra.com/_i/icons/icon.svg",
-    "bytes": 1533
+    "bytes": 1307,
+    "checked": "2026-10-18",
+    "notes": "Official light-background colour variant fixed for white site cards; only the system dark-mode CSS override was removed. Logo paths unchanged."
   },
   "willdesk": {
-    "path": "/assets/vendor-logos/willdesk.webp",
-    "source": "https://www.willdesk.com/wp-content/uploads/2024/04/favicon.webp",
-    "bytes": 298
+    "path": "/assets/vendor-logos/willdesk.svg",
+    "source": "https://www.willdesk.com/wp-content/uploads/2025/05/Group-2087324713.svg",
+    "bytes": 1266,
+    "checked": "2026-10-18",
+    "notes": "Unchanged symbol rect and path extracted from the official header wordmark; no shape or colour changes."
   },
   "chatway": {
     "path": "/assets/vendor-logos/chatway.png",
     "source": "https://chatway.app/wp-content/uploads/2023/05/Favicon.png",
-    "bytes": 2935
+    "bytes": 2935,
+    "checked": "2026-10-18"
   },
   "gorgias": {
     "path": "/assets/vendor-logos/gorgias.png",
     "source": "https://cdn.prod.website-files.com/5e4ff204e7b6f80e402d407a/655f0a311c75248c5ff9756b_Social%20Avatar.png",
-    "bytes": 1881
+    "bytes": 1881,
+    "checked": "2026-10-18"
   },
   "tawk": {
     "path": "/assets/vendor-logos/tawk.png",
-    "source": "https://www.tawk.to/apple-icon.png?apple-icon.2cb02985.png",
-    "bytes": 14871
+    "source": "https://www.tawk.to/icon.png?icon.074cb158.png",
+    "bytes": 57733,
+    "checked": "2026-10-18"
   },
   "commslayer": {
     "path": "/assets/vendor-logos/commslayer.svg",
     "source": "https://commslayer.com/logo.svg",
-    "bytes": 4619
+    "bytes": 4619,
+    "checked": "2026-10-18"
   },
   "bestchat": {
     "path": "/assets/vendor-logos/bestchat.png",
     "source": "https://bestchat.com/assets/images/logo.png",
-    "bytes": 8919
+    "bytes": 8919,
+    "checked": "2026-10-18",
+    "width": 300,
+    "height": 60,
+    "kind": "wordmark"
+  },
+  "gleap": {
+    "path": "/assets/vendor-logos/gleap.svg",
+    "source": "https://www.gleap.ai/favicon.svg",
+    "bytes": 3269,
+    "checked": "2026-10-18"
+  },
+  "helpscout": {
+    "path": "/assets/vendor-logos/helpscout.svg",
+    "source": "https://www.helpscout.com/images/favicon/favicon.svg",
+    "bytes": 602,
+    "checked": "2026-10-18",
+    "notes": "Official light-background colour variant fixed for white site cards; only the system dark-mode CSS override was removed. Logo paths unchanged."
+  },
+  "freshchat": {
+    "path": "/assets/vendor-logos/freshchat.svg",
+    "source": "https://dam.freshworks.com/asset/e5019838-27ea-46b7-a8bf-b3430a0af3c7/Freshchat.svg",
+    "bytes": 889,
+    "checked": "2026-10-18"
+  },
+  "zendesk": {
+    "path": "/assets/vendor-logos/zendesk.svg",
+    "source": "https://d1eipm3vz40hy0.cloudfront.net/images/logos/favicons/zendesk-icon.svg",
+    "bytes": 367,
+    "checked": "2026-10-18",
+    "notes": "Official light-background colour variant fixed for white site cards; only the system dark-mode CSS override was removed. Logo paths unchanged."
+  },
+  "chatwoot": {
+    "path": "/assets/vendor-logos/chatwoot.png",
+    "source": "https://www.chatwoot.com/favicon/android-chrome-512x512.png",
+    "bytes": 17061,
+    "checked": "2026-10-18"
+  },
+  "livechat": {
+    "path": "/assets/vendor-logos/livechat.png",
+    "source": "https://www.livechat.com/icon-512.png",
+    "bytes": 8473,
+    "checked": "2026-10-18",
+    "notes": "Official icon declared in https://www.livechat.com/manifest.json."
   }
 }

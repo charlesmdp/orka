@@ -3,19 +3,18 @@ import {readFileSync} from 'node:fs';
 import {replaceProductElement, widgetPreview} from './dashboard-previews.mjs';
 
 const vendorLogos = JSON.parse(readFileSync(new URL('./vendor-logos.json', import.meta.url), 'utf8'));
-// Official marks, fetched from the providers' own sites on 14 October 2026.
+// Competitor marks share the registry checked on 18 October 2026.
 // Local copies avoid runtime requests to third-party servers.
-// Help Scout's color-scheme rule is removed because these marks sit on white cards.
 const officialMarks = {
-  Gleap: '/assets/competitors/gleap.svg',
+  Gleap: vendorLogos.gleap.path,
   GitBook: '/assets/competitors/gitbook.png',
-  'Help Scout': '/assets/competitors/helpscout.svg',
+  'Help Scout': vendorLogos.helpscout.path,
   Fernand: '/assets/competitors/fernand.png',
 };
 export const importLogoSources = {
-  Gleap: 'https://www.gleap.ai/favicon.svg',
+  Gleap: vendorLogos.gleap.source,
   GitBook: 'https://framerusercontent.com/images/93a6peqhbHQaWP67zttmrKDazq4.png',
-  'Help Scout': 'https://www.helpscout.com/images/favicon/favicon.svg',
+  'Help Scout': vendorLogos.helpscout.source,
   Fernand: 'https://getfernand.com/images/favicon/favicon-32x32.png',
 };
 const marks = {

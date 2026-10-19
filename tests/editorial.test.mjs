@@ -74,7 +74,7 @@ test('all competitor guides have over 1,000 editorial words, documented comparis
    assert.ok(html.indexOf('id="cost"')<html.indexOf('id="overview"'),c.id+' calculator should precede the long comparison');
    assert.match(html,/c-product-evidence/);
    assert.doesNotMatch(html,/21 September 2026|15 October 2026/);
-   assert.match(html,/dateModified":"2026-10-18/);
+   assert.match(html,/dateModified":"2026-10-19/);
    assert.ok(html.includes(comparisonArt(c.id)));
    assert.doesNotMatch(html,/not verified|unverified/i);
    assert.match(html,/rel="canonical"/);assert.match(html,/type="text\/markdown"/);

@@ -72,8 +72,8 @@ test('Pages output includes the API, linked assets and cache headers', async () 
 
   const allPages=(await readdir(output)).filter(n=>n.endsWith('.html'));
   const pageNames=allPages.filter(n=>!['new.html','new2.html','new3.html','new4.html','old.html','404.html'].includes(n));
-  assert.equal(allPages.length,106);
-  assert.equal(pageNames.length,100);
+  assert.equal(allPages.length,112);
+  assert.equal(pageNames.length,106);
   const knowledge=JSON.parse(await readFile(new URL('faq-knowledge.json',output),'utf8'));
   assert.equal(selectFaqSources('What does Pro cost?',knowledge.documents)[0].url,'https://orka.chat/pricing');
   assert.ok(!knowledge.documents.some(doc=>doc.url==='https://orka.chat/old'));
@@ -94,7 +94,7 @@ test('Pages output includes the API, linked assets and cache headers', async () 
     const page=await readFile(new URL(route+'.html',output),'utf8');
     assert.ok(page.includes('rel="canonical" href="https://orka.chat/'+route+'"'));
     assert.equal((page.match(/<h1\b/g)||[]).length,1);
-    const updated='2026-10-18';
+    const updated='2026-10-19';
     assert.ok(sitemap.includes('<loc>https://orka.chat/'+route+'</loc><lastmod>'+updated+'</lastmod>'));
     const markdown=await readFile(new URL(route+'.md',output),'utf8');
     assert.ok(markdown.includes('Updated: '+updated));

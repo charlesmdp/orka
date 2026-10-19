@@ -47,7 +47,7 @@ test('migration guides explain both real URL entry routes and scope',()=>{
   assert.match(p.body,/In the Help center tab/);
   assert.match(p.body,/automatically/);
   assert.match(p.body,/Conversation history, inbox rules and domain redirects are separate/);
-  assert.equal(p.updated,'2026-10-18');
+  assert.equal(p.updated,'2026-10-19');
   assert.match(p.body,/"@type":"FAQPage"/);
  }
 });

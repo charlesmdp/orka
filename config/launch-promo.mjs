@@ -4,7 +4,6 @@ export const launchPromo = {
   enabled: true,
   campaignId: 'uneed-2026-10-28',
   uneedUrl: 'https://www.uneed.best/tool/orka-chat',
-  remainingCustomers: 49,
+  remainingCustomers: 48,
   customerTarget: 49,
-  plannedIncreasePercent: 50,
 };

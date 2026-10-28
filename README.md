@@ -90,7 +90,7 @@ The real marketing-site widget uses the owner-supplied project ID `66471b6efff64
 
 `config/launch-promo.mjs` controls the homepage-only Uneed banner and floating pricing announcement. Set `enabled` to `false` to remove both. Update `remainingCustomers` manually after real customers join; at zero, the pricing card disappears while the Uneed banner remains. There is no timed countdown, automatic reset or pricing change. The owner changes prices separately in the normal pricing configuration.
 
-Prices displayed in the card come from `scripts/plan-copy.mjs`. Each announcement can be dismissed for the current browser session. The discount button opens the real Orka widget with a draft; the visitor sends it themselves.
+The compact card links to the existing homepage pricing section. Each announcement can be dismissed for the current browser session. The discount button opens the real Orka widget with a draft; the visitor sends it themselves. The Uneed banner stays on one line, including while the chat opens.
 
 ## Optional website analytics
 

@@ -86,6 +86,12 @@ The worker uses best-effort in-memory limits of six requests per IP per ten minu
 
 The real marketing-site widget uses the owner-supplied project ID `66471b6efff6410a175c00b6`; public installation guides continue to show only `YOUR_PROJECT_ID`. Its loader is injected once per generated HTML page. The green brand theme is fixed. Five quick clicks on the header logo load the local orca GIF; reduced-motion users get a still image.
 
+## Homepage launch campaign
+
+`config/launch-promo.mjs` controls the homepage-only Uneed banner and floating pricing announcement. Set `enabled` to `false` to remove both. Update `remainingCustomers` manually after real customers join; at zero, the pricing card disappears while the Uneed banner remains. There is no timed countdown, automatic reset or pricing change. The owner changes prices separately in the normal pricing configuration.
+
+Prices displayed in the card come from `scripts/plan-copy.mjs`. Each announcement can be dismissed for the current browser session. The discount button opens the real Orka widget with a draft; the visitor sends it themselves.
+
 ## Optional website analytics
 
 Clicks.page is configured only in `config/integrations.mjs`. The build adds the deferred script to the `<head>` of every generated HTML page, including homepage variants and the 404 page, and adds a short privacy notice.

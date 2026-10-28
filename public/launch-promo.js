@@ -60,12 +60,14 @@ if (banner) {
     const button = event.currentTarget;
     const status = banner.querySelector('.launch-chat-status');
     button.disabled = true; openingChat = true; schedulePosition();
+    status.classList.remove('has-error');
     status.hidden = false; status.textContent = 'Opening your chat…';
     try {
       await openQuestionInChat('Hi! I’m here for the Uneed launch offer. Can you help me claim the $5/month discount?');
       status.textContent = 'Your message is ready in the chat. Press Send when you’re ready.';
     } catch {
       status.textContent = 'Chat could not load. Please try again or email hello@orka.chat to claim your discount.';
+      status.classList.add('has-error');
     } finally {button.disabled = false; openingChat = false; schedulePosition();}
   });
 }

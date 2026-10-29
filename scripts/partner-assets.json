@@ -1,0 +1,26 @@
+{
+  "checked": "2026-10-29",
+  "owner": "Dharma Software",
+  "assets": [
+    {
+      "file": "public/assets/partners/redirect-ninja-logo.webp",
+      "source": "https://cdn.prod.website-files.com/66f989b0624c365c9606b89a/6adcc8acf488e71ec8bad865_logo.webp",
+      "page": "https://www.dharmasoftware.com/apps/redirect-ninja"
+    },
+    {
+      "file": "public/assets/partners/redirect-ninja-dashboard.png",
+      "source": "https://cdn.prod.website-files.com/66f989b0624c365c9606b89a/6ad3a4f10b59180dd34d1087_post-apply.png",
+      "page": "https://www.dharmasoftware.com/apps/redirect-ninja"
+    },
+    {
+      "file": "public/assets/partners/schema-ninja-logo.png",
+      "source": "https://cdn.prod.website-files.com/66f989b0624c365c9606b89a/688a027016a8d8561098e0c0_icon-good.png",
+      "page": "https://www.dharmasoftware.com/apps/schema-ninja-json-ld-seo"
+    },
+    {
+      "file": "public/assets/partners/schema-ninja-dashboard.webp",
+      "source": "https://cdn.prod.website-files.com/66f989b0624c365c9606b89a/688b507fcee45ceb0e33ecf4_CleanShot%202025-07-31%20at%2007.14.26%402x%201.webp",
+      "page": "https://www.dharmasoftware.com/apps/schema-ninja-json-ld-seo"
+    }
+  ]
+}

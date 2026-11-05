@@ -10,58 +10,16 @@
 }
 .o-apps-page :is(h1,h2,h3,p,figure) { margin: 0; }
 .o-apps-wrap { width: min(1200px, calc(100% - 80px)); margin-inline: auto; }
-.o-apps-intro { padding: clamp(44px,5vw,78px) 0 36px; }
 .o-apps-page .o-apps-eyebrow {
   color: #486451; display: flex; gap: 10px; align-items: center;
   font: 500 10px/1.5 var(--mono,monospace); letter-spacing: .14em;
 }
-.o-apps-eyebrow::before { content: ''; width: 7px; height: 7px; background: #80a55e; border-radius: 50%; }
-.o-apps-intro h1 { font-size: clamp(47px,6vw,83px); font-weight: 500; letter-spacing: -.065em; line-height: 1.05; margin: 18px 0; text-wrap: balance; }
-.o-apps-intro h1 em { color: #567459; font: italic 400 1.06em/.95 var(--serif,'Instrument Serif',Georgia,serif); letter-spacing: -.047em; }
-.o-apps-intro>p:not(.o-apps-eyebrow), .o-app-platform p, .o-app-file-help { color: var(--apps-muted); line-height: 1.7; }
-.o-apps-intro>p:not(.o-apps-eyebrow) { font-size: clamp(15px,1.3vw,18px); }
-.o-app-shortcuts { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 22px; }
-.o-app-shortcuts a { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; border: 1px solid #bdcdb7; border-radius: 9px; padding: 8px 13px; color: var(--apps-ink); background: #fffffa; font-size: 13px; font-weight: 700; line-height: 1.35; text-decoration: none; }
-.o-app-shortcuts a:first-child { background: var(--apps-lime); border-color: #cee982; }
-.o-app-shortcuts a:hover { background: #e8f0df; }
-.o-app-shortcuts a:first-child:hover { background: #e8ff9d; }
-.o-app-shortcuts .o-app-icon { width: 17px; height: 17px; pointer-events: none; }
-.o-app-mac {
-  background: #193e32; color: #fbfcf5; border-radius: 24px;
-  display: grid; grid-template-columns: minmax(220px,.75fr) minmax(0,1.5fr);
-  gap: clamp(26px,4vw,70px); padding: clamp(26px,3.4vw,50px); align-items: center;
-}
-.o-app-mac .o-apps-eyebrow { color: #d6eab5; }
-.o-app-mac .o-apps-eyebrow::before { background: var(--apps-lime); }
-.o-app-mac h2 { color: #f6f8ec; font-size: clamp(38px,4.6vw,68px); line-height: 1.05; font-weight: 550; letter-spacing: -.06em; margin: 16px 0; text-wrap: balance; }
-.o-app-mac-copy>p:not(.o-apps-eyebrow) { color: #d1e0d4; font-size: clamp(14px,1.2vw,17px); line-height: 1.75; max-width: 32ch; }
 .o-app-icon { width: 20px; height: 20px; flex-shrink: 0; }
 .o-apps-page .o-app-button { display: inline-flex; gap: 12px; align-items: center; justify-content: center; min-height: 46px; padding: 12px 18px; border-radius: 9px; font-size: 14px; line-height: 1.35; font-weight: 750; text-decoration: none; }
 .o-apps-page .o-app-download { color: #172d22; background: var(--apps-lime); }
 .o-apps-page .o-app-download:hover { background: #e8ff9d; }
-.o-app-mac .o-app-download { margin-top: 26px; }
-.o-app-mac-copy small { display: block; margin-top: 12px; color: #b8ccbc; font-size: 11px; }
-.o-app-mac-photo, .o-app-mac-photo picture { min-width: 0; display: block; }
-.o-app-mac-photo img { display: block; width: 100%; height: auto; border-radius: 9px; border: 1px solid #658273; box-shadow: 0 16px 34px #0c241e40; }
-.o-app-mac-photo figcaption { color: #d5e2d6; margin-top: 10px; font-size: 10px; line-height: 1.5; }
-.o-app-mac-photo figcaption span { color: #b8ccbc; }
-.o-app-options { padding: clamp(38px,4vw,60px) 0 clamp(50px,6vw,92px); }
-.o-app-options>h2 { font-size: clamp(26px,3vw,40px); line-height: 1.12; letter-spacing: -.05em; font-weight: 550; margin-bottom: 22px; }
-.o-app-platforms { display: grid; gap: 16px; grid-template-columns: repeat(3,minmax(0,1fr)); }
-.o-app-platform { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; background: #fffffb; border: 1px solid var(--apps-line); border-radius: 16px; padding: clamp(19px,2vw,29px); }
-.o-app-platform-head { display: flex; align-items: center; gap: 12px; }
-.o-app-platform-symbol { width: 38px; height: 38px; background: #edf1e5; border-radius: 11px; color: #3c5946; display: grid; place-items: center; }
-.o-app-platform h3 { font-size: clamp(21px,2vw,26px); letter-spacing: -.04em; font-weight: 600; }
-.o-app-platform p { font-size: 14px; margin: 16px 0 22px; }
-.o-app-platform-actions { display: flex; flex-wrap: wrap; gap: 9px 16px; align-items: center; margin-top: auto; }
-.o-apps-page .orka-store-links { margin: 0; }
-.o-apps-page .orka-store-links img { height: 40px; }
-.o-apps-page .orka-store-links a[aria-label] img { height: 52.8px; margin: -6.4px 0 -6.4px -6.4px; }
-.o-apps-page .orka-store-links .store-badge-art { --store-badge-height: 40px; }
 .o-apps-page .o-app-detail, .o-apps-page .o-app-back { color: #395e47; font-weight: 650; text-decoration: none; font-size: 12px; display: inline-flex; align-items: center; gap: 7px; min-height: 44px; }
 .o-app-detail:hover, .o-app-back:hover { text-decoration: underline; text-underline-offset: 4px; }
-.o-apps-page .o-app-web { border: 1px solid #b9c9b4; color: #254733; min-height: 40px; padding-block: 9px; }
-.o-app-web:hover { background: #edf2e6; }
 .o-apps-page :is(a,button):focus-visible { outline: 3px solid #4185d1; outline-offset: 4px; }
 .o-app-download-page { padding: 28px 0 clamp(60px,9vw,130px); }
 .o-app-back .o-app-icon { width: 16px; }
@@ -75,25 +33,60 @@
 .o-app-download-card .o-app-file-help { max-width: 47ch; margin-inline: auto; font-size: 16px; }
 .o-app-download-card .o-app-fallback { margin: 26px 0 9px; color: var(--apps-muted); font-size: 13px; }
 .o-app-download-card .o-app-detail { display: flex; width: fit-content; margin: 10px auto 0; }
-@media (max-width: 480px) {
-  .o-app-shortcuts { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
-  .o-app-shortcuts a { font-size: 12px; padding-inline: 6px; }
+
+.o-apps-hub { padding-bottom: clamp(54px, 8vw, 112px); }
+.o-apps-hub .o-apps-wrap { max-width: 1056px; }
+.o-apps-intro { text-align: center; padding: clamp(45px, 5vw, 76px) 0 clamp(26px, 3.4vw, 48px); }
+.o-apps-intro h1 { font-size: clamp(44px, 6vw, 82px); font-weight: 550; letter-spacing: -.065em; line-height: 1.05; text-wrap: balance; }
+.o-apps-intro h1 em { color: #507454; font: italic 400 1.05em/.96 var(--serif, 'Instrument Serif', Georgia, serif); letter-spacing: -.045em; }
+.o-apps-intro p { margin: 15px auto 0; max-width: 54ch; font-size: clamp(15px, 1.4vw, 18px); color: var(--apps-muted); line-height: 1.55; text-wrap: balance; }
+
+.o-app-picker ul { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(10px, 1.35vw, 18px); grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.o-app-picker li { display: flex; min-width: 0; }
+.o-apps-page .o-app-choice {
+  box-sizing: border-box; width: 100%; display: flex; flex-direction: column; align-items: center;
+  padding: clamp(16px, 1.6vw, 25px) 8px clamp(17px, 1.6vw, 25px); border-radius: 20px;
+  color: var(--apps-ink); text-align: center; text-decoration: none; background: #fffffc;
+  border: 1px solid var(--apps-line); box-shadow: 0 3px 8px #283c2210;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
 }
-@media (max-width: 880px) {
-  .o-apps-wrap { width: calc(100% - 48px); }
-  .o-app-mac { grid-template-columns: minmax(0,.85fr) minmax(0,1fr); gap: 24px; }
-  .o-app-platforms { gap: 12px; }
+.o-choice-web { --art-wash: #efedff; }
+.o-choice-mac { --art-wash: #e5f4ff; }
+.o-choice-iphone { --art-wash: #fff0e5; }
+.o-choice-android { --art-wash: #e5f6e8; }
+.o-choice-art {
+  display: grid; place-items: center; width: clamp(84px, 8.5vw, 118px); aspect-ratio: 1; border-radius: 32%;
+  background: radial-gradient(ellipse at center, var(--art-wash) 44%, transparent 74%);
 }
-@media (max-width: 670px) {
+.o-choice-art .app-platform-icon { display: block; width: 93%; height: auto; }
+.o-choice-name { margin-top: 8px; font-weight: 650; font-size: clamp(21px, 1.9vw, 28px); letter-spacing: -.045em; line-height: 1.25; }
+.o-choice-action { display: inline-flex; align-items: center; justify-content: center; gap: 6px; margin-top: 9px; color: #49614f; font-size: 13px; line-height: 1.4; font-weight: 600; }
+.o-choice-action .o-app-icon { width: 14px; height: 14px; }
+@media (hover: hover) {
+  .o-apps-page .o-app-choice:hover { transform: translateY(-3px); border-color: #92ae91; box-shadow: 0 8px 20px #253b2615; }
+  .o-app-choice:hover .o-choice-action { text-decoration: underline; text-underline-offset: 3px; }
+}
+.o-apps-page .o-app-preview {
+  margin: clamp(32px, 4vw, 56px) auto 0; padding: clamp(14px, 2.3vw, 30px) clamp(16px, 3.6vw, 48px) 0; border-radius: 20px;
+  border: 1px solid #d8dfcf; background: linear-gradient(135deg, #f0f3e7, #e5edda); overflow: hidden;
+}
+.o-app-preview figcaption { display: flex; align-items: baseline; justify-content: space-between; gap: 15px; margin-bottom: 13px; font-size: 14px; font-weight: 650; }
+.o-app-preview figcaption span { color: #526954; font-size: 12px; font-weight: 500; }
+.o-app-preview img { display: block; width: 100%; height: auto; border-radius: 9px 9px 0 0; box-shadow: 0 6px 24px #203b2624; }
+.o-app-file-help { color: var(--apps-muted); line-height: 1.7; }
+@media (max-width: 740px) {
   .o-apps-wrap { width: calc(100% - 36px); }
-  .o-apps-intro { padding: 40px 0 26px; }
-  .o-app-mac { grid-template-columns: minmax(0,1fr); border-radius: 18px; padding: 24px 19px 18px; }
-  .o-app-mac-copy>p:not(.o-apps-eyebrow) { max-width: 46ch; }
-  .o-app-mac .o-app-download { margin-top: 18px; }
-  .o-app-mac-photo figcaption { font-size: 9px; }
-  .o-app-platforms { grid-template-columns: minmax(0,1fr); }
-  .o-app-platform p { margin-bottom: 14px; }
-  .o-app-platform-actions { column-gap: 18px; }
+  .o-app-picker ul { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .o-apps-intro { padding: 36px 0 24px; }
+  .o-apps-intro p { max-width: 38ch; }
+  .o-apps-page .o-app-choice { border-radius: 16px; padding-block: 14px 17px; }
+  .o-choice-art { width: 74px; }
+  .o-choice-name { margin-top: 3px; }
+  .o-choice-action { margin-top: 5px; }
   .o-app-download-page { padding-top: 14px; }
   .o-app-download-card { margin-top: 15px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .o-apps-page .o-app-choice { transition: none; }
+  .o-apps-page .o-app-choice:hover { transform: none; }
 }

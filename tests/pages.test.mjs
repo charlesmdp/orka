@@ -71,9 +71,9 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   await assert.rejects(access(new URL('.openai/hosting.json', output)));
 
   const allPages=(await readdir(output)).filter(n=>n.endsWith('.html'));
-  const pageNames=allPages.filter(n=>!['new.html','new2.html','new3.html','new4.html','old.html','404.html'].includes(n));
-  assert.equal(allPages.length,113);
-  assert.equal(pageNames.length,107);
+  const pageNames=allPages.filter(n=>!['new.html','new2.html','new3.html','new4.html','old.html','404.html','download-mac.html'].includes(n));
+  assert.equal(allPages.length,115);
+  assert.equal(pageNames.length,108);
   const knowledge=JSON.parse(await readFile(new URL('faq-knowledge.json',output),'utf8'));
   assert.equal(selectFaqSources('What does Pro cost?',knowledge.documents)[0].url,'https://orka.chat/pricing');
   assert.ok(!knowledge.documents.some(doc=>doc.url==='https://orka.chat/old'));
@@ -90,6 +90,16 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   const homepageFooter=html.match(/<footer class="o-footer"[\s\S]*?<\/footer>/)[0];
   const sitemap=await readFile(new URL('sitemap.xml',output),'utf8');
   assert.ok(!sitemap.includes('<loc>https://orka.chat/old</loc>'));
+  const apps = await readFile(new URL('apps.html',output),'utf8');
+  const download = await readFile(new URL('download-mac.html',output),'utf8');
+  assert.ok(homepageFooter.includes('href="/apps"'));
+  assert.match(apps, /href="\/download-mac#start"/);
+  assert.match(download, /<meta name="robots" content="noindex, follow">/);
+  assert.ok(!sitemap.includes('<loc>https://orka.chat/download-mac</loc>'));
+  const installer = new URL('https://orka-chat.fra1.digitaloceanspaces.com/desktop/Orka.dmg');
+  assert.ok(download.includes('href="'+installer.href+'"'), 'Manual retry must work without JavaScript');
+  assert.ok(!apps.includes(installer.href), 'Browsing the apps page should not initiate a download');
+
   for(const route of ['help-center-migration','migrate-crisp-help-center-to-orka','migrate-intercom-help-center-to-orka','migrate-help-scout-help-center-to-orka','zendesk-alternatives','chatwoot-alternatives']) {
     const page=await readFile(new URL(route+'.html',output),'utf8');
     assert.ok(page.includes('rel="canonical" href="https://orka.chat/'+route+'"'));

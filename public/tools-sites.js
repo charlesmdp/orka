@@ -73,42 +73,74 @@ async function generateRedirectMap(values) {
     download:{filename:'help-center-redirect-map.csv',type:'text/csv;charset=utf-8',text:['source,destination,match',...rows.map(row=>[row.from,row.destination,row.status].map(escaped).join(','))].join('\r\n')}
   };
 }
-let previousPreviewImage;
+export const widgetDefaults = {
+  brand: 'Orka', color: '#356052', message: 'Hi there! Have a question about Orka?'
+};
+
+export function widgetHomepage(value) {
+  const address=String(value || '').trim();
+  if (!address || /\s/.test(address)) throw new Error('Enter your public website address.');
+  let target;
+  try { target=new URL(/^[a-z][a-z0-9+.-]*:/i.test(address) ? address : 'https://'+address); }
+  catch { throw new Error('Enter your public website address.'); }
+  if (target.protocol!=='https:' || !target.hostname.includes('.') || target.username || target.password)
+    throw new Error('Enter a public HTTPS website address.');
+  return target.origin;
+}
+
+export async function captureWidgetHomepage(website,signal) {
+  const url=widgetHomepage(website);
+  const response=await fetch('/api/website-screenshot',{
+    method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({url}), signal
+  });
+  if (!response.ok) throw new Error('The homepage could not be captured. You can upload a screenshot instead.');
+  const blob=await response.blob();
+  if (blob.type!=='image/jpeg' || !blob.size || blob.size>3*1024*1024)
+    throw new Error('The homepage capture could not be opened. You can upload a screenshot instead.');
+  return blob;
+}
+
+export async function getWidgetBackground(website,signal) {
+  const url=widgetHomepage(website);
+  const response=await fetch('/api/website-preview',{
+    method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({url}), signal
+  });
+  if (!response.ok) throw new Error('This website could not be checked. Upload a screenshot to use it as the background.');
+  const details=await response.json();
+  if (details.captureAvailable) {
+    try { return {kind:'image',blob:await captureWidgetHomepage(url,signal),website:url}; }
+    catch (error) { if (signal?.aborted) throw error; }
+  }
+  if (details.status==='ready' && details.canEmbed!==false) return {kind:'website',website:widgetHomepage(details.url)};
+  if (details.canEmbed===false) throw new Error('This website blocks embedded previews. Upload a screenshot to see your widget there.');
+  throw new Error('This homepage could not be opened. Upload a screenshot to preview it.');
+}
+
 async function previewChatWidget(values) {
   const brand=values.brand.trim(), message=values.message.trim(), color=values.color.trim();
   if (!brand || brand.length>70 || !message || message.length>240) throw new Error('Use a brand name up to 70 characters and a welcome message up to 240 characters.');
   if (!/^#[0-9a-f]{6}$/i.test(color)) throw new Error('Choose a six-digit hex color, such as #356052.');
   const preview={brand,message,color};
-  let stage='Sample page';
-  if (values.website.trim()) {
-    let target;
-    try { target=new URL(values.website.trim()); } catch { throw new Error('Enter a full HTTPS website address, or keep the sample page.'); }
-    if (target.protocol!=='https:' || !target.hostname.includes('.') || target.username || target.password) throw new Error('Enter a public HTTPS website address.');
-    preview.website=target.origin;
-    try {
-      const shot=await fetch('/api/website-screenshot',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:target.origin})});
-      if (shot.ok && shot.headers.get('Content-Type')?.startsWith('image/jpeg')) {
-        preview.image=URL.createObjectURL(await shot.blob());
-        stage='Homepage snapshot of '+target.hostname;
-      } else stage='Sample page · A snapshot of '+target.hostname+' is unavailable';
-    } catch { stage='Sample page · The homepage snapshot could not be loaded'; }
+  if (values.website?.trim()) {
+    preview.website=widgetHomepage(values.website);
+    const background=await getWidgetBackground(preview.website);
+    if (background.blob) preview.image=URL.createObjectURL(background.blob);
+    else preview.website=background.website;
   }
-  if (previousPreviewImage) URL.revokeObjectURL(previousPreviewImage);
-  previousPreviewImage=preview.image;
-  return {headline:brand+' chat preview',body:stage+'\nWidget color: '+color+'\nWelcome message: '+message,preview};
+  return {headline:brand+' chat preview',body:brand+' · '+color+'\n'+message,preview};
 }
 
 export const siteTools=[
   {
     slug:'live-chat-detector',name:'Live Chat Detector',title:'Free Live Chat Detector for Any Public Website',
     description:'Identify live chat software on a public website. Scan a URL for Orka, Crisp, Intercom, Tidio, Gorgias and other chat embed signatures.',
-    category:'Live chat',intro:'Enter a public page to see which live chat providers appear in its initial HTML. Each match includes the installation signal that identified it.',
-    fields:[urlField('Website page URL','https://orka.chat/apps')],button:'Detect live chat',run:({url})=>requestSiteAnalysis('detect',url),
-    method:'The detector reads the page as an anonymous visitor and compares its script tags and iframe sources with known provider signatures. It reports every match, so you can spot an older widget during a migration. Run it on the page where visitors actually chat.',
-    example:'Suppose a shop includes client.crisp.chat/l.js on its product page. The result names Crisp and identifies its loader. A product page still using the previous provider will show a different result when scanned separately.',
+    category:'Live chat',intro:'Find out which live chat a website uses. Enter its address to see the provider and the code that identified it.',
+    fields:[{...urlField('Website address','https://orka.chat/apps'),hint:'Enter a domain or public HTTPS page URL.'}],button:'Scan website',run:({url})=>requestSiteAnalysis('detect',url),
+    method:'The detector checks the public page for chat installation code. It can also inspect linked scripts for a loader added by the site’s JavaScript. Each match includes the signal and the page or script where it was found.',
+    example:'A product page that loads client.crisp.chat/l.js returns Crisp. If your help center runs on another domain, scan one of its articles to see whether it uses the same provider.',
     faqs:[
       ['Which chat widgets can I identify?','Signatures cover Orka, Crisp, Intercom, Tidio, tawk.to, Zendesk, Gorgias, Chatwoot, HubSpot Conversations, Drift, LiveChat, Help Scout Beacon, Gleap and Freshchat.'],
-      ['Why can I see a chat bubble when the scan finds nothing?','A consent button, tag manager, login or JavaScript event can load the widget after the first response. The scan reads the HTML sent by the server. Try the page where the chat is normally available and check those conditions.'],
+      ['Why can I see a chat bubble when the scan finds nothing?','The detector reads public page code and can check linked scripts. A widget can still load after a consent choice, login or click. Try the exact page where it appears. A scan that cannot cover all the code is marked as partial.'],
       ['Does a detected script mean the widget is working?','It identifies an installation signal. Sending and receiving a test message in a browser is how to confirm the widget and inbox both work.']
     ],
     related:['chat-widget-preview','chat-welcome-message-generator']
@@ -174,20 +206,20 @@ export const siteTools=[
   },
   {
     slug:'chat-widget-preview',name:'Chat Widget Preview',title:'Free Live Chat Widget Preview for Your Website',
-    description:'Preview a branded chat widget with your color, business name and welcome message. Use a sample page or request a screenshot of your public homepage.',
-    category:'Live chat',intro:'Try a chat bubble with your own brand and greeting before you install anything. Use the sample or enter a public website to preview the design on a homepage snapshot.',
+    description:'Customize an Orka chat widget on a real homepage or your own screenshot. Try the launcher, change colors and test the conversation on desktop or mobile.',
+    category:'Live chat',intro:'See how Orka looks on your website. Change the greeting and colors, open the launcher and try a conversation.',
     fields:[
-      {key:'brand',label:'Business name',type:'text',value:'Coast & Co.'},
-      {key:'color',label:'Widget color',type:'color',value:'#356052'},
-      {key:'message',label:'Welcome message',type:'textarea',value:'Hi there! Need a hand choosing a size?'},
-      {key:'website',label:'Website for a homepage snapshot',type:'url',value:'',optional:true,hint:'Leave blank to use the sample page.'}
+      {key:'brand',label:'Team name',type:'text',value:widgetDefaults.brand},
+      {key:'color',label:'Accent color',type:'color',value:widgetDefaults.color},
+      {key:'message',label:'Welcome message',type:'textarea',value:widgetDefaults.message},
+      {key:'website',label:'Public website homepage',type:'url',value:'',optional:true}
     ],button:'Preview widget',run:previewChatWidget,
-    method:'Choose a brand, accent color and greeting to draw a sample launcher and message. Entering a website requests an anonymous desktop capture of its homepage. If the site blocks screenshots, the preview uses a sample background.',
-    example:'A clothing shop can compare “How can we help?” with “Need a hand choosing a size?” using its own green accent, then pick the greeting that suits the product page.',
+    method:'Start with the Orka homepage or choose a background from your own site. Switch between the People and Classic launchers, edit your team name and greeting, and send a local test message. Choose Desktop or Mobile to see how the widget fits at each width.',
+    example:'To check the mobile experience on a product page, upload a screenshot from your phone, choose Mobile and open the launcher. Try your longest welcome message and send a test reply to see how the conversation fits.',
     faqs:[
-      ['Do I need to install a script to preview my widget?','The preview runs on this page. You can adjust the design and wording before choosing a live chat platform.'],
-      ['Can I use a particular product or checkout page as the background?','Automatic captures use the public homepage of the domain you enter. Pages that require an account or restrict screenshots use the sample background instead.'],
-      ['Does this send a real message to my team?','This is a visual preview. Connecting a team inbox and testing message delivery takes place when you install a live widget.']
+      ['Can I preview the widget on my own website?','Choose Website and enter your public domain to load its homepage. If the site blocks previews or you want to see a specific product or checkout, choose Upload and use a screenshot from your device.'],
+      ['Which parts of the chat widget can I customize?','Change the team name, accent color, greeting and launcher style. The changes appear immediately. Close the conversation to see the launcher in its position on the page.'],
+      ['Where do my test messages and uploaded screenshots go?','Test messages and uploaded screenshots stay in this tab. Choosing Website sends the public domain to Orka to check whether the homepage can be previewed. Refreshing the page clears your preview.']
     ],
     related:['chat-welcome-message-generator','live-chat-detector']
   }

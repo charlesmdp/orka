@@ -36,6 +36,77 @@ test('chat detection accepts known script signatures, including multiple install
   assert.equal((await noMatches.json()).headline,'No recognized chat embed found');
 });
 
+test('Crisp-style escaped runtime configuration is detected on the redirected page',async()=>{
+  const input=base+'/crisp', page=base+'/en/';
+  const markup=String.raw`<script type="module">window.__APP__={CHATBOX:"https:\u002F\u002Fclient.crisp.chat\u002Fl.js"}</script>`;
+  const result=await (await supportSiteTool(req('detect',input),webHandler({
+    [input]:()=>Response.redirect(page,301),[page]:markup
+  }))).json();
+  assert.deepEqual(result.scan,{url:page,matches:[{name:'Crisp',evidence:'client.crisp.chat/l.js',source:page}],scriptsChecked:0,partial:false});
+});
+
+test('a large storefront with a late external installer is recognized and cites the actual bundle',async()=>{
+  const page=base+'/store', bundle=base+'/assets/site.js?v=5';
+  const markup='<base href="/assets/"><style>'+' '.repeat(715000)+'</style><script defer src="site.js?v=5"></script>';
+  const calls=[];
+  const result=await (await supportSiteTool(req('detect',page),webHandler({
+    [page]:markup,[bundle]:()=>new Response('window.ORKA_APP_ID="demo";',{headers:{'Content-Type':'application/javascript'}})
+  },calls))).json();
+  assert.equal(result.headline,'Orka');
+  assert.equal(result.scan.scriptsChecked,1);
+  assert.deepEqual(result.scan.matches,[{name:'Orka',evidence:'window.ORKA_APP_ID assignment',source:bundle}]);
+  assert.equal(result.scan.partial,false);
+  assert.equal(calls.length,2);
+});
+
+test('irrelevant content and hostnames do not identify providers, inaccessible scripts produce a partial result',async()=>{
+  const page=base+'/catalog', script=base+'/client.js';
+  const markup=`<a href="https://crisp.chat">Crisp</a><script type="text/plain">"https://client.crisp.chat/l.js"</script>
+    <script type="application/json">{"name":"window.ORKA_APP_ID=1"}</script>
+    <style>/* <script src="https://widget.orka.chat/app.js"></script> */</style>
+    <iframe src="https://notclient.crisp.chat/l.js"></iframe>
+    <iframe src="https://example.net/?ref=https://client.crisp.chat/l.js"></iframe>
+    <script type="module" src="/client.js"></script>`;
+  const calls=[];
+  const data=await (await supportSiteTool(req('detect',page),webHandler({
+    [page]:markup,[script]:()=>new Response(null,{status:403})
+  },calls))).json();
+  assert.deepEqual(data.scan,{url:page,matches:[],scriptsChecked:0,partial:true});
+  assert.match(data.headline,/incomplete/i);
+  assert.equal(calls.length,2);
+});
+
+test('oversized detection sources yield available evidence or a partial result, never a false complete negative',async()=>{
+  const page=base+'/large', large=' '.repeat(4*1024*1024+1);
+  const scan=body=>supportSiteTool(req('detect',page),webHandler({[page]:body})).then(r=>r.json());
+  const positive=await scan('<script src="https://widget.orka.chat/app.js"></script>'+large);
+  assert.equal(positive.headline,'Orka');
+  assert.equal(positive.scan.partial,true);
+  const unknown=await scan(large);
+  assert.deepEqual(unknown.scan.matches,[]);
+  assert.equal(unknown.scan.partial,true);
+});
+
+test('linked script scans enforce public DNS, private query stripping and a bounded number of requests',async()=>{
+  const page=base+'/many';
+  const markup='<script src="https://private.acme.com/chat.js"></script><script src="/secret.js?token=private"></script>'+
+    Array.from({length:14},(_,i)=>'<script src="/app-'+i+'.js"></script>').join('');
+  const fetched=[];
+  const fetcher=async address=>{
+    const url=new URL(address);
+    if(url.hostname==='cloudflare-dns.com') return url.searchParams.get('name')==='private.acme.com'
+      ? Response.json({Answer:[{type:1,data:'127.0.0.1'}]}) : publicDns();
+    fetched.push(address);
+    if(address===page) return html(markup);
+    return new Response('let x;', {headers:{'content-type':'text/javascript'}});
+  };
+  const data=await (await supportSiteTool(req('detect',page),fetcher)).json();
+  assert.equal(data.scan.partial,true);
+  assert.ok(data.scan.scriptsChecked<=8);
+  assert.ok(fetched.length<=9);
+  assert.doesNotMatch(fetched.join('\n'),/token=|private.acme.com/);
+});
+
 test('markdown export prefers article content, preserves article structure, resolves base URL and leaves untrusted plaintext inert',async()=>{
   const url=base+'/en/guide';
   const body=`<head><base href="/documentation/"></head><nav>Menu</nav><main><aside>Sidebar</aside><article>
@@ -83,7 +154,7 @@ test('support scans reject cross-origin, unsafe target or DNS, external access c
     if(address.startsWith('https://cloudflare-dns.com'))return Response.json({Answer:[{type:1,data:'10.1.0.1'}]});pageRequests++;return html('x');
   });assert.equal(blocked.status,422);assert.equal(pageRequests,0);
   const challenged=await supportSiteTool(req('detect',page),webHandler({[page]:'<title>Just a moment...</title>'}));assert.equal(challenged.status,422);
-  const tooBig=await supportSiteTool(req('detect',page),webHandler({[page]:'a'.repeat(512*1024+1)}));assert.equal(tooBig.status,422);
+  const tooBig=await supportSiteTool(req('markdown',page),webHandler({[page]:'a'.repeat(512*1024+1)}));assert.equal(tooBig.status,422);
   const dense=await supportSiteTool(req('inventory',page),webHandler({[page]:Array.from({length:510},(_,i)=>'<a href="/article/'+i+'">'+i+'</a>').join('')}));assert.equal(dense.status,422);
 });
 

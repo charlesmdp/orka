@@ -114,6 +114,21 @@ test('Pages output includes the API, linked assets and cache headers', async () 
     await access(new URL('assets/free-tools/'+tool.slug+'.svg',output));
     await access(new URL('assets/free-tools/'+tool.slug+'-share.jpg',output));
   }
+  // Each custom workbench boots once and can be used without the generic tools client.
+  for (const [slug,asset,marker] of [
+    ['live-chat-detector','chat-detector-tool','data-chat-detector'],
+    ['chat-widget-preview','widget-preview-tool','data-widget-studio']
+  ]) {
+    const page = await readFile(new URL(slug+'.html',output),'utf8');
+    assert.ok(page.includes(marker),slug);
+    assert.doesNotMatch(page,/src="free-tools\.[a-f0-9]{12}\.js"/);
+    for (const ext of ['css','js']) {
+      const pattern = new RegExp('(?:src|href)="('+asset+'\\.[a-f0-9]{12}\\.'+ext+')"','g');
+      const links = [...page.matchAll(pattern)];
+      assert.equal(links.length,1,slug+' loads its '+ext+' once');
+      await access(new URL(links[0][1],output));
+    }
+  }
   const installer = new URL('https://orka-chat.fra1.digitaloceanspaces.com/desktop/Orka.dmg');
   assert.ok(download.includes('href="'+installer.href+'"'), 'Manual retry must work without JavaScript');
   assert.ok(!apps.includes(installer.href), 'Browsing the apps page should not initiate a download');
@@ -200,7 +215,7 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   assert.equal([...sitemap.matchAll(/<loc>/g)].length,pageNames.length);
   for(const name of pageNames){
     const document=await readFile(new URL(name,output),'utf8');
-    assert.equal((document.match(/window.ORKA_APP_ID="66471b6efff6410a175c00b6"/g)||[]).length,1,name);
+    assert.equal((document.match(/window.ORKA_APP_ID="66471b6efff6410a175c00b6"/g)||[]).length,name==='chat-widget-preview.html'?0:1,name);
     assert.doesNotMatch(document,/class="(?:support-float|brand-theme-switcher)"/);
     assert.match(document,/data-brand-theme="green"/);
     assert.match(document,/two dreamers/);

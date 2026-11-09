@@ -4,9 +4,16 @@ const voidElements = new Set('area base br col embed hr img input link meta para
 const rawTags = new Set(['script','style','textarea','template','noscript']);
 const htmlTokens = /<!--[\s\S]*?(?:-->|$)|<\/?[a-z][a-z\d:-]*\b(?:[^<>"']|"[^"]*"|'[^']*')*>|<![^>]*>|[^<]+|</gi;
 const attrPattern = /([^\s=/><]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g;
+function siteTagAttributes(text,entities) {
+  const attrs=Object.create(null);
+  for (const [,key,dq,sq,unquoted] of text.matchAll(attrPattern)) {
+    attrs[key.toLowerCase()]=entities(dq ?? sq ?? unquoted ?? '');
+  }
+  return attrs;
+}
 function siteDocument(html, entities) {
   const root = {tag:'root',attrs:{},children:[]};
-  const stack = [root], scripts = [];
+  const stack = [root];
   const tokens=new RegExp(htmlTokens.source,htmlTokens.flags);
   let count = 0, match;
   while ((match=tokens.exec(html))!==null) {
@@ -24,22 +31,17 @@ function siteDocument(html, entities) {
       const closingTag=new RegExp('</'+tag+'\\s*>','ig');
       closingTag.lastIndex=tokens.lastIndex;
       const closing=closingTag.exec(html);
-      if (tag==='script' && !/\btype\s*=\s*["']?(?:application\/(?:ld\+)?json|importmap)/i.test(token))
-        scripts.push(html.slice(match.index,closing?.index ?? html.length));
       tokens.lastIndex=closing?closingTag.lastIndex:html.length;
       continue;
     }
-    const attrs = Object.create(null);
-    for (const [,key,dq,sq,unquoted] of token.slice(heading[0].length,-1).matchAll(attrPattern)) {
-      attrs[key.toLowerCase()] = entities(dq ?? sq ?? unquoted ?? '');
-    }
+    const attrs = siteTagAttributes(token.slice(heading[0].length,-1),entities);
     // Common optional end tags on exported help articles.
     if (['li','p','tr'].includes(tag) && stack.at(-1).tag === tag) stack.pop();
     const el = {tag,attrs,children:[]};
     stack.at(-1).children.push(el);
     if (!voidElements.has(tag) && !token.endsWith('/>')) stack.push(el);
   }
-  return {root,scripts};
+  return root;
 }
 function findSiteElements(node, predicate, results=[], skip) {
   for (const child of node.children) {
@@ -99,29 +101,121 @@ function supportPageLinks(doc, page, allowUrl, scope=doc, skip) {
   }
   return [...distinct].map(([url,label])=>({url,label}));
 }
+// Match installation URLs in JavaScript and embed attributes rather than
+// general mentions of a provider or links to its marketing site.
 const chatSignatures = [
-  ['Orka', /(?:widget\.orka\.chat\/app\.js|window\.ORKA_APP_ID\s*=)/i, 'Orka widget loader'],
-  ['Crisp', /(?:client\.crisp\.chat\/l\.js|window\.CRISP_WEBSITE_ID\s*=)/i, 'Crisp loader or website ID'],
-  ['Intercom', /(?:widget\.intercom\.io\/widget\/|window\.intercomSettings\s*=)/i, 'Intercom Messenger loader or settings'],
-  ['Tidio', /(?:code\.tidio\.co\/|widget-v\d+\.tidiochat\.com\/)/i, 'Tidio widget script'],
-  ['tawk.to', /embed\.tawk\.to\//i, 'tawk.to embed'],
-  ['Zendesk', /(?:static\.zdassets\.com\/ekr\/snippet\.js|v2\.zopim\.com\/)/i, 'Zendesk Web Widget loader'],
-  ['Gorgias', /(?:config\.gorgias\.chat\/|\.gorgias\.chat\/bundle-loader)/i, 'Gorgias Chat loader'],
-  ['Chatwoot', /(?:window\.chatwootSDK\.run|app\.chatwoot\.com\/packs\/js\/sdk\.js)/i, 'Chatwoot SDK'],
-  ['HubSpot', /(?:js(?:-[a-z\d]+)?\.usemessages\.com\/conversations|window\.HubSpotConversations\.)/i, 'HubSpot Conversations loader'],
-  ['Drift', /js\.driftt\.com\/include\//i, 'Drift widget loader'],
-  ['LiveChat', /cdn\.livechatinc\.com\/tracking\.js/i, 'LiveChat tracking script'],
-  ['Help Scout', /beacon-v2\.helpscout\.net\//i, 'Help Scout Beacon loader'],
-  ['Gleap', /(?:sdk\.gleap\.io\/|Gleap\.initialize\s*\()/i, 'Gleap SDK'],
-  ['Freshchat', /(?:wchat\.freshchat\.com\/js\/widget|fw-cdn\.com\/[^"'\s]*\/widget\.js|window\.fcWidget\.init)/i, 'Freshchat or Freshworks widget loader']
+  ['Orka', /(?:\/\/widget\.orka\.chat\/app\.js\b|\bwindow\.ORKA_APP_ID\s*=)/i],
+  ['Crisp', /(?:\/\/client\.crisp\.chat\/l\.js\b|\bwindow\.CRISP_WEBSITE_ID\s*=)/i],
+  ['Intercom', /(?:\/\/widget\.intercom\.io\/widget\/|\bwindow\.intercomSettings\s*=)/i],
+  ['Tidio', /\/\/(?:code\.tidio\.co|widget-v\d+\.tidiochat\.com)\//i],
+  ['tawk.to', /\/\/embed\.tawk\.to\//i],
+  ['Zendesk', /\/\/(?:static\.zdassets\.com\/ekr\/snippet\.js\b|v2\.zopim\.com\/)/i],
+  ['Gorgias', /\/\/(?:config\.gorgias\.chat\/|[a-z\d-]+\.gorgias\.chat\/bundle-loader)/i],
+  ['Chatwoot', /(?:\bwindow\.chatwootSDK\.run\b|\/\/app\.chatwoot\.com\/packs\/js\/sdk\.js\b)/i],
+  ['HubSpot', /(?:\/\/js(?:-[a-z\d]+)?\.usemessages\.com\/conversations|\bwindow\.HubSpotConversations\.)/i],
+  ['Drift', /\/\/js\.driftt\.com\/include\//i],
+  ['LiveChat', /\/\/cdn\.livechatinc\.com\/tracking\.js\b/i],
+  ['Help Scout', /\/\/beacon-v2\.helpscout\.net\//i],
+  ['Gleap', /(?:\/\/sdk\.gleap\.io\/|\bGleap\.initialize\s*\()/i],
+  ['Freshchat', /(?:\/\/wchat\.freshchat\.com\/js\/widget|\/\/(?:[a-z\d-]+\.)*fw-cdn\.com\/[\w./-]{1,220}\/widget\.js\b|\bwindow\.fcWidget\.init\b)/i]
 ];
-function widgetMatches(scripts, doc, url) {
-  const embeds = findSiteElements(doc, el=>el.tag==='iframe' && el.attrs.src).map(el=>el.attrs.src);
-  const source = [...scripts,...embeds].join('\n');
-  const matches = chatSignatures.filter(([,pattern])=>pattern.test(source));
+// A detector only needs executable script blocks and embed URLs. Avoid building
+// a document tree for large storefronts, especially long inline SVGs and styles.
+function chatSources(html, entities) {
+  const tokens=new RegExp(htmlTokens.source,htmlTokens.flags);
+  const embeds=[], scripts=[], inline=[];
+  let baseHref, count=0, partial=false, match;
+  while ((match=tokens.exec(html))!==null) {
+    if (++count>160000 || scripts.length+inline.length+embeds.length>=256) { partial=true; break; }
+    const token=match[0];
+    const heading=token.match(/^<(script|iframe|base|style|textarea|title|template|noscript)\b/i);
+    if (!heading) continue;
+    const tag=heading[1].toLowerCase();
+    let end=tokens.lastIndex;
+    if (tag!=='base') {
+      const closingTag=new RegExp('</'+tag+'\\s*>','ig');
+      closingTag.lastIndex=end;
+      const closing=closingTag.exec(html);
+      tokens.lastIndex=closing?closingTag.lastIndex:html.length;
+      end=closing?.index ?? html.length;
+    }
+    if (!['script','iframe','base'].includes(tag)) continue;
+    const attrs=siteTagAttributes(token.slice(heading[0].length,-1),entities);
+    if (tag==='base') { baseHref ??= attrs.href; continue; }
+    if (tag==='iframe') { if (attrs.src) embeds.push(attrs.src); continue; }
+    const type=(attrs.type || '').trim().split(';')[0].toLowerCase();
+    if (type && type!=='module' && !/^(?:text|application)\/(?:x-)?(?:java|ecma)script$/.test(type)) continue;
+    if (attrs.src) scripts.push(attrs.src);
+    else inline.push(html.slice(match.index+token.length,end));
+  }
+  return {baseHref,embeds,scripts,inline,partial};
+}
+
+function chatScriptPriority(url,origin) {
+  if (/chat|messenger|beacon|support|widget|tagmanager/i.test(url.hostname+url.pathname)) return 0;
+  if (url.origin===origin && /\/(?:site|app|main|index|entry|client)(?:[.-]|$)/i.test(url.pathname)) return 1;
+  return url.origin===origin ? 2 : 3;
+}
+
+async function detectChat(page,fetchPage,allowUrl,entities) {
+  const sources=chatSources(page.text,entities);
+  const matches=new Map();
+  let scriptsChecked=0, partial=Boolean(page.truncated || sources.partial);
+  function inspect(code,source) {
+    // Nuxt and other frameworks serialize configured loaders with escaped
+    // slashes in executable JavaScript. Decode the URL characters without eval.
+    const text=code.replace(/\\(?:u002f|x2f|\/)/gi,'/').replace(/\\(?:u003a|x3a)/gi,':').replace(/\\(?:u002e|x2e)/gi,'.');
+    for (const [name,signature] of chatSignatures) {
+      if (matches.has(name)) continue;
+      const observed=signature.exec(text);
+      if (observed) {
+        const evidence=observed[0].replace(/^\/\//,'').replace(/\s*=\s*$/,' assignment').slice(0,120);
+        matches.set(name,{name,evidence,source});
+      }
+    }
+  }
+  for (const code of sources.inline) inspect(code,page.url);
+  let base=page.url;
+  try { if (sources.baseHref) base=allowUrl(new URL(sources.baseHref,base).href).href; } catch { /* Keep the document URL. */ }
+  const candidates=new Map();
+  function inspectEmbed(raw,isScript) {
+    let url;
+    try { url=allowUrl(new URL(raw,base).href); } catch { partial=true; return; }
+    if (hasPrivateSiteQuery(url)) { partial=true; return; }
+    // Look at the actual script or iframe location, ignoring unrelated query values.
+    inspect(url.origin+url.pathname,page.url);
+    if (isScript) candidates.set(url.href,url);
+  }
+  for (const raw of sources.embeds) inspectEmbed(raw,false);
+  for (const raw of sources.scripts) inspectEmbed(raw,true);
+  if (!matches.size) {
+    const origin=new URL(page.url).origin;
+    const ordered=[...candidates.values()].sort((a,b)=>chatScriptPriority(a,origin)-chatScriptPriority(b,origin));
+    const selected=ordered.slice(0,8);
+    partial ||= ordered.length>selected.length;
+    for (let i=0;i<selected.length;i+=3) {
+      const batch=await Promise.all(selected.slice(i,i+3).map(async url=>{
+        try { return await fetchPage(url.href,{script:true}); }
+        catch { return null; }
+      }));
+      for (const linked of batch) {
+        if (!linked) { partial=true; continue; }
+        scriptsChecked++;
+        partial ||= Boolean(linked.truncated);
+        inspect(linked.text,linked.url);
+      }
+      if (matches.size) break;
+    }
+  }
+  const found=[...matches.values()];
+  const scope='Checked the page and '+scriptsChecked+' linked script'+(scriptsChecked===1?'':'s')+'.';
+  const summary=found.map(m=>m.name+' — '+m.evidence+' · '+m.source);
+  if (partial) summary.push('Some source content was unavailable or exceeded the scan limits.');
+  if (!found.length) summary.push('A chat can also load after cookie consent, sign-in or an interaction.');
   return {
-    headline:matches.length ? matches.map(([name])=>name).join(' + ') : 'No recognized chat embed found',
-    body:[`Page checked: ${url}`, ...matches.map(([name,,evidence])=>`${name} — ${evidence}`), '', 'Scope: scripts and embed URLs included in the initial HTML. A consent gate, tag manager or signed-in area can load a widget later.'].join('\n')
+    headline:found.length ? found.map(m=>m.name).join(' + ') : partial ? 'Scan incomplete' : 'No recognized chat embed found',
+    body:['Page checked: '+page.url,scope,...summary].join('\n'),
+    scan:{url:page.url,matches:found,scriptsChecked,partial}
   };
 }
 function helpInventory(doc, url, allowUrl) {
@@ -214,7 +308,8 @@ async function checkHelpLinks(doc, url, allowUrl, fetchPage) {
   return {headline:rows.length?`${count('Broken')} broken · ${count('Unverified')} unverified · ${count('Reachable')} reachable`:'No internal links found in the page content',body:[`Source: ${url}`,`Checked ${sample.length} of ${all.length} eligible internal links in document order.`,'',...rows.map(row=>`${row.group} · ${row.detail}\n${row.label}\n${row.url}\n`)].join('\n')};
 }
 export async function analyzeSupportSite(action,input,{fetchPage,allowUrl,entities}) {
-  const page=await fetchPage(input,{xml:action==='sitemap'});
+  const page=await fetchPage(input,{xml:action==='sitemap',detect:action==='detect'});
+  if (action==='detect') return detectChat(page,fetchPage,allowUrl,entities);
   if (action==='sitemap') {
     if (/<sitemapindex[\s>]/i.test(page.text)) throw new Error('This is a sitemap index. Use one of its individual URL sitemaps.');
     if (!/<urlset[\s>]/i.test(page.text)) throw new Error('Use an XML URL sitemap or paste a list of article URLs.');
@@ -222,8 +317,7 @@ export async function analyzeSupportSite(action,input,{fetchPage,allowUrl,entiti
     if (urls.length>500) throw new Error('Choose a smaller sitemap or paste up to 500 article URLs per list.');
     return {urls};
   }
-  const {root,scripts}=siteDocument(page.text,entities);
-  if (action==='detect') return widgetMatches(scripts,root,page.url);
+  const root=siteDocument(page.text,entities);
   if (action==='markdown') return convertArticle(root,page.url,allowUrl);
   if (action==='inventory') return helpInventory(root,page.url,allowUrl);
   if (action==='links') return checkHelpLinks(root,page.url,allowUrl,fetchPage);

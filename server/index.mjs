@@ -1,4 +1,5 @@
 import {answerFaq} from './faq.mjs';
+import {analyzeSupportSite} from './site-tools.mjs';
 // Public homepage metadata only. No remote HTML, scripts or cookies reach the client.
 const MAX_HTML_BYTES = 512 * 1024;
 const SITE_TIMEOUT_MS = 9000;
@@ -19,10 +20,14 @@ export function publicUrl(input) {
 
 export function isPublicIP(address) {
   if (address.includes(':')) {
-    const value = address.toLowerCase();
-    // Global unicast only; reject mapped IPv4, local, reserved and documentation ranges.
-    return /^[23][0-9a-f]{0,3}:/.test(value) && !value.startsWith('2001:db8:') && !value.startsWith('2001:0:') && !value.startsWith('2002:');
+    let value;
+    try { value=new URL('https://['+address+']/').hostname.slice(1,-1); } catch { return false; }
+    // Global IPv6 unicast. Exclude reserved protocol blocks, documentation,
+    // 6to4 tunnels and the segment-routing range within 2000::/3.
+    return /^[23][0-9a-f]{3}:/.test(value) && !/^2001:(?::|[0-9a-f]{1,2}:|1[0-9a-f]{2}:|db8:)/.test(value)
+      && !value.startsWith('2002:') && !value.startsWith('3fff:');
   }
+  if (!/^(?:0|[1-9]\d{0,2})(?:\.(?:0|[1-9]\d{0,2})){3}$/.test(address)) return false;
   const parts = address.split('.').map(Number);
   if (parts.length !== 4 || parts.some(n => !Number.isInteger(n) || n < 0 || n > 255)) return false;
   const [a,b,c] = parts;
@@ -197,6 +202,104 @@ export async function screenshotPreview(request, env, fetcher=fetch, cache=globa
     return json({error:'This website could not be photographed. It may block automated browsers. Try an uploaded screenshot or the sample.'},502);
   } finally { clearTimeout(timeout); }
 }
+const siteToolActions = new Set(['detect','markdown','inventory','links','sitemap']);
+const siteToolRequests = new Map();
+
+function siteToolPageReader(fetcher, signal) {
+  const checked = new Map();
+  let requests = 0;
+  return async (input, {statusOnly=false, xml=false}={}) => {
+    let current = publicUrl(input);
+    let method = statusOnly ? 'HEAD' : 'GET';
+    for (let redirects=0;redirects<=3;) {
+      if ([...current.searchParams.keys()].some(key=>/(?:token|auth|password|secret|session|signature|api[_-]?key|^code$)/i.test(key)))
+        throw new Error('Use a public page URL without sign-in tokens or private parameters.');
+      if (++requests>16) throw new Error('The scan reached its request limit.');
+      if (!checked.has(current.hostname)) checked.set(current.hostname,publicDNS(current.hostname,fetcher,signal));
+      await checked.get(current.hostname);
+      const response = await fetcher(current.href,{method,redirect:'manual',signal,headers:{
+        Accept:xml?'application/xml,text/xml;q=0.9,*/*;q=0.1':'text/html,application/xhtml+xml,*/*;q=0.1',
+        'User-Agent':'OrkaSupportTools/1.0 (+https://orka.chat/free-tools)'
+      }});
+      if ([301,302,303,307,308].includes(response.status)) {
+        await response.body?.cancel();
+        const target=response.headers.get('Location');
+        if (!target) throw new Error('The website returned a redirect without a destination.');
+        current=publicUrl(new URL(target,current).href);
+        redirects++;
+        continue;
+      }
+      if (statusOnly) {
+        await response.body?.cancel();
+        if (method==='HEAD' && [405,501].includes(response.status)) { method='GET'; continue; }
+        return {url:current.href,status:response.status};
+      }
+      if (!response.ok) {
+        await response.body?.cancel();
+        throw new Error('The website returned HTTP '+response.status+'. Try a public page that opens without signing in.');
+      }
+      const format=response.headers.get('content-type') || '';
+      const readable=xml ? /^(application\/(?:[\w.-]+\+)?xml|text\/(?:xml|plain))\b/i : /^(text\/html|application\/xhtml\+xml)\b/i;
+      const reader=response.body?.getReader();
+      if (!reader || !readable.test(format)) {
+        await reader?.cancel();
+        throw new Error(xml?'Enter a public XML sitemap address.':'Use the address of an HTML page.');
+      }
+      const decoder=new TextDecoder();
+      let text='',bytes=0;
+      try {
+        while (true) {
+          const {done,value}=await reader.read();
+          if (done) break;
+          bytes+=value.byteLength;
+          if (bytes>MAX_HTML_BYTES) throw new Error('This page exceeds the 512 KiB scan limit. Try a shorter page.');
+          text+=decoder.decode(value,{stream:true});
+        }
+        text+=decoder.decode();
+      } finally { await reader.cancel().catch(()=>{}); }
+      if (!xml) {
+        const title=text.slice(0,16000).match(/<title\b[^>]{0,200}>([^<]{0,300})<\/title>/i)?.[1] || '';
+        if (/just a moment|checking your browser|^access denied$|^forbidden$/i.test(title.trim()))
+          throw new Error('This website blocks automated visitors. Try another public page.');
+      }
+      return {url:current.href,text};
+    }
+    throw new Error('This website redirected too many times.');
+  };
+}
+
+export async function supportSiteTool(request,fetcher=fetch) {
+  if (request.method!=='POST') return json({error:'Method not allowed'},405);
+  if (request.headers.get('origin')!==new URL(request.url).origin) return json({error:'Run the tool from this Orka page.'},403);
+  let action,target;
+  try {
+    const payload=await requestJson(request);
+    action=payload.action;
+    if (!siteToolActions.has(action)) return json({error:'Unknown tool.'},400);
+    target=publicUrl(payload.url);
+    if ([...target.searchParams.keys()].some(key=>/(?:token|auth|password|secret|session|signature|api[_-]?key|^code$)/i.test(key)))
+      return json({error:'Use a public page URL without sign-in tokens or private parameters.'},400);
+  } catch { return json({error:'Enter a public HTTPS address.'},400); }
+  const now=Date.now();
+  const ip=request.headers.get('CF-Connecting-IP') || 'unknown';
+  const entry=siteToolRequests.get(ip);
+  if (entry?.until>now && entry.count>=20) return json({error:'Scan limit reached. Try again in a minute.'},429);
+  if (entry?.until>now) entry.count++;
+  else {
+    if (siteToolRequests.size>=1000) siteToolRequests.delete(siteToolRequests.keys().next().value);
+    siteToolRequests.set(ip,{count:1,until:now+60000});
+  }
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),12000);
+  try {
+    const result=await analyzeSupportSite(action,target.href,{fetchPage:siteToolPageReader(fetcher,controller.signal),allowUrl:publicUrl,entities:decodeEntities});
+    return json(result);
+  } catch (error) {
+    const message=controller.signal.aborted ? 'The website took too long to respond. Try again or enter a smaller page.' :
+      error instanceof TypeError ? 'The website could not be reached. Check the address and try again.' : error.message;
+    return json({error:message || 'This public page could not be scanned.'},422);
+  } finally { clearTimeout(timer); }
+}
 export default {
   async fetch(request,env) {
     const url = new URL(request.url);
@@ -210,6 +313,7 @@ export default {
       url.hostname = 'orka.chat';
       return Response.redirect(url.href, 301);
     }
+    if (url.pathname === '/api/support-site-tool') return supportSiteTool(request);
     if (url.pathname === '/api/website-screenshot') return screenshotPreview(request,env);
     if (url.pathname === '/api/faq-answer') return answerFaq(request,env);
     if (url.pathname !== '/api/website-preview') {

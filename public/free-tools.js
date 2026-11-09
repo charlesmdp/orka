@@ -4,40 +4,6 @@ const libraries = {
   sites: () => import('./tools-sites.js').then(m => m.siteTools)
 };
 
-function widgetPreview(preview) {
-  const site = document.createElement('div');
-  site.className = 'ft-preview-site';
-  const hasWebsite = preview.image?.startsWith('blob:');
-  if (hasWebsite) {
-    const image = document.createElement('img');
-    image.src = preview.image;
-    image.alt = 'Website preview';
-    site.append(image);
-  } else {
-    site.classList.add('ft-sample-site');
-    const product = document.createElement('img');
-    product.src = '/assets/orca-cap.webp';
-    product.alt = 'Cap on the example storefront';
-    site.append(product);
-  }
-  const label = document.createElement('small');
-  label.textContent = hasWebsite ? preview.website : 'Sample storefront';
-  const bubble = document.createElement('div');
-  bubble.className = 'ft-preview-bubble';
-  if (/^#[0-9a-f]{6}$/i.test(preview.color)) site.style.setProperty('--bubble', preview.color);
-  const name = document.createElement('strong');
-  name.textContent = preview.brand;
-  const message = document.createElement('span');
-  message.textContent = preview.message;
-  bubble.append(name, message);
-  const launcher = document.createElement('span');
-  launcher.className = 'ft-preview-launcher';
-  launcher.setAttribute('aria-hidden','true');
-  launcher.textContent = '•••';
-  site.append(label, bubble, launcher);
-  return site;
-}
-
 async function activate(panel) {
   const status = panel.querySelector('.ft-status');
   let tools;
@@ -53,7 +19,6 @@ async function activate(panel) {
   const result = panel.querySelector('[data-result]');
   const headline = result.querySelector('[data-headline]');
   const body = result.querySelector('[data-body]');
-  const preview = result.querySelector('[data-preview]');
   const download = result.querySelector('[data-download]');
   const example = panel.querySelector('[data-example]');
   let fileUrl;
@@ -79,15 +44,13 @@ async function activate(panel) {
     clearOutput();
     submit.disabled = true;
     status.removeAttribute('data-error');
+    example.hidden = true;
     status.textContent = 'Working…';
     try {
       const output = await tool.run(Object.fromEntries(new FormData(form)));
       if (current !== revision) return;
       headline.textContent = output.headline;
       body.textContent = output.body;
-      preview.replaceChildren();
-      preview.hidden = !output.preview;
-      if (output.preview) preview.append(widgetPreview(output.preview));
       if (output.download) {
         fileUrl = URL.createObjectURL(new Blob([output.download.text], {type:output.download.type}));
         download.href = fileUrl;

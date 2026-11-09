@@ -1,6 +1,14 @@
 import { escapeHtml as esc, faqSchema, origin } from './site-chrome.mjs';
 import { tools, toolGroups, toolFamily, updated } from './free-tool-catalogue.mjs';
 
+import { chatDetectorWorkbench } from './chat-detector-page.mjs';
+import { widgetPreviewWorkbench } from './widget-preview-page.mjs';
+
+const customWorkbenches = {
+  'live-chat-detector': { render: chatDetectorWorkbench, asset: 'chat-detector-tool' },
+  'chat-widget-preview': { render: widgetPreviewWorkbench, asset: 'widget-preview-tool' }
+};
+
 const hub = 'free-tools';
 const imageDir = '/assets/free-tools/';
 const hubTitle = 'Free Customer Support Tools for Live Chat, Help Centers & Ecommerce';
@@ -30,7 +38,7 @@ function decorate(html,slug,name,desc,extra) {
 const directoryQuestions = [
   ['Do I need an Orka account to use these tools?', 'All 20 tools are free to use here. Open a tool, change the sample inputs and run it without signing in.'],
   ['Which tool should I use before moving a help center?', 'Start with the migration checker to list links on a public collection page. Use the Markdown converter for an individual article, then compare your old and new URL lists in the redirect map generator.'],
-  ['Can I export my results?', 'Every tool lets you copy its result. The redirect map and migration inventory offer CSV downloads. The article converter, FAQ generators and bug report tool also offer text files you can keep or edit.']
+  ['Can I export my results?', 'You can copy reports and calculator results. The redirect map and migration inventory also offer CSV downloads. The article converter, FAQ generators and bug report tool also offer text files you can keep or edit.']
 ];
 function directory(documentPage) {
   const groups = toolGroups.map(g=>({...g,items:tools.filter(t=>t.category===g.name)}));
@@ -64,7 +72,21 @@ function renderField(f) {
   }
   return `<div class="ft-field${f.type==='textarea'?' ft-wide':''}"><label for="${id}">${esc(f.label)}${f.optional?' <small>(optional)</small>':''}</label>${input}${f.hint?`<small id="${hintId}">${esc(f.hint)}</small>`:''}</div>`;
 }
+function defaultWorkbench(t) {
+  return `<section class="ft-workbench" aria-label="${esc(t.name)} workspace" data-tool="${t.slug}" data-family="${toolFamily(t)}">
+      <form autocomplete="off" method="post" class="ft-form">
+        <noscript><p>Enable JavaScript to run this tool. Its method and worked example are available below.</p></noscript>
+        <fieldset disabled><legend>Your inputs</legend><div class="ft-fields">${t.fields.map(renderField).join('')}</div><button class="ft-submit" type="submit">${esc(t.button)} <span aria-hidden="true">→</span></button></fieldset>
+      </form>
+      <div class="ft-output"><div class="ft-example" data-example><h2>Worked example</h2><p>${esc(t.example)}</p></div>
+        <div data-result hidden><h2 tabindex="-1" data-headline></h2><div class="ft-result-body" data-body></div><div class="ft-actions"><button type="button" data-copy>Copy result</button><a data-download hidden download>Download file ↓</a></div></div>
+        <p class="ft-status" role="status" aria-live="polite" aria-atomic="true"></p>
+      </div>
+    </section>`;
+}
+
 function renderTool(documentPage,t) {
+  const custom = customWorkbenches[t.slug];
   const group=toolGroups.find(g=>g.name===t.category);
   const relatedSlugs = [...new Set([...(t.related||[]), ...tools.filter(x=>x.category===t.category).map(x=>x.slug)])].filter(s=>s!==t.slug);
   const related=relatedSlugs.map(s=>tools.find(x=>x.slug===s)).filter(Boolean).slice(0,2);
@@ -72,27 +94,21 @@ function renderTool(documentPage,t) {
   const doc=documentation[t.slug];
   const guide=productGuides[t.category];
   const methodTitle = toolFamily(t)==='math'?'How the calculation works':'How it works';
-  const body=`<div class="ft-page"><div class="ft-wrap">
+  const body=`<div class="ft-page${custom ? ' ft-focused-tool' : ''}"><div class="ft-wrap">
     <nav class="ft-breadcrumb" aria-label="Breadcrumb"><a href="/free-tools">Free tools</a><span aria-hidden="true">/</span><a href="/free-tools#${group.id}">${esc(t.category)}</a></nav>
     <header class="ft-hero"><div><h1>${esc(t.name)}</h1><p>${esc(t.intro)}</p></div><div class="ft-hero-art ft-tone-${group.id}">${icon(t.slug,194)}</div></header>
-    <section class="ft-workbench" aria-label="${esc(t.name)} workspace" data-tool="${t.slug}" data-family="${toolFamily(t)}">
-      <form autocomplete="off" method="post" class="ft-form">
-        <noscript><p>Enable JavaScript to run this tool. Its method and worked example are available below.</p></noscript>
-        <fieldset disabled><legend>Your inputs</legend><div class="ft-fields">${t.fields.map(renderField).join('')}</div><button class="ft-submit" type="submit">${esc(t.button)} <span aria-hidden="true">→</span></button></fieldset>
-      </form>
-      <div class="ft-output"><div class="ft-example" data-example><h2>Worked example</h2><p>${esc(t.example)}</p></div>
-        <div data-result hidden><h2 tabindex="-1" data-headline></h2><div class="ft-result-body" data-body></div><div data-preview hidden></div><div class="ft-actions"><button type="button" data-copy>Copy result</button><a data-download hidden download>Download file ↓</a></div></div>
-        <p class="ft-status" role="status" aria-live="polite" aria-atomic="true"></p>
-      </div>
-    </section>
-    <div class="ft-reading"><section><h2>${methodTitle}</h2><p>${esc(t.method)}</p>${doc?`<a class="ft-ref" href="${doc[1]}">${esc(doc[0])} ↗</a>`:''}</section>
+    ${custom ? custom.render() : defaultWorkbench(t)}
+    <div class="ft-reading"><section><h2>${methodTitle}</h2><p>${esc(t.method)}</p>${doc?`<a class="ft-ref" href="${doc[1]}">${esc(doc[0])} ↗</a>`:''}${custom ? `<h3>Worked example</h3><p>${esc(t.example)}</p>` : ''}</section>
       <section class="ft-faq"><h2>Frequently asked questions</h2>${faq}</section></div>
     <nav class="ft-more" aria-label="Related tools and guides"><h2>Related tools</h2><div>${related.map(x=>`<a href="/${x.slug}">${icon(x.slug,38,true)} ${esc(x.name)} <span aria-hidden="true">↗</span></a>`).join('')}</div><a href="${guide[0]}">${guide[1]} →</a></nav>
   </div></div>`;
   const url=origin+'/'+t.slug;
   const appSchema=schema({'@type':'WebApplication','@id':url+'#tool',url,name:t.name,description:t.description,applicationCategory:'BusinessApplication',operatingSystem:'Any',browserRequirements:'Requires JavaScript',inLanguage:'en',isAccessibleForFree:true,offers:{'@type':'Offer',price:'0',priceCurrency:'USD'},publisher:{'@type':'Organization',name:'Orka',url:origin},image:origin+imageDir+t.slug+'-share.jpg'});
   const crumbs=schema({'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'Free tools',item:origin+'/'+hub},{'@type':'ListItem',position:2,name:t.category,item:origin+'/'+hub+'#'+group.id},{'@type':'ListItem',position:3,name:t.name,item:url}]});
-  const extra=appSchema+crumbs+faqSchema(t.faqs)+'<script type="module" src="free-tools.js"></script>';
+  const assets = custom
+    ? `<link rel="stylesheet" href="${custom.asset}.css"><script type="module" src="${custom.asset}.js"></script>`
+    : '<script type="module" src="free-tools.js"></script>';
+  const extra=appSchema+crumbs+faqSchema(t.faqs)+assets;
   const md = [`# ${t.name}`,`Canonical: ${url}\nUpdated: ${updated}\nPublisher: Orka`,t.intro,'## Inputs',t.fields.map(f=>'- '+f.label+(f.hint?' — '+f.hint:'')).join('\n'),'## '+methodTitle,t.method,'## Worked example',t.example,'## Frequently asked questions',...t.faqs.flatMap(([q,a])=>['### '+q,a]),...(doc?['## Reference',`[${doc[0]}](${doc[1]})`]:[]),'## Related tools',related.map(r=>`- [${r.name}](${origin}/${r.slug})`).join('\n')].join('\n\n')+'\n';
   return {html:decorate(documentPage(t.slug,t.title,t.description,body,{script:false,updated}),t.slug,t.name,t.description,extra),md};
 }

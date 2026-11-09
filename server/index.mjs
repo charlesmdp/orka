@@ -204,11 +204,30 @@ export async function screenshotPreview(request, env, fetcher=fetch, cache=globa
 }
 const siteToolActions = new Set(['detect','markdown','inventory','links','sitemap']);
 const siteToolRequests = new Map();
+const siteResponseFormats = {
+  html: {
+    accept:'text/html,application/xhtml+xml,*/*;q=0.1',
+    readable:/^(?:text\/html|application\/xhtml\+xml)\b/i,
+    error:'Use the address of an HTML page.'
+  },
+  xml: {
+    accept:'application/xml,text/xml;q=0.9,*/*;q=0.1',
+    readable:/^(?:application\/(?:[\w.-]+\+)?xml|text\/(?:xml|plain))\b/i,
+    error:'Enter a public XML sitemap address.'
+  },
+  script: {
+    accept:'application/javascript,text/javascript,*/*;q=0.1',
+    readable:/^(?:(?:text|application)\/(?:x-)?(?:javascript|ecmascript)|text\/plain|application\/octet-stream)\b/i,
+    error:'The linked asset did not return JavaScript.'
+  }
+};
 
 function siteToolPageReader(fetcher, signal) {
   const checked = new Map();
   let requests = 0;
-  return async (input, {statusOnly=false, xml=false}={}) => {
+  return async (input, {statusOnly=false, xml=false, detect=false, script=false}={}) => {
+    const format=siteResponseFormats[script?'script':xml?'xml':'html'];
+    const byteLimit = detect ? 4 * 1024 * 1024 : MAX_HTML_BYTES;
     let current = publicUrl(input);
     let method = statusOnly ? 'HEAD' : 'GET';
     for (let redirects=0;redirects<=3;) {
@@ -218,7 +237,7 @@ function siteToolPageReader(fetcher, signal) {
       if (!checked.has(current.hostname)) checked.set(current.hostname,publicDNS(current.hostname,fetcher,signal));
       await checked.get(current.hostname);
       const response = await fetcher(current.href,{method,redirect:'manual',signal,headers:{
-        Accept:xml?'application/xml,text/xml;q=0.9,*/*;q=0.1':'text/html,application/xhtml+xml,*/*;q=0.1',
+        Accept:format.accept,
         'User-Agent':'OrkaSupportTools/1.0 (+https://orka.chat/free-tools)'
       }});
       if ([301,302,303,307,308].includes(response.status)) {
@@ -238,31 +257,35 @@ function siteToolPageReader(fetcher, signal) {
         await response.body?.cancel();
         throw new Error('The website returned HTTP '+response.status+'. Try a public page that opens without signing in.');
       }
-      const format=response.headers.get('content-type') || '';
-      const readable=xml ? /^(application\/(?:[\w.-]+\+)?xml|text\/(?:xml|plain))\b/i : /^(text\/html|application\/xhtml\+xml)\b/i;
       const reader=response.body?.getReader();
-      if (!reader || !readable.test(format)) {
+      if (!reader || !format.readable.test(response.headers.get('content-type') || '')) {
         await reader?.cancel();
-        throw new Error(xml?'Enter a public XML sitemap address.':'Use the address of an HTML page.');
+        throw new Error(format.error);
       }
       const decoder=new TextDecoder();
-      let text='',bytes=0;
+      let text='',bytes=0,truncated=false;
       try {
         while (true) {
           const {done,value}=await reader.read();
           if (done) break;
+          const remaining=byteLimit-bytes;
+          if (value.byteLength>remaining) {
+            if (!detect && !script) throw new Error('This page exceeds the 512 KiB scan limit. Try a shorter page.');
+            text+=decoder.decode(value.subarray(0,remaining),{stream:true});
+            truncated=true;
+            break;
+          }
           bytes+=value.byteLength;
-          if (bytes>MAX_HTML_BYTES) throw new Error('This page exceeds the 512 KiB scan limit. Try a shorter page.');
           text+=decoder.decode(value,{stream:true});
         }
         text+=decoder.decode();
       } finally { await reader.cancel().catch(()=>{}); }
-      if (!xml) {
+      if (!xml && !script) {
         const title=text.slice(0,16000).match(/<title\b[^>]{0,200}>([^<]{0,300})<\/title>/i)?.[1] || '';
         if (/just a moment|checking your browser|^access denied$|^forbidden$/i.test(title.trim()))
           throw new Error('This website blocks automated visitors. Try another public page.');
       }
-      return {url:current.href,text};
+      return {url:current.href,text,truncated};
     }
     throw new Error('This website redirected too many times.');
   };

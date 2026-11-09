@@ -388,3 +388,11 @@ img[src$="orky-app-icon.svg"]{object-fit:contain}
 @media(max-width:1120px){.site-header.compact-site-nav .ed-menu-toggle{display:flex}.site-header.compact-site-nav .nav-wrap{gap:10px}.site-header.compact-site-nav .desktop-nav{position:absolute;left:0;right:0;top:100%;padding:20px 24px;background:#f8faf5;border:1px solid #e0e7db;box-shadow:0 14px 22px #1f352412;border-radius:0 0 14px 14px;flex-direction:column;align-items:stretch;gap:0;width:auto;margin:0;z-index:70}.site-header.compact-site-nav .desktop-nav.is-open{display:flex!important}.site-header.compact-site-nav .desktop-nav>a{font-size:14px;padding:12px 0}.site-header.compact-site-nav .nav-actions{gap:10px}.site-header.compact-site-nav .nav-cta{max-width:150px}}
 @media(max-width:420px){.site-header.compact-site-nav .nav-wrap{padding-inline:16px}.site-header.compact-site-nav .wordmark{font-size:27px}.site-header.compact-site-nav .brand-icon{width:30px;height:28px}.site-header.compact-site-nav .nav-cta{max-width:145px;font-size:9px}}
 @media(max-width:1120px){.site-header.compact-site-nav .nav-wrap{padding-block:14px;min-height:64px}}
+
+.o-footer-tools { border-top: 1px solid #486052; padding: 28px 0 38px; }
+.o-footer-tools h2 { font: 600 11px/1.5 monospace; letter-spacing: .12em; margin: 0 0 18px; }
+.o-footer-tools h2 a { color: #d5ff5f; }
+.o-footer-tools div { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px 20px; }
+.o-footer-tools div a { width: fit-content; font-size: 13px; line-height: 1.5; color: #c5d7cb; }
+.o-footer-tools a:hover { text-decoration: underline; }
+@media (max-width: 800px) { .o-footer-tools div { grid-template-columns: repeat(2,minmax(0,1fr)); } }

@@ -72,8 +72,8 @@ test('Pages output includes the API, linked assets and cache headers', async () 
 
   const allPages=(await readdir(output)).filter(n=>n.endsWith('.html'));
   const pageNames=allPages.filter(n=>!['new.html','new2.html','new3.html','new4.html','old.html','404.html','download-mac.html'].includes(n));
-  assert.equal(allPages.length,115);
-  assert.equal(pageNames.length,108);
+  assert.equal(allPages.length,136);
+  assert.equal(pageNames.length,129);
   const knowledge=JSON.parse(await readFile(new URL('faq-knowledge.json',output),'utf8'));
   assert.equal(selectFaqSources('What does Pro cost?',knowledge.documents)[0].url,'https://orka.chat/pricing');
   assert.ok(!knowledge.documents.some(doc=>doc.url==='https://orka.chat/old'));
@@ -96,6 +96,24 @@ test('Pages output includes the API, linked assets and cache headers', async () 
   assert.match(apps, /href="\/download-mac#start"/);
   assert.match(download, /<meta name="robots" content="noindex, follow">/);
   assert.ok(!sitemap.includes('<loc>https://orka.chat/download-mac</loc>'));
+  const {tools: freeTools} = await import('../scripts/free-tool-catalogue.mjs');
+  const directory = await readFile(new URL('free-tools.html',output),'utf8');
+  const directoryMain = directory.match(/<main id="main">([\s\S]*?)<\/main>/)[1];
+  const toolFooter = homepageFooter.match(/<nav class="o-footer-tools"[\s\S]*?<\/nav>/)[0];
+  assert.equal(freeTools.length,20);
+  for (const tool of freeTools) {
+    const link = 'href="/'+tool.slug+'"';
+    assert.ok(directoryMain.includes(link) && toolFooter.includes(link),tool.slug);
+    const page = await readFile(new URL(tool.slug+'.html',output),'utf8');
+    const md = await readFile(new URL(tool.slug+'.md',output),'utf8');
+    const data = [...page.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs)].map(m=>JSON.parse(m[1]));
+    const faq = data.find(item=>item['@type']==='FAQPage');
+    assert.ok(faq && faq.mainEntity.length===tool.faqs.length,tool.slug);
+    assert.ok(data.some(item=>item['@type']==='WebApplication' && item.isAccessibleForFree),tool.slug);
+    assert.ok(md.includes(tool.example) && md.includes(tool.method),tool.slug);
+    await access(new URL('assets/free-tools/'+tool.slug+'.svg',output));
+    await access(new URL('assets/free-tools/'+tool.slug+'-share.jpg',output));
+  }
   const installer = new URL('https://orka-chat.fra1.digitaloceanspaces.com/desktop/Orka.dmg');
   assert.ok(download.includes('href="'+installer.href+'"'), 'Manual retry must work without JavaScript');
   assert.ok(!apps.includes(installer.href), 'Browsing the apps page should not initiate a download');
@@ -191,7 +209,8 @@ test('Pages output includes the API, linked assets and cache headers', async () 
     assert.ok(sitemap.includes('<loc>'+canonical+'</loc>'),name);
     assert.equal(document.match(/<footer class="o-footer"[\s\S]*?<\/footer>/)?.[0],homepageFooter,name);
     assert.doesNotMatch(document,/https:\/\/orka-1t3\.pages\.dev/);
-    assert.doesNotMatch(document,/not verified|unverified/i);
+    // The link checker documents its “Unverified” result for unreachable URLs.
+    if (name !== 'help-center-broken-link-checker.html') assert.doesNotMatch(document,/not verified|unverified/i);
   }
   assert.match(await readFile(new URL('robots.txt',output),'utf8'),/Sitemap: https:\/\/orka\.chat\/sitemap\.xml/);
   assert.match(html,/FAQPage/);
